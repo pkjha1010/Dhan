@@ -1,0 +1,54 @@
+name: D3Y Dhan 3-year backtest
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'check = test Dhan access (run first) | run = backtest (run again to continue) | summary = rebuild tables'
+        required: true
+        default: 'check'
+        type: choice
+        options:
+          - check
+          - run
+          - summary
+      budget_minutes:
+        description: 'Stop politely after this many minutes (progress is saved)'
+        required: false
+        default: '300'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dhan-api
+  cancel-in-progress: false
+
+jobs:
+  d3y:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests yfinance pandas numpy
+
+      - name: Run
+        env:
+          DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
+          DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
+          BUDGET_MIN: ${{ github.event.inputs.budget_minutes }}
+        run: python -u d3y_backtest.py ${{ github.event.inputs.mode }}
+
+      - name: Save results
+        if: always()
+        run: |
+          git config user.name "d3y-bot"
+          git config user.email "d3y-bot@users.noreply.github.com"
+          if [ -d d3y_results ]; then git add d3y_results; fi
+          git diff --cached --quiet || (git commit -m "d3y results" && git pull --rebase && git push)
