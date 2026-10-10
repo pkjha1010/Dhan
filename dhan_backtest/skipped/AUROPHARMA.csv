@@ -1,0 +1,10 @@
+date,stock,direction,entry,reason
+2025-07-31,AUROPHARMA,LONG,,expiry day
+2025-08-01,AUROPHARMA,SHORT,E1_all,ATM: first option candle 05-Aug 15:28 too late for signal 09:21
+2025-08-01,AUROPHARMA,SHORT,E1_all,ITM1: first option candle 05-Aug 15:28 too late for signal 09:21
+2025-08-01,AUROPHARMA,SHORT,E2_4candle_0920,ATM: first option candle 05-Aug 15:28 too late for signal 09:21
+2025-08-01,AUROPHARMA,SHORT,E2_4candle_0920,ITM1: first option candle 05-Aug 15:28 too late for signal 09:21
+2025-10-28,AUROPHARMA,SHORT,,expiry day
+2026-04-28,AUROPHARMA,LONG,,expiry day
+2026-06-30,AUROPHARMA,LONG,,expiry day
+2026-09-30,AUROPHARMA,LONG,E1_all,ITM1: first option candle 30-Sep 09:24 too late for signal 09:18

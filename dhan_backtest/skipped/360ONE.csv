@@ -1,0 +1,17 @@
+date,stock,direction,entry,reason
+2025-05-15,360ONE,LONG,E1_all,ATM: no option data
+2025-05-15,360ONE,LONG,E1_all,ITM1: no option data
+2025-05-15,360ONE,LONG,E2_4candle_0920,ATM: no option data
+2025-05-15,360ONE,LONG,E2_4candle_0920,ITM1: no option data
+2026-02-19,360ONE,SHORT,E1_all,ATM: first option candle 19-Feb 10:26 too late for signal 09:37
+2026-02-19,360ONE,SHORT,E1_all,ITM1: first option candle 19-Feb 09:47 too late for signal 09:37
+2026-02-19,360ONE,SHORT,E2_4candle_0920,ATM: first option candle 19-Feb 10:26 too late for signal 09:37
+2026-02-19,360ONE,SHORT,E2_4candle_0920,ITM1: first option candle 19-Feb 09:47 too late for signal 09:37
+2026-02-19,360ONE,SHORT,E3_recross_0920,ATM: first option candle 19-Feb 10:26 too late for signal 10:11
+2026-03-13,360ONE,SHORT,E1_all,ATM: first option candle 13-Mar 09:29 too late for signal 09:15
+2026-03-13,360ONE,SHORT,E1_all,ITM1: first option candle 13-Mar 10:00 too late for signal 09:15
+2026-03-23,360ONE,SHORT,E1_all,ATM: first option candle 23-Mar 09:21 too late for signal 09:15
+2026-03-23,360ONE,SHORT,E1_all,ITM1: first option candle 23-Mar 09:23 too late for signal 09:15
+2026-05-25,360ONE,LONG,E1_all,ITM1: first option candle 25-May 09:27 too late for signal 09:16
+2026-08-03,360ONE,LONG,E1_all,ITM1: first option candle 03-Aug 09:30 too late for signal 09:15
+2026-08-18,360ONE,LONG,E1_all,ITM1: first option candle 18-Aug 09:27 too late for signal 09:15

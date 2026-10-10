@@ -1,0 +1,5 @@
+date,stock,direction,entry,reason
+2025-05-22,ADANIENSOL,SHORT,E1_all,ITM1: first option candle 22-May 09:22 too late for signal 09:15
+2026-02-24,ADANIENSOL,LONG,,expiry day
+2026-04-02,ADANIENSOL,SHORT,E1_all,ATM: first option candle 02-Apr 09:22 too late for signal 09:15
+2026-04-02,ADANIENSOL,SHORT,E1_all,ITM1: first option candle 02-Apr 14:11 too late for signal 09:15

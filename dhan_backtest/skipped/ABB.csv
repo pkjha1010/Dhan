@@ -1,0 +1,7 @@
+date,stock,direction,entry,reason
+2025-07-11,ABB,SHORT,E1_all,ITM1: first option candle 11-Jul 09:32 too late for signal 09:16
+2025-12-03,ABB,SHORT,E1_all,ATM: first option candle 03-Dec 10:37 too late for signal 09:45
+2025-12-03,ABB,SHORT,E1_all,ITM1: first option candle 03-Dec 10:37 too late for signal 09:45
+2025-12-03,ABB,SHORT,E2_4candle_0920,ATM: first option candle 03-Dec 10:37 too late for signal 09:45
+2025-12-03,ABB,SHORT,E2_4candle_0920,ITM1: first option candle 03-Dec 10:37 too late for signal 09:45
+2026-07-13,ABB,SHORT,E1_all,ATM: first option candle 13-Jul 09:36 too late for signal 09:15

@@ -1,0 +1,6 @@
+date,stock,direction,entry,reason
+2025-03-27,ADANIENT,LONG,,expiry day
+2025-07-09,ADANIENT,LONG,E1_all,ITM1: first option candle 11-Jul 10:40 too late for signal 09:15
+2025-07-09,ADANIENT,LONG,E2_4candle_0920,ITM1: first option candle 11-Jul 10:40 too late for signal 10:09
+2025-07-09,ADANIENT,LONG,E3_recross_0920,ITM1: first option candle 11-Jul 10:40 too late for signal 10:09
+2026-07-28,ADANIENT,SHORT,,expiry day
