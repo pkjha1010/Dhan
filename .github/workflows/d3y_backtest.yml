@@ -44,11 +44,12 @@ jobs:
           DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
           BUDGET_MIN: ${{ github.event.inputs.budget_minutes }}
         run: python -u d3y_backtest.py ${{ github.event.inputs.mode }}
-
       - name: Save results
         if: always()
         run: |
           git config user.name "d3y-bot"
           git config user.email "d3y-bot@users.noreply.github.com"
           if [ -d d3y_results ]; then git add d3y_results; fi
-          git diff --cached --quiet || (git commit -m "d3y results" && git pull --rebase && git push)
+          git diff --cached --quiet || (git commit -m "d3y results" && git pull --rebase --strategy-option=ours && git push)
+      
+        
