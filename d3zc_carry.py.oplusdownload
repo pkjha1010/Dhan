@@ -1,0 +1,105 @@
+"""d3zc_carry.py - CARRY-FORWARD exit ("until hit", up to 5 trading days) for the entries your d3z backtest already found.
+
+Needs only what d3z saved: d3z_results/events.csv (stock, direction, date, entry type, entry minute). Yahoo and the stock-minute Dhan step are
+NOT repeated. It only fetches option candles from Dhan (ATM + 3 strikes each side, entry day + the following days) and tests every
+stop-loss / target pair with the trade kept open until hit.
+
+  python d3zc_carry.py check | run | summary | range      (run is resumable, stops politely before the time budget)
+
+Trade: ATM option at the entry minute (strike fixed at entry); SL 10/20 %, target 20..200 %; checked minute by minute across the next days
+(entry day = day 1, max HOLD_DAYS = 5, never past the monthly expiry); overnight gap through the stop fills at the open ("STOP (gap)",
+ret_pct = loss %); gap above target fills at the target; no hit by 15:30 of the last day = TIME exit.
+Output: d3zc_results/ (parts, summaries, all_trades_combined/ = every trade in plain CSV).
+"""
+import os, sys, io, json, time, gzip, glob, subprocess
+import requests, numpy as np, pandas as pd
+from datetime import datetime, date, timedelta
+from zoneinfo import ZoneInfo
+
+IST = ZoneInfo("Asia/Kolkata")
+START = os.environ.get("D3ZC_START") or "2000-01-01"          # empty = every event in the source file
+END = os.environ.get("D3ZC_END") or "2100-01-01"
+SRC = os.environ.get("D3ZC_SRC") or "d3z_results/events.csv"      # events saved by the d3z backtest
+SLS = [10, 20]
+TPS = [20, 30, 40, 60, 80, 100, 120, 140, 200]
+EXITS = []                      # same-day exits are already in your d3z results; here only UNTIL_HIT is run
+HOLD_DAYS = int(os.environ.get("HOLD_DAYS") or 5)      # UNTIL_HIT: hold the ATM option (entry strike) up to this many trading days (entry day = day 1)
+CAPS = {10: 200000, 20: 100000}
+ENTRY_LAST = "15:00"                                        # no entries after this time
+OFFSETS = [int(x) for x in (os.environ.get("OFFSETS") or "0,1,-1,2,-2,3,-3").split(",")]    # ATM and neighbours (Dhan allows -3..+3 for stocks)
+GAP_S = float(os.environ.get("DHAN_GAP", "0.35"))           # seconds between Dhan calls (limit is 5/second)
+BUDGET_MIN = float(os.environ.get("BUDGET_MIN", "300"))     # stop politely after this many minutes
+OUT = os.environ.get("D3ZC_OUT", "d3zc_results")
+DK = ["stock", "direction", "date", "type"]                 # one entry event
+RK = DK + ["exit_rule", "sl", "tp"]                          # one trade row
+BASE = "https://api.dhan.co/v2"
+MASTER = "https://images.dhan.co/api-data/api-scrip-master-detailed.csv"
+T0 = time.time()
+LAST_CP = time.time()
+
+UNIVERSE = """
+    HDFCBANK RELIANCE ICICIBANK INFY BHARTIARTL ITC LT TCS AXISBANK SBIN
+""".split()                                                    # the 10 biggest Nifty 50 stocks by weight - edit this list freely
+SIG_LONG = ("14:00", "15:30")        # signal day: first cross above the line must be in this window
+SIG_SHORT = ("11:00", "13:00")       # signal day: first cross below the line must be in this window
+
+
+def shape(o, h, l, c):
+    """Signal-day daily candle: body < 45% of range and a wick >= 2x body (the old rule). Only FLAGGED now, not required."""
+    if h == l: return 0
+    b = abs(c - o)
+    return int(b / (h - l) < .45 and max(h - max(o, c), min(o, c) - l) >= 2 * b)
+
+
+def setup(df, long):
+    n, res = len(df) - 1, None
+    hi, lo, c = df.High.values, df.Low.values, df.Close.values
+    for i in range(10, n):
+        w = (hi if long else lo)[i - 10:i]
+        k = w.argmax() if long else w.argmin()
+        ref, sw = w[k], i - 10 + k
+        if not (c[i] > ref if long else c[i] < ref): continue
+        if i - sw > 20 or n - i > 20: continue
+        if not (c[n] < ref if long else c[n] > ref): continue
+        pb = next(j for j in range(i + 1, n + 1) if (c[j] < ref if long else c[j] > ref))
+        res = (ref, df.index[sw], df.index[i], df.index[pb])
+    return res
+
+
+# ------------------------------------------------------------------ Dhan client (paced, with back-off)
+class Stop(Exception): pass          # polite stop: time budget used, or Dhan keeps refusing; progress is saved
+class Fatal(Exception): pass         # needs your action (token expired, API not subscribed)
+
+
+class Dhan:
+    RATE_CODES = {"DH-904", "805", "DH-805"}
+    AUTH_CODES = {"DH-901", "DH-902", "807", "808", "809", "810", "811", "DH-807", "DH-808", "DH-809", "DH-810", "DH-811"}
+
+    def __init__(self):
+        cid, tok = os.environ.get("DHAN_CLIENT_ID"), os.environ.get("DHAN_ACCESS_TOKEN")
+        if not cid or not tok: raise Fatal("Missing DHAN_CLIENT_ID or DHAN_ACCESS_TOKEN secret")
+        self.h = {"Accept": "application/json", "Content-Type": "application/json", "access-token": tok, "client-id": cid}
+        self.last, self.n, self.rl, self.errs = 0.0, 0, 0, 0
+
+    def post(self, path, body):
+        if (time.time() - T0) / 60 > BUDGET_MIN: raise Stop(f"time budget of {BUDGET_MIN:.0f} min used")
+        for attempt in range(8):
+            w = GAP_S - (time.time() - self.last)
+            if w > 0: time.sleep(w)
+            self.last = time.time(); self.n += 1
+            try:
+                r = requests.post(BASE + path, headers=self.h, json=body, timeout=120)
+            except Exception as e:
+                print(f"[call {self.n}] network problem: {e}", flush=True); time.sleep(5 * (attempt + 1)); continue
+            try: j = r.json()
+            except Exception: j = None
+            code = str(j.get("errorCode", "")) if isinstance(j, dict) else ""
+            if r.status_code == 200 and j is not None and not code:
+                self.rl = 0; return j
+            if r.status_code == 429 or code in self.RATE_CODES:
+                self.rl += 1
+                if self.rl > 6: raise Stop("Dhan keeps refusing (rate limit) - wait a while and run again")
+                s = min(30 * 2 ** (self.rl - 1), 600)
+                print(f"[call {self.n}] rate limit ({code or r.status_code}) - waiting {s}s", flush=True); time.sleep(s); continue
+            if r.status_code in (401, 403) or code in self.AUTH_CODES:
+                raise Fatal(f"Dhan refused the login/token: http {r.stat
