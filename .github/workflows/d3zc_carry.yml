@@ -1,0 +1,121 @@
+name: D3ZC carry-forward exit on d3z entries (Dhan)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'check = test Dhan access (run first) | run = full backtest (run again to continue) | summary = rebuild tables | range = tables and trades for chosen dates'
+        required: true
+        default: 'check'
+        type: choice
+        options:
+          - check
+          - run
+          - summary
+          - range
+      start:
+        description: 'Start entry date (empty = all events). Used by run and range'
+        required: false
+        default: ''
+      end:
+        description: 'Stop entry date, included (empty = all events). Used by run and range'
+        required: false
+        default: ''
+      shape_rule:
+        description: 'range mode: NO_SHAPE_RULE or WITH_SHAPE_RULE (empty = both)'
+        required: false
+        default: ''
+      entry_type:
+        description: 'range mode: ALL, FROM_0920_4C or RECROSS_0920_4C (empty = no trade list)'
+        required: false
+        default: ''
+      exit_rule:
+        description: 'range mode: 09:30, 10:00, 12:00, 15:30 or UNTIL_HIT (empty = all)'
+        required: false
+        default: ''
+      sl:
+        description: 'range mode: stop loss 10 or 20 (empty = all)'
+        required: false
+        default: ''
+      tp:
+        description: 'range mode: target 20, 30, 40, 60, 80, 100, 120, 140 or 200 (empty = all)'
+        required: false
+        default: ''
+      min_trades:
+        description: 'Minimum trades for a setup to appear in rankings'
+        required: false
+        default: '5'
+      offsets:
+        description: 'Option strikes fetched: 0 = ATM only (fastest) | 0,1,-1,2,-2,3,-3 = ATM and 3 strikes each side (default; needed to follow the entry strike over several days)'
+        required: false
+        default: '0,1,-1,2,-2,3,-3'
+      source:
+        description: 'Events file saved by the d3z backtest'
+        required: false
+        default: 'd3z_results/events.csv'
+      hold_days:
+        description: 'UNTIL_HIT exit: maximum trading days to hold (entry day = day 1)'
+        required: false
+        default: '5'
+      budget_minutes:
+        description: 'run mode: stop politely after this many minutes (progress is saved)'
+        required: false
+        default: '300'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: d3zc-dhan-queue
+  cancel-in-progress: false
+
+jobs:
+  d3zc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests yfinance pandas numpy
+
+      - name: Run
+        env:
+          DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
+          DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
+          BUDGET_MIN: ${{ github.event.inputs.budget_minutes }}
+          D3ZC_START: ${{ github.event.inputs.start }}
+          D3ZC_END: ${{ github.event.inputs.end }}
+          D3ZC_SRC: ${{ github.event.inputs.source }}
+          HOLD_DAYS: ${{ github.event.inputs.hold_days }}
+          OFFSETS: ${{ github.event.inputs.offsets }}
+          SHAPE_RULE: ${{ github.event.inputs.shape_rule }}
+          ENTRY_TYPE: ${{ github.event.inputs.entry_type }}
+          EXIT_RULE: ${{ github.event.inputs.exit_rule }}
+          SL: ${{ github.event.inputs.sl }}
+          TP: ${{ github.event.inputs.tp }}
+          MIN_TRADES: ${{ github.event.inputs.min_trades }}
+        run: python -u d3zc_carry.py ${{ github.event.inputs.mode }}
+
+      - name: Download all trades (zip)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: d3zc-all-trades
+          path: d3zc_results/all_trades_combined
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Save results
+        if: always()
+        run: |
+          git config user.name "d3zc-bot"
+          git config user.email "d3zc-bot@users.noreply.github.com"
+          for d in d3zc_results d3zc_range_out; do if [ -d $d ]; then git add $d; fi; done
+          git diff --cached --quiet || git commit -m "d3zc results"
+          git pull --no-rebase -X ours --no-edit || true
+          git push || true
