@@ -1,0 +1,18 @@
+date,stock,direction,entry,reason
+2025-03-03,BLUESTARCO,LONG,E1_all,ATM: no option data
+2025-03-03,BLUESTARCO,LONG,E1_all,ITM1: no option data
+2025-03-03,BLUESTARCO,LONG,E2_4candle_0920,ATM: no option data
+2025-03-03,BLUESTARCO,LONG,E2_4candle_0920,ITM1: no option data
+2025-04-23,BLUESTARCO,SHORT,E1_all,ATM: no option data
+2025-04-23,BLUESTARCO,SHORT,E1_all,ITM1: no option data
+2025-04-23,BLUESTARCO,SHORT,E2_4candle_0920,ATM: no option data
+2025-04-23,BLUESTARCO,SHORT,E2_4candle_0920,ITM1: no option data
+2025-05-07,BLUESTARCO,SHORT,E1_all,ATM: no option data
+2025-05-07,BLUESTARCO,SHORT,E1_all,ITM1: no option data
+2025-06-03,BLUESTARCO,SHORT,E1_all,ITM1: first option candle 03-Jun 11:21 too late for signal 09:26
+2025-06-03,BLUESTARCO,SHORT,E2_4candle_0920,ITM1: first option candle 03-Jun 11:21 too late for signal 09:26
+2025-11-25,BLUESTARCO,SHORT,,expiry day
+2026-05-05,BLUESTARCO,SHORT,E1_all,ATM: first option candle 05-May 09:37 too late for signal 09:15
+2026-05-05,BLUESTARCO,SHORT,E1_all,ITM1: first option candle 05-May 09:41 too late for signal 09:15
+2026-06-11,BLUESTARCO,SHORT,E1_all,ATM: first option candle 11-Jun 09:24 too late for signal 09:16
+2026-06-11,BLUESTARCO,SHORT,E1_all,ITM1: first option candle 11-Jun 09:25 too late for signal 09:16

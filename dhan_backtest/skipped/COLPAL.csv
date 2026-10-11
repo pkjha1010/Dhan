@@ -1,0 +1,15 @@
+date,stock,direction,entry,reason
+2025-01-02,COLPAL,SHORT,E1_all,ITM1: first option candle 02-Jan 12:43 too late for signal 09:30
+2025-01-02,COLPAL,SHORT,E2_4candle_0920,ITM1: first option candle 02-Jan 12:43 too late for signal 09:30
+2025-02-28,COLPAL,SHORT,E1_all,ATM: first option candle 28-Feb 10:05 too late for signal 09:15
+2025-02-28,COLPAL,SHORT,E2_4candle_0920,ATM: first option candle 28-Feb 10:05 too late for signal 09:50
+2025-02-28,COLPAL,SHORT,E3_recross_0920,ATM: first option candle 28-Feb 10:05 too late for signal 09:50
+2025-05-29,COLPAL,SHORT,,expiry day
+2025-06-05,COLPAL,SHORT,E3_recross_0920,ITM1: ITM-1 strike is on the wrong side of ATM
+2025-07-02,COLPAL,SHORT,E1_all,ITM1: first option candle 02-Jul 10:32 too late for signal 09:15
+2025-07-02,COLPAL,SHORT,E2_4candle_0920,ITM1: first option candle 02-Jul 10:32 too late for signal 09:48
+2026-01-12,COLPAL,SHORT,E1_all,ITM1: first option candle 12-Jan 09:28 too late for signal 09:15
+2026-01-12,COLPAL,SHORT,E2_4candle_0920,ITM1: first option candle 12-Jan 09:28 too late for signal 09:22
+2026-09-28,COLPAL,SHORT,E1_all,ITM1: first option candle 28-Sep 09:37 too late for signal 09:23
+2026-09-28,COLPAL,SHORT,E2_4candle_0920,ITM1: first option candle 28-Sep 09:37 too late for signal 09:23
+2026-09-29,COLPAL,SHORT,,expiry day

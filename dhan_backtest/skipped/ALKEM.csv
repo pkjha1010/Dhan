@@ -1,0 +1,14 @@
+date,stock,direction,entry,reason
+2025-01-21,ALKEM,SHORT,E3_recross_0920,ITM1: first option candle 21-Jan 12:28 too late for signal 12:16
+2025-02-03,ALKEM,SHORT,E1_all,ITM1: first option candle 03-Feb 09:39 too late for signal 09:22
+2025-02-03,ALKEM,SHORT,E2_4candle_0920,ITM1: first option candle 03-Feb 09:39 too late for signal 09:22
+2025-09-30,ALKEM,LONG,,expiry day
+2025-12-26,ALKEM,SHORT,E1_all,ITM1: first option candle 26-Dec 09:40 too late for signal 09:15
+2026-04-01,ALKEM,SHORT,E1_all,ITM1: first option candle 01-Apr 15:00 too late for signal 14:46
+2026-04-01,ALKEM,SHORT,E2_4candle_0920,ITM1: first option candle 01-Apr 15:00 too late for signal 14:46
+2026-04-06,ALKEM,SHORT,E2_4candle_0920,ITM1: first option candle 06-Apr 09:35 too late for signal 09:24
+2026-04-06,ALKEM,SHORT,E3_recross_0920,ITM1: first option candle 06-Apr 11:13 too late for signal 09:40
+2026-04-07,ALKEM,SHORT,E1_all,ATM: first option candle 07-Apr 09:30 too late for signal 09:15
+2026-04-07,ALKEM,SHORT,E1_all,ITM1: first option candle 07-Apr 09:38 too late for signal 09:15
+2026-04-07,ALKEM,SHORT,E2_4candle_0920,ITM1: first option candle 07-Apr 12:29 too late for signal 10:49
+2026-04-07,ALKEM,SHORT,E3_recross_0920,ITM1: first option candle 07-Apr 12:29 too late for signal 10:49

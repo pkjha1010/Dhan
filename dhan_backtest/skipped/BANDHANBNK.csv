@@ -1,0 +1,29 @@
+date,stock,direction,entry,reason
+2025-10-20,BANDHANBNK,LONG,E1_all,ITM1: no option data
+2025-10-20,BANDHANBNK,LONG,E2_4candle_0920,ITM1: no option data
+2025-10-20,BANDHANBNK,LONG,E3_recross_0920,ITM1: no option data
+2025-12-03,BANDHANBNK,SHORT,E1_all,ATM: first option candle 03-Dec 10:37 too late for signal 09:15
+2025-12-03,BANDHANBNK,SHORT,E1_all,ITM1: no option data
+2025-12-03,BANDHANBNK,SHORT,E2_4candle_0920,ATM: first option candle 03-Dec 10:37 too late for signal 09:25
+2025-12-03,BANDHANBNK,SHORT,E2_4candle_0920,ITM1: no option data
+2026-02-03,BANDHANBNK,LONG,E1_all,ITM1: no option data
+2026-02-03,BANDHANBNK,LONG,E2_4candle_0920,ITM1: no option data
+2026-04-06,BANDHANBNK,SHORT,E1_all,ATM: first option candle 06-Apr 09:23 too late for signal 09:16
+2026-04-06,BANDHANBNK,SHORT,E1_all,ITM1: no option data
+2026-04-06,BANDHANBNK,SHORT,E2_4candle_0920,ITM1: no option data
+2026-04-06,BANDHANBNK,SHORT,E3_recross_0920,ITM1: no option data
+2026-06-03,BANDHANBNK,LONG,E1_all,ITM1: no option data
+2026-06-03,BANDHANBNK,LONG,E2_4candle_0920,ITM1: no option data
+2026-06-09,BANDHANBNK,LONG,E1_all,ITM1: no option data
+2026-06-09,BANDHANBNK,LONG,E2_4candle_0920,ITM1: no option data
+2026-06-09,BANDHANBNK,LONG,E3_recross_0920,ITM1: no option data
+2026-09-17,BANDHANBNK,LONG,E1_all,ATM: no option data
+2026-09-17,BANDHANBNK,LONG,E1_all,ITM1: no option data
+2026-09-17,BANDHANBNK,LONG,E2_4candle_0920,ATM: no option data
+2026-09-17,BANDHANBNK,LONG,E2_4candle_0920,ITM1: no option data
+2026-09-18,BANDHANBNK,LONG,E1_all,ATM: no option data
+2026-09-18,BANDHANBNK,LONG,E1_all,ITM1: no option data
+2026-09-18,BANDHANBNK,LONG,E2_4candle_0920,ATM: no option data
+2026-09-18,BANDHANBNK,LONG,E2_4candle_0920,ITM1: no option data
+2026-09-18,BANDHANBNK,LONG,E3_recross_0920,ATM: no option data
+2026-09-18,BANDHANBNK,LONG,E3_recross_0920,ITM1: no option data

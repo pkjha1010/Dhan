@@ -1,0 +1,22 @@
+date,stock,direction,entry,reason
+2025-09-09,BANKBARODA,SHORT,E1_all,ATM: no option data
+2025-09-09,BANKBARODA,SHORT,E1_all,ITM1: no option data
+2025-09-09,BANKBARODA,SHORT,E2_4candle_0920,ATM: no option data
+2025-09-09,BANKBARODA,SHORT,E2_4candle_0920,ITM1: no option data
+2025-09-09,BANKBARODA,SHORT,E3_recross_0920,ATM: no option data
+2025-09-09,BANKBARODA,SHORT,E3_recross_0920,ITM1: no option data
+2025-10-09,BANKBARODA,LONG,E1_all,ATM: no option data
+2025-10-09,BANKBARODA,LONG,E1_all,ITM1: no option data
+2025-10-09,BANKBARODA,LONG,E2_4candle_0920,ATM: no option data
+2025-10-09,BANKBARODA,LONG,E2_4candle_0920,ITM1: no option data
+2025-12-30,BANKBARODA,LONG,,expiry day
+2026-01-14,BANKBARODA,LONG,E1_all,ATM: no option data
+2026-01-14,BANKBARODA,LONG,E2_4candle_0920,ATM: no option data
+2026-03-27,BANKBARODA,SHORT,E1_all,ITM1: no option data
+2026-05-08,BANKBARODA,SHORT,E1_all,ITM1: no option data
+2026-05-08,BANKBARODA,SHORT,E2_4candle_0920,ITM1: no option data
+2026-05-12,BANKBARODA,SHORT,E1_all,ITM1: no option data
+2026-05-12,BANKBARODA,SHORT,E2_4candle_0920,ITM1: no option data
+2026-09-04,BANKBARODA,SHORT,E1_all,ITM1: no option data
+2026-09-04,BANKBARODA,SHORT,E2_4candle_0920,ITM1: no option data
+2026-09-04,BANKBARODA,SHORT,E3_recross_0920,ITM1: no option data
