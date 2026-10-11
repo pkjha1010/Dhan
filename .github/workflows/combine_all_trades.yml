@@ -1,0 +1,57 @@
+name: Combine all trades (CSV)
+
+on:
+  workflow_dispatch:
+    inputs:
+      folder:
+        description: 'Results folder to combine, e.g. d3z_results, n50x_results, n10y_results (empty = first one found)'
+        required: false
+        default: 'd3z_results'
+      chunk_mb:
+        description: 'Maximum size of each CSV file in MB'
+        required: false
+        default: '45'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: combine-trades-queue
+  cancel-in-progress: false
+
+jobs:
+  combine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install pandas
+
+      - name: Combine
+        env:
+          FOLDER: ${{ github.event.inputs.folder }}
+          CHUNK_MB: ${{ github.event.inputs.chunk_mb }}
+        run: python -u combine_all_trades.py
+
+      - name: Download link (artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: all-trades-csv
+          path: combined_out
+          retention-days: 30
+
+      - name: Save to repo
+        if: always()
+        run: |
+          git config user.name "combine-bot"
+          git config user.email "combine-bot@users.noreply.github.com"
+          if [ -d combined_out ]; then git add combined_out; fi
+          git diff --cached --quiet || git commit -m "combined all trades csv"
+          git pull --no-rebase -X ours --no-edit || true
+          git push || true
