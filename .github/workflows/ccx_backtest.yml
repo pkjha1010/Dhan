@@ -1,0 +1,111 @@
+name: CCX close-beyond-line backtest 2023-2026 (Yahoo + Dhan)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'check = test Dhan access (run first) | run = full backtest (run again to continue) | summary = rebuild tables | range = tables and trades for chosen dates'
+        required: true
+        default: 'check'
+        type: choice
+        options:
+          - check
+          - run
+          - summary
+          - range
+      start:
+        description: 'Start entry date (empty = 2023-01-01). Used by run and range'
+        required: false
+        default: ''
+      end:
+        description: 'Stop entry date, included (empty = 2026-09-30). Used by run and range'
+        required: false
+        default: ''
+      entry_type:
+        description: 'range mode: ALL, OPEN_0915, FROM_0920_4C or RECROSS_0920_4C (empty = no trade list)'
+        required: false
+        default: ''
+      exit_rule:
+        description: 'range mode: 09:30, 09:45, 10:00 or UNTIL_HIT (empty = all)'
+        required: false
+        default: ''
+      sl:
+        description: 'range mode: stop loss 10 (empty = all)'
+        required: false
+        default: ''
+      tp:
+        description: 'range mode: target 20 or 120 (empty = all)'
+        required: false
+        default: ''
+      min_trades:
+        description: 'Minimum trades for a setup to appear in rankings'
+        required: false
+        default: '5'
+      offsets:
+        description: 'Option strikes fetched: 0 = ATM only (fastest) | 0,1,-1,2,-2,3,-3 = ATM and 3 strikes each side (default; needed to follow the entry strike over several days)'
+        required: false
+        default: '0,1,-1,2,-2,3,-3'
+      hold_days:
+        description: 'UNTIL_HIT exit: maximum trading days to hold (entry day = day 1)'
+        required: false
+        default: '5'
+      budget_minutes:
+        description: 'run mode: stop politely after this many minutes (progress is saved)'
+        required: false
+        default: '300'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ccx-dhan-queue
+  cancel-in-progress: false
+
+jobs:
+  ccx:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests yfinance pandas numpy
+
+      - name: Run
+        env:
+          DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
+          DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
+          BUDGET_MIN: ${{ github.event.inputs.budget_minutes }}
+          CCX_START: ${{ github.event.inputs.start }}
+          CCX_END: ${{ github.event.inputs.end }}
+          HOLD_DAYS: ${{ github.event.inputs.hold_days }}
+          OFFSETS: ${{ github.event.inputs.offsets }}
+          ENTRY_TYPE: ${{ github.event.inputs.entry_type }}
+          EXIT_RULE: ${{ github.event.inputs.exit_rule }}
+          SL: ${{ github.event.inputs.sl }}
+          TP: ${{ github.event.inputs.tp }}
+          MIN_TRADES: ${{ github.event.inputs.min_trades }}
+        run: python -u ccx_backtest.py ${{ github.event.inputs.mode }}
+
+      - name: Download all trades (zip)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ccx-all-trades
+          path: ccx_results/all_trades_combined
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Save results
+        if: always()
+        run: |
+          git config user.name "ccx-bot"
+          git config user.email "ccx-bot@users.noreply.github.com"
+          for d in ccx_results ccx_range_out; do if [ -d $d ]; then git add $d; fi; done
+          git diff --cached --quiet || git commit -m "ccx results"
+          git pull --no-rebase -X ours --no-edit || true
+          git push || true
