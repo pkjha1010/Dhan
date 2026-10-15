@@ -1,0 +1,2 @@
+type,exit_rule,sl,noshape_trades,noshape_win_pct,noshape_stops,noshape_total_pnl,noshape_roi_pct,noshape_avg_ret_pct,noshape_profit_factor,shape_trades,shape_win_pct,shape_stops,shape_total_pnl,shape_roi_pct,shape_avg_ret_pct,shape_profit_factor,roi_diff_shape_minus_noshape
+ALL,09:30,10,206.0,43.7,80.0,880033.0,2.2,2.18,1.41,63.0,47.6,22.0,907982.0,7.42,7.27,2.73,5.22
