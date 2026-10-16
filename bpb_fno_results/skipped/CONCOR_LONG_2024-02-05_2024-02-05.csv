@@ -1,0 +1,2 @@
+stock,direction,date,reason
+CONCOR,LONG,2024-02-05,no option candles between entry and exit (or one lot costs more than the capital)
