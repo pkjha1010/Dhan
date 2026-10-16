@@ -1,0 +1,4 @@
+stock,direction,date,entry_minute,reason
+MAHABANK,LONG,2026-08-18,09:15,no ATM candle at the entry minute
+MAHABANK,LONG,2026-08-20,09:15,no ATM candle at the entry minute
+MAHABANK,LONG,2026-08-25,09:18,no ATM candle at the entry minute
