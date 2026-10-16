@@ -1,0 +1,3 @@
+stock,direction,date,reason
+NMDC,LONG,2023-12-01,no ATM candle at the entry minute
+NMDC,LONG,2023-12-15,no ATM candle at the entry minute

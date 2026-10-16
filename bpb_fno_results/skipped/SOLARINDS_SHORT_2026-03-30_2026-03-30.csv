@@ -1,0 +1,2 @@
+stock,direction,date,reason
+SOLARINDS,SHORT,2026-03-30,no option candles between entry and exit (or one lot costs more than the capital)
