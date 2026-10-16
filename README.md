@@ -50,3 +50,10 @@ Variants (3 x 2 x 9 x 4 = 216):
 Next morning the 1-minute stock candles (09:15 until just before the exit time) trigger an ATM option trade when Day-1 High / Low breaks; SL 10 % of premium, time exit 09:30.
 Run it from GitHub: **Actions -> "MR-POC backtest (top 10 stocks, 3 years, Dhan 1-min)" -> Run workflow** (use `check` first). Results go to `mr_poc_results/`.
 Offline logic test (no Dhan login): `python test_mr_poc.py`.
+
+## COMBO day-SL backtest (BPB + SHAPECMP, all F&O stocks)
+
+`combo_dayrisk_backtest.py` - runs the BPB strategy and the SHAPECMP swing-alert strategy (5 variants: no shape rule, previous candle green, previous candle red, upper wick longer, lower wick longer; each with entry types ALL / OPEN_0915 / FROM_0920_4C / RECROSS_0920_4C) on every F&O stock.
+Entry 09:15-09:25, exit 09:30, trade stop-loss 10 / 20 / 30 %, at most Rs 60,000 per trade, and a **day stop-loss** test (no day SL, 5000, 6000, 12000, 18000, 24000, 30000): when the day P&L (realised + open) reaches the limit, all open trades are closed and no new entry is taken that day.
+Run it from GitHub: **Actions -> "COMBO day-SL backtest" -> Run workflow**, type the start and end date (use `check` first). Results go to `combo_results/` (`summary.csv`, `roi_matrix.csv`, `daily_pnl.csv.gz`, `day_sl_vs_no_day_sl.csv`).
+Offline logic test (no login): `python test_combo.py`. `mode = summary` rebuilds the tables from saved data for a new date range or a new day-SL list without calling Dhan.

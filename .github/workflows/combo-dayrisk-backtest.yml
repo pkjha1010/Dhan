@@ -1,0 +1,78 @@
+name: COMBO day-SL backtest (BPB + SHAPECMP, all F&O stocks, Dhan 1-min)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "check = test Dhan access | run = full backtest (resumable) | summary = rebuild tables from saved data (no API calls, e.g. new date range / new day-SL list)"
+        type: choice
+        options: [check, run, summary]
+        default: run
+      start:
+        description: "Start date YYYY-MM-DD (entry dates)"
+        required: true
+      end:
+        description: "End date YYYY-MM-DD (entry dates)"
+        required: true
+      symbols:
+        description: "Stocks (space or comma separated). Blank = all F&O stocks"
+        required: false
+        default: ""
+      day_sls:
+        description: "Day stop-loss list in Rs (0 = no day stop-loss)"
+        required: false
+        default: "0,5000,6000,12000,18000,24000,30000"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: combo-dayrisk-backtest
+  cancel-in-progress: false
+
+jobs:
+  combo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install packages
+        run: pip install -r requirements.txt
+
+      - name: Offline logic test
+        run: python test_combo.py
+
+      - name: Run
+        env:
+          DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
+          DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
+          COMBO_START: ${{ inputs.start }}
+          COMBO_END: ${{ inputs.end }}
+          COMBO_SYMBOLS: ${{ inputs.symbols }}
+          DAY_SLS: ${{ inputs.day_sls }}
+          BUDGET_MIN: "320"
+        run: python combo_dayrisk_backtest.py "${{ inputs.mode }}"
+
+      - name: Save results to the repo
+        if: always() && inputs.mode != 'check'
+        run: |
+          git config user.name "combo-bot"
+          git config user.email "combo-bot@users.noreply.github.com"
+          git add combo_results || true
+          git commit -m "combo results" || echo "nothing new to commit"
+          git pull --no-rebase -X ours --no-edit || true
+          git push || true
+
+      - name: Upload results
+        if: always() && inputs.mode != 'check'
+        uses: actions/upload-artifact@v4
+        with:
+          name: combo-results-${{ github.run_number }}
+          path: combo_results/
+          if-no-files-found: ignore
