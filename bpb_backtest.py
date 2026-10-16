@@ -118,7 +118,8 @@ class Dhan:
             try: j = r.json()
             except Exception: j = None
             code = str(j.get("errorCode", "")) if isinstance(j, dict) else ""
-            if r.status_code == 200 and j is not None and not code:
+            failed_body = isinstance(j, dict) and str(j.get("status", "")).lower() == "failed"
+            if r.status_code == 200 and j is not None and not code and not failed_body:
                 with self.lock:
                     if time.monotonic() >= self.pause_until: self.rl = 0
                 return j
@@ -178,8 +179,12 @@ def eq_minute(dh, sid, d0, d1):
     """1-minute stock candles from d0 to d1 (dates), <= 90 days per request."""
     j = dh.post("/charts/intraday", {"securityId": str(sid), "exchangeSegment": "NSE_EQ", "instrument": "EQUITY", "interval": "1",
                                      "oi": False, "fromDate": f"{d0} 09:15:00", "toDate": f"{d1} 15:30:00"})
-    if j is None: return None
-    return frame(j.get("data", j) if isinstance(j.get("data", None), dict) else j)
+    if j is None: return None                                    # call failed (reason printed by Dhan.post)
+    fr = frame(j.get("data", j) if isinstance(j.get("data", None), dict) else j)
+    if fr is None:
+        print(f"[stock candles {sid} {d0}..{d1}] Dhan answered but sent no candles: {str(j)[:300]}", flush=True)
+        return pd.DataFrame(columns=["o", "h", "l", "c"], index=pd.DatetimeIndex([]))
+    return fr
 
 
 def rolling(dh, sid, d0, d1, side, offset):
@@ -361,7 +366,8 @@ def step_events(dh, cand, mst, st):
     def work(t):
         s, g, d0, d1, key = t
         u_all = eq_minute(dh, mst[s][0], d0, d1)
-        if u_all is None: return None
+        if u_all is None: return None                             # failed -> NOT marked done, retried on the next run
+        if u_all.empty: return [], 0
         u_all = u_all[(u_all.index.hour.values * 60 + u_all.index.minute.values) <= ENTRY_MIN]
         days = {k: v for k, v in u_all.groupby(u_all.index.date)}
         out = []
@@ -376,17 +382,24 @@ def step_events(dh, cand, mst, st):
             m, gap = e
             out.append(dict(stock=s, direction=r.direction, ref=round(lvl, 2), line=round(line, 2), breakout_date=r.breakout_date, date=r.date,
                             entry_minute=hm(m), gap_open=int(gap), stock_price=float(u.c[m])))
-        return out
+        return out, len(days)
 
-    def handle(t, out):
+    fails = [0]
+
+    def handle(t, res):
         s, g, d0, d1, key = t
+        if res is None:
+            fails[0] += 1
+            print(f"stock candles {s} {d0}..{d1}: FAILED (will be retried on the next run), calls so far {dh.n}", flush=True); return
+        out, nd = res
         if out: ev.extend(out)
         st["done"].add(key); flush(st, ev, ep); checkpoint()
-        print(f"stock candles {s} {d0}..{d1}: {len(g)} candidate days, {len(out or [])} entries, calls so far {dh.n}", flush=True)
+        print(f"stock candles {s} {d0}..{d1}: {len(g)} candidate days, minute data on {nd} days, {len(out)} entries, calls so far {dh.n}", flush=True)
 
     FLUSHER[0] = lambda: flush(st, ev, ep, force=True)
     try: stream(tasks, work, handle)
     finally: flush(st, ev, ep, force=True)
+    if fails[0]: print(f"WARNING: {fails[0]} stock-candle request(s) failed - see the 'Dhan says' lines above; run again to retry them.", flush=True)
     return clean_events(ev)
 
 
@@ -559,14 +572,28 @@ def progress():
     open(f"{OUT}/PROGRESS.txt", "w").write(msg + "\n"); print("\n*** " + msg + " ***", flush=True)
 
 
+def report(n_trades):
+    """REPORT.txt: how many setups survived each step, so an empty result can be explained."""
+    def rows(p): return len(pd.read_csv(p)) if os.path.exists(p) else 0
+    cand = glob.glob(f"{OUT}/candidates_*.csv")
+    lines = [f"Top stocks tested: {' '.join(UNIVERSE)}",
+             f"1. Daily setups (breakout + confirmed pullback + entry level reachable that day): {rows(cand[0]) if cand else 0}",
+             f"2. Entries (1-minute stock price reached the level between 09:15 and {ENTRY_LAST}): {rows(f'{OUT}/events.csv')}",
+             f"3. Trade rows with option results (SL10 / exit 09:30): {n_trades}"]
+    open(f"{OUT}/REPORT.txt", "w").write("\n".join(lines) + "\n"); print("\n" + "\n".join(lines), flush=True)
+
+
 def summary():
     progress()
     fs = sorted(glob.glob(f"{OUT}/parts/*.csv.gz"))
-    if not fs: print("No results yet"); return
+    os.makedirs(OUT, exist_ok=True)
+    if not fs:
+        pd.DataFrame(columns=COLS).to_csv(f"{OUT}/trades_all.csv", index=False)
+        report(0); print("No trades yet - see REPORT.txt and the log above (failed Dhan calls print 'Dhan says').", flush=True); return
     t = load_parts(fs)
     t.sort_values(["date", "stock", "direction"]).to_csv(f"{OUT}/trades_all.csv", index=False)
     print(f"ALL TRADES: {len(t):,} rows -> {OUT}/trades_all.csv", flush=True)
-    tables(t, OUT)
+    report(len(t)); tables(t, OUT)
 
 
 def range_summary(start, end):
@@ -615,6 +642,7 @@ def run():
         ev = step_events(dh, cand, mst, st)
         ev = ev[(ev["date"] >= START) & (ev["date"] <= END)] if len(ev) else ev
         print(f"Entries (price reached the level between 09:15 and {ENTRY_LAST}): {len(ev)}", flush=True)
+        if not len(ev): print("NO ENTRIES - if the lines above show FAILED / 'Dhan says', the stock candles were not downloaded (token / Data API); otherwise no setup reached its level in the window.", flush=True)
         if len(ev): step_options(dh, ev, mst, st)
         print("ALL STEPS FINISHED", flush=True)
     except Stop as e:
