@@ -1,0 +1,77 @@
+name: BPB backtest (breakout + pullback, Dhan 1-min)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "check = test Dhan access | run = full backtest (resumable) | summary = rebuild tables from saved results"
+        type: choice
+        options: [check, run, summary]
+        default: run
+      symbols:
+        description: "Stocks (space or comma separated). Blank = top 10"
+        required: false
+        default: ""
+      start:
+        description: "Start date YYYY-MM-DD (blank = last 3 years)"
+        required: false
+        default: ""
+      end:
+        description: "End date YYYY-MM-DD (blank = today)"
+        required: false
+        default: ""
+      reset_line:
+        description: "1 = a fresh breakout candle before any pullback moves the line up (stricter). 0 = line fixed at first breakout"
+        required: false
+        default: "0"
+
+permissions:
+  contents: write            # the script saves progress to bpb_results/ in this repo
+
+concurrency:
+  group: bpb-backtest
+  cancel-in-progress: false
+
+jobs:
+  bpb:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install packages
+        run: pip install -r requirements.txt
+
+      - name: Run
+        env:
+          DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
+          DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
+          BPB_SYMBOLS: ${{ inputs.symbols }}
+          BPB_START: ${{ inputs.start }}
+          BPB_END: ${{ inputs.end }}
+          BPB_RESET_LINE: ${{ inputs.reset_line }}
+          BUDGET_MIN: "320"
+        run: python bpb_backtest.py "${{ inputs.mode }}"
+
+      - name: Save results to the repo
+        if: always() && inputs.mode != 'check'
+        run: |
+          git config user.name "bpb-bot"
+          git config user.email "bpb-bot@users.noreply.github.com"
+          git add bpb_results || true
+          git commit -m "bpb results" || echo "nothing new to commit"
+          git pull --no-rebase -X ours --no-edit || true
+          git push || true
+
+      - name: Upload results
+        if: always() && inputs.mode != 'check'
+        uses: actions/upload-artifact@v4
+        with:
+          name: bpb-results-${{ github.run_number }}
+          path: bpb_results/
+          if-no-files-found: ignore
