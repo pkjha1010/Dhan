@@ -1,0 +1,2 @@
+stock,direction,date,reason
+BHARTIARTL,SHORT,2026-03-04,no option candles between entry and exit (or one lot costs more than the capital)
