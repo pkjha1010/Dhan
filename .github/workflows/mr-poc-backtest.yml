@@ -1,0 +1,82 @@
+name: MR-POC backtest (top 10 stocks, 3 years, Dhan 1-min)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "check = test Dhan access | run = full backtest | summary = rebuild report from saved results"
+        type: choice
+        options: [check, run, summary]
+        default: run
+      symbols:
+        description: "Stocks (space or comma separated). Blank = top 10 large caps"
+        required: false
+        default: ""
+      start:
+        description: "Start date YYYY-MM-DD (blank = last 3 years)"
+        required: false
+        default: ""
+      end:
+        description: "End date YYYY-MM-DD (blank = today)"
+        required: false
+        default: ""
+      sl_pct:
+        description: "Stop-loss, % of option premium"
+        required: false
+        default: "10"
+      exit_time:
+        description: "Time exit HH:MM (entries are checked only before this)"
+        required: false
+        default: "09:30"
+
+permissions:
+  contents: write            # results are saved to mr_poc_results/ in this repo
+
+concurrency:
+  group: mr-poc-backtest
+  cancel-in-progress: false
+
+jobs:
+  mr-poc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install packages
+        run: pip install -r requirements.txt
+
+      - name: Run
+        env:
+          DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
+          DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
+          MR_SYMBOLS: ${{ inputs.symbols }}
+          MR_START: ${{ inputs.start }}
+          MR_END: ${{ inputs.end }}
+          SL_PCT: ${{ inputs.sl_pct }}
+          EXIT_TIME: ${{ inputs.exit_time }}
+          BUDGET_MIN: "100"
+        run: python mr_poc_backtest.py "${{ inputs.mode }}"
+
+      - name: Save results to the repo
+        if: always() && inputs.mode != 'check'
+        run: |
+          git config user.name "mrpoc-bot"
+          git config user.email "mrpoc-bot@users.noreply.github.com"
+          git add mr_poc_results || true
+          git commit -m "mr-poc backtest results" || echo "nothing new to commit"
+          git pull --no-rebase -X ours --no-edit || true
+          git push || true
+
+      - name: Upload results
+        if: always() && inputs.mode != 'check'
+        uses: actions/upload-artifact@v4
+        with:
+          name: mr-poc-results-${{ github.run_number }}
+          path: mr_poc_results/
+          if-no-files-found: ignore

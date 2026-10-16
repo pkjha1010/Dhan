@@ -43,3 +43,10 @@ Variants (3 x 2 x 9 x 4 = 216):
 * Dhan only serves ATM-3..ATM+3 for stock options. If the stock moves further than that while the trade
   is open, the trade exits on the last available candle with reason `DATA_GAP`.
 * If entry happens on expiry day, the next month's contract is used (`--roll-on-expiry-day 0` turns this off).
+
+## MR-POC backtest (mean reversion to POC + last-hour fade)
+
+`mr_poc_backtest.py` - sideways stocks that gap into a low-volume node, revert to the session POC and print a small counter-trend last-hour candle.
+Next morning the 1-minute stock candles (09:15 until just before the exit time) trigger an ATM option trade when Day-1 High / Low breaks; SL 10 % of premium, time exit 09:30.
+Run it from GitHub: **Actions -> "MR-POC backtest (top 10 stocks, 3 years, Dhan 1-min)" -> Run workflow** (use `check` first). Results go to `mr_poc_results/`.
+Offline logic test (no Dhan login): `python test_mr_poc.py`.
