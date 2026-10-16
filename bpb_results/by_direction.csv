@@ -1,0 +1,3 @@
+exit_rule,sl,direction,trades,wins,win_pct,stops,gap_stops,time_exits,total_pnl,capital,roi_pct,avg_pnl,avg_ret_pct,profit_factor,thin_data
+09:30,10,LONG,43,24,55.8,13,4,30,361469,8315672,4.35,8406,4.3,2.2,5
+09:30,10,SHORT,33,16,48.5,12,3,21,284653,6448128,4.41,8625,4.37,1.87,2

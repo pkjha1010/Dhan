@@ -1,0 +1,4 @@
+Top stocks tested: RELIANCE HDFCBANK ICICIBANK INFY TCS SBIN BHARTIARTL ITC LT AXISBANK
+1. Daily setups (breakout + confirmed pullback + entry level reachable that day): 286
+2. Entries (1-minute stock price reached the level between 09:15 and 09:20): 107
+3. Trade rows with option results (SL10 / exit 09:30): 76
