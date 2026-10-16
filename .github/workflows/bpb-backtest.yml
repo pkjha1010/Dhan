@@ -26,7 +26,7 @@ on:
         default: "0"
 
 permissions:
-  contents: write            # the script saves progress to bpb_results/ in this repo
+  contents: write            # the script saves progress to bpb_grid_results/ in this repo
 
 concurrency:
   group: bpb-backtest
@@ -63,7 +63,7 @@ jobs:
         run: |
           git config user.name "bpb-bot"
           git config user.email "bpb-bot@users.noreply.github.com"
-          git add bpb_results || true
+          git add bpb_grid_results || true
           git commit -m "bpb results" || echo "nothing new to commit"
           git pull --no-rebase -X ours --no-edit || true
           git push || true
@@ -72,6 +72,6 @@ jobs:
         if: always() && inputs.mode != 'check'
         uses: actions/upload-artifact@v4
         with:
-          name: bpb-results-${{ github.run_number }}
-          path: bpb_results/
+          name: bpb-grid-results-${{ github.run_number }}
+          path: bpb_grid_results/
           if-no-files-found: ignore

@@ -1,5 +1,6 @@
 """bpb_backtest.py - BREAKOUT + PULLBACK + RE-CROSS strategy on stock options. Yahoo daily + Dhan 1-minute candles.
-Self-contained. Default: top-10 stocks, last 3 years, ATM option (CE for LONG / PE for SHORT), entry 09:15-09:20, exit 09:30, SL 10 %.
+Self-contained. Default: top-10 stocks, last 3 years, ATM option (CE for LONG / PE for SHORT), entry 09:15-09:59,
+every combination of  stop-loss 10/20/30 %  x  target 10/20/40/60/80/120/160/200 % (+ "no target" baseline, tp = 0)  x  time exit 09:30/09:40/10:00.
 
   python bpb_backtest.py check     test Dhan access (run first)
   python bpb_backtest.py run       full backtest, resumable (stops politely before the time budget - just run again)
@@ -22,14 +23,16 @@ THE STRATEGY (daily candles decide the setup, 1-minute candles decide the entry)
   Detail : the LINE is fixed at the FIRST breakout candle's 10-day high; later higher candles only raise the entry level.
            (Optional: BPB_RESET_LINE=1 moves the line up to the newest 10-day high when another breakout candle comes before any pullback.)
 
+  Entry window : the first 1-minute candle from 09:15 to 09:59 whose High (SHORT: Low) reaches the entry level.
   Option price : close of the option candle of the entry minute (nearest monthly expiry, ATM strike at that moment, strike locked afterwards).
-  Exit         : 09:30 (close of the last option candle up to that time) or stop-loss 10 % (first 1-minute low that touches it; a gap through
-                 it fills at the open).  No target.
-  Capital      : SL10 -> Rs 2,00,000 per trade, lots = capital // (price x lot size).
+  Exit         : whichever comes first - stop-loss (% of premium, first 1-minute low that touches it), target (first 1-minute high that touches it),
+                 or the time exit (close of the last option candle up to 09:30 / 09:40 / 10:00). A gap through the stop or target fills at the open.
+                 If stop and target are inside the same 1-minute candle the STOP is taken. A time exit is skipped when the entry is at/after it.
+  Capital      : equal risk - SL10 Rs 2,00,000 | SL20 Rs 1,00,000 | SL30 Rs 66,667 per trade; lots = capital // (price x lot size).
 Charges, taxes and slippage are not included. Lot sizes are today's values for all years.
 
 Dhan Data API limit = 5 calls/second, 100,000/day: one global rate limiter, parallel threads, merged date windows, resumable state.
-Output folder: bpb_results/  (parts, trades_all.csv, signals/candidates, summary tables, PROGRESS.txt)
+Output folder: bpb_grid_results/  (parts, trades_all.csv, summary.csv = every variant, roi_matrix.csv, by_year/month/direction/stock, skipped.csv, REPORT.txt, PROGRESS.txt)
 """
 import os, sys, io, json, time, glob, subprocess, threading
 from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
@@ -45,10 +48,11 @@ TOP10 = "RELIANCE HDFCBANK ICICIBANK INFY TCS SBIN BHARTIARTL ITC LT AXISBANK".s
 UNIVERSE = [s.strip().upper() for s in (os.environ.get("BPB_SYMBOLS") or "").replace(",", " ").split()] or TOP10
 LOOKBACK = int(os.environ.get("BPB_LOOKBACK") or 10)          # rolling-high window (days)
 RESET_LINE = os.environ.get("BPB_RESET_LINE") == "1"          # 1 = a fresh breakout candle before any pullback moves the line up to the newest 10-day high
-SLS = [10]
-EXITS = ["09:30"]
-CAPS = {10: 200000}
-ENTRY_LAST = os.environ.get("BPB_ENTRY_LAST") or "09:20"      # entry candles: 09:15 .. 09:20 (inclusive)
+SLS = [10, 20, 30]                                            # stop-loss, % of the option premium
+TPS = [0, 10, 20, 40, 60, 80, 120, 160, 200]                  # target, % of the option premium (0 = no target, shown as a baseline)
+EXITS = ["09:30", "09:40", "10:00"]                           # time exits
+CAPS = {10: 200000, 20: 100000, 30: 66667}                    # equal risk per trade: capital per stop-loss
+ENTRY_LAST = os.environ.get("BPB_ENTRY_LAST") or "09:59"      # entry candles: 09:15 .. 09:59 (an entry needs a later exit time)
 ENTRY_MIN = int(ENTRY_LAST[:2]) * 60 + int(ENTRY_LAST[3:])
 PRE_TOL = float(os.environ.get("PRE_TOL") or 0.04)            # daily-open prefilter: open within 4 % below the level (entry is only in the first minutes)
 EXTRA = [int(x) for x in (os.environ.get("OFFSETS2") or "1,-1").split(",") if x.strip()]    # neighbouring strikes, fetched only when needed
@@ -59,13 +63,13 @@ DAY_CAP = int(os.environ.get("DAY_CAP") or 95000)             # Dhan Data API al
 EQ_SPAN = int(os.environ.get("EQ_SPAN") or 85)                # stock 1-minute candles: days per call (Dhan max 90)
 EQ_GAP = int(os.environ.get("EQ_GAP") or 30)                  # merge candidate days closer than this into one stock call
 OPT_GAP = int(os.environ.get("OPT_GAP") or 15)                # merge option dates closer than this into one call (span max 30 days)
-OUT = os.environ.get("BPB_OUT", "bpb_results")
+OUT = os.environ.get("BPB_OUT", "bpb_grid_results")
 BASE = "https://api.dhan.co/v2"
 MASTER = "https://images.dhan.co/api-data/api-scrip-master-detailed.csv"
 T0 = time.time()
 LAST_CP = time.time()
 FLUSHER = [None]
-EK = ["stock", "direction", "date", "exit_rule", "sl"]            # one trade row
+EK = ["stock", "direction", "date", "exit_rule", "sl", "tp"]            # one trade row
 DK = ["stock", "direction", "date"]                               # one entry event
 
 
@@ -404,12 +408,18 @@ def step_events(dh, cand, mst, st):
 
 
 # ------------------------------------------------------------------ step 3: ATM option candles -> trades
-def stop_walk(o, l, entry, sl_pct):
+def exit_walk(o, h, l, entry, sl_pct, tp_pct):
+    """First stop-loss / target touch on 1-minute option candles. Gap through the level fills at the open. If stop and target fall in the same
+    candle the STOP wins (cannot know the order inside a minute). Returns (candle index, price, reason) or None = no touch before the exit time."""
     sl = entry * (1 - sl_pct / 100)
-    hit = l <= sl
-    if not hit.any(): return None
-    i = int(np.argmax(hit))
-    return (i, float(o[i]), "STOP (gap)") if o[i] <= sl else (i, float(sl), "STOP")
+    sh = l <= sl; i_s = int(np.argmax(sh)) if sh.any() else None
+    i_t, tp = None, None
+    if tp_pct:
+        tp = entry * (1 + tp_pct / 100); th = h >= tp; i_t = int(np.argmax(th)) if th.any() else None
+    if i_s is None and i_t is None: return None
+    if i_t is None or (i_s is not None and i_s <= i_t):
+        return (i_s, float(o[i_s]), "STOP (gap)") if o[i_s] <= sl else (i_s, float(sl), "STOP")
+    return (i_t, float(o[i_t]), "TARGET (gap)") if o[i_t] >= tp else (i_t, float(tp), "TARGET")
 
 
 def build(e, allr, lot, strict):
@@ -435,21 +445,23 @@ def build(e, allr, lot, strict):
         if hm(te) >= ex: continue
         w = ser[mins <= lim]
         if w.empty: continue
-        o, l, cc = w.o.values, w.l.values, w.c.values
+        o, h, l, cc = w.o.values, w.h.values, w.l.values, w.c.values
         for sl in SLS:
             lots = int(CAPS[sl] // (entry * lot))
             if lots < 1: continue
             qty, cost = lot * lots, entry * lot * lots
-            r = stop_walk(o, l, entry, sl)
-            if r: i, px, why = r; xt = w.ts.iloc[i]
-            else: i, px, why = len(w) - 1, float(cc[-1]), "TIME"; xt = w.ts.iloc[-1]
-            late = int(why == "TIME" and (lim - (xt.hour * 60 + xt.minute)) > 5)           # option data thin near the exit time
-            rows.append((e.stock, e.direction, e.date, e.breakout_date, e.line, e.ref, int(e.gap_open), hm(te), K, round(entry, 2), ex, sl, lots, round(cost),
-                         hm(xt), round(px, 2), why, round((px - entry) * qty), round((px / entry - 1) * 100, 1), late, round(float(e.stock_price), 2)))
+            for tp in TPS:
+                r = exit_walk(o, h, l, entry, sl, tp)
+                if r: i, px, why = r; xt = w.ts.iloc[i]
+                else: i, px, why = len(w) - 1, float(cc[-1]), "TIME"; xt = w.ts.iloc[-1]
+                late = int(why == "TIME" and (lim - (xt.hour * 60 + xt.minute)) > 5)           # option data thin near the exit time
+                rows.append((e.stock, e.direction, e.date, e.breakout_date, e.line, e.ref, int(e.gap_open), hm(te), K, round(entry, 2), ex, sl, tp, lots, round(cost),
+                             hm(xt), round(px, 2), why, round((px - entry) * qty), round((px / entry - 1) * 100, 1), late, round(float(e.stock_price), 2)))
+    if not rows: return "skip", "no option candles between entry and exit (or one lot costs more than the capital)"
     return "ok", rows
 
 
-COLS = ["stock", "direction", "date", "breakout_date", "line", "entry_level", "gap_open", "entry_time", "strike", "entry_price", "exit_rule", "sl", "lots", "cost",
+COLS = ["stock", "direction", "date", "breakout_date", "line", "entry_level", "gap_open", "entry_time", "strike", "entry_price", "exit_rule", "sl", "tp", "lots", "cost",
         "exit_time", "exit_price", "reason", "pnl", "ret_pct", "thin_data", "stock_price"]
 
 
@@ -463,16 +475,21 @@ def work_options(dh, mst, t):
     s, dr, g, d0, d1, key = t
     lot, sid = mst[s][1], mst[s][0]
     x0 = rolling(dh, sid, d0, d1 + timedelta(days=1), dr, 0)
-    if x0 is None: return [], {"no option data": len(g)}
+    skips = []
+    if x0 is None:
+        return [], {"no option data": len(g)}, [(e.stock, e.direction, e.date, "Dhan returned no option candles for this period") for e in g.itertuples()]
     x0["off"] = 0
-    if "strike" not in x0: return [], {"Dhan sent no strike column": len(g)}
+    if "strike" not in x0:
+        return [], {"Dhan sent no strike column": len(g)}, [(e.stock, e.direction, e.date, "Dhan sent no strike column") for e in g.itertuples()]
     allr = prep_series([x0])
     rows, miss, retry = [], {}, []
+
+    def note(e, r): miss[r] = miss.get(r, 0) + 1; skips.append((e.stock, e.direction, e.date, r))
     for e in g.itertuples():
         st_, r = build(e, allr, lot, True)
         if st_ == "ok": rows += r
         elif st_ == "retry": retry.append(e)
-        else: miss[r] = miss.get(r, 0) + 1
+        else: note(e, r)
     if retry and EXTRA:
         series = [x0]
         for a, b in clusters([e.d for e in retry], 30, OPT_GAP):
@@ -483,12 +500,13 @@ def work_options(dh, mst, t):
         for e in retry:
             st_, r = build(e, allr, lot, False)
             if st_ == "ok": rows += r
-            else: miss[r] = miss.get(r, 0) + 1
+            else: note(e, r)
     elif retry:
         for e in retry:
             st_, r = build(e, allr, lot, False)
             if st_ == "ok": rows += r
-    return rows, miss
+            else: note(e, r)
+    return rows, miss, skips
 
 
 def step_options(dh, ev, mst, st):
@@ -504,10 +522,13 @@ def step_options(dh, ev, mst, st):
     print(f"Dhan option work: {len(tasks)} request groups to do ({len(expected) - len(tasks)} already done)", flush=True)
 
     def work(t):
-        rows, miss = work_options(dh, mst, t)
+        rows, miss, skips = work_options(dh, mst, t)
+        s, dr, g, d0, d1, key = t
         if rows:
-            s, dr, g, d0, d1, key = t
             pd.DataFrame(rows, columns=COLS).to_csv(f"{OUT}/parts/{s}_{dr}_{d0}_{d1}.csv.gz", index=False, compression={"method": "gzip", "compresslevel": 1})
+        if skips:
+            os.makedirs(f"{OUT}/skipped", exist_ok=True)
+            pd.DataFrame(skips, columns=["stock", "direction", "date", "reason"]).to_csv(f"{OUT}/skipped/{s}_{dr}_{d0}_{d1}.csv", index=False)
         return len(rows), miss
 
     def handle(t, res):
@@ -526,21 +547,21 @@ def load_parts(fs):
     return pd.concat(dfs, ignore_index=True).drop_duplicates(EK)
 
 
-AGG_COLS = ["trades", "wins", "win_pct", "stops", "gap_stops", "time_exits", "total_pnl", "capital", "roi_pct", "avg_pnl", "avg_ret_pct", "profit_factor", "thin_data"]
+AGG_COLS = ["trades", "wins", "win_pct", "stops", "targets", "gap_stops", "time_exits", "total_pnl", "capital", "roi_pct", "avg_pnl", "avg_ret_pct", "profit_factor", "thin_data"]
 
 
 def agg_by(t, keys):
     p = t.pnl
-    x = t.assign(_w=p > 0, _gain=p.clip(lower=0), _loss=(-p).clip(lower=0), _st=t.reason.str.startswith("STOP"),
+    x = t.assign(_w=p > 0, _gain=p.clip(lower=0), _loss=(-p).clip(lower=0), _st=t.reason.str.startswith("STOP"), _tg=t.reason.str.startswith("TARGET"),
                  _gap=t.reason == "STOP (gap)", _tm=t.reason == "TIME")
-    g = x.groupby(keys).agg(trades=("pnl", "size"), wins=("_w", "sum"), stops=("_st", "sum"), gap_stops=("_gap", "sum"), time_exits=("_tm", "sum"),
+    g = x.groupby(keys).agg(trades=("pnl", "size"), wins=("_w", "sum"), stops=("_st", "sum"), targets=("_tg", "sum"), gap_stops=("_gap", "sum"), time_exits=("_tm", "sum"),
                             total_pnl=("pnl", "sum"), capital=("cost", "sum"), avg_pnl=("pnl", "mean"), avg_ret_pct=("ret_pct", "mean"),
                             gain=("_gain", "sum"), loss=("_loss", "sum"), thin_data=("thin_data", "sum"))
     g["win_pct"] = (g.wins / g.trades * 100).round(1)
     g["roi_pct"] = (g.total_pnl / g.capital * 100).round(2)
     g["profit_factor"] = (g.gain / g.loss.where(g.loss > 0)).round(2)
     g["avg_ret_pct"] = g.avg_ret_pct.round(2)
-    for c in ("wins", "stops", "gap_stops", "time_exits", "total_pnl", "capital", "avg_pnl", "thin_data"): g[c] = g[c].astype(np.int64)
+    for c in ("wins", "stops", "targets", "gap_stops", "time_exits", "total_pnl", "capital", "avg_pnl", "thin_data"): g[c] = g[c].astype(np.int64)
     return g[AGG_COLS]
 
 
@@ -550,17 +571,21 @@ def max_drawdown(t):
     return int((c - np.maximum.accumulate(np.concatenate([[0], c]))[1:]).min()) if len(c) else 0
 
 
-def tables(t, out):
+def tables(t, out, mt):
+    """Summary tables for the trades in t (every TP x SL x exit-time variant), written into folder out."""
     os.makedirs(out, exist_ok=True)
-    t = t.copy(); t["year"] = t.date.str[:4]; t["month"] = t.date.str[:7]; t["all"] = "ALL"
-    base = ["exit_rule", "sl"]
-    tot = agg_by(t, base).reset_index(); tot.to_csv(f"{out}/summary.csv", index=False)
-    for name, extra in (("by_year", "year"), ("by_month", "month"), ("by_direction", "direction"), ("by_stock", "stock"),
-                        ("by_stock_direction", ["stock", "direction"])):
-        agg_by(t, base + ([extra] if isinstance(extra, str) else extra)).reset_index().to_csv(f"{out}/{name}.csv", index=False)
-    print(f"\n{len(t):,} trades | max drawdown (cumulative P&L, Rs): {max_drawdown(t):,}\nOVERALL:\n" + tot.to_string(index=False), flush=True)
-    print("\nBY DIRECTION:\n" + agg_by(t, base + ["direction"]).reset_index()[["direction", "trades", "win_pct", "total_pnl", "roi_pct", "profit_factor"]].to_string(index=False), flush=True)
-    print("\nBY YEAR:\n" + agg_by(t, base + ["year"]).reset_index()[["year", "trades", "win_pct", "total_pnl", "roi_pct", "profit_factor"]].to_string(index=False), flush=True)
+    t = t.copy(); t["year"] = t.date.str[:4]; t["month"] = t.date.str[:7]
+    base = ["exit_rule", "sl", "tp"]
+    tot = agg_by(t, base).reset_index().sort_values("roi_pct", ascending=False)
+    tot.to_csv(f"{out}/summary.csv", index=False)
+    tot.pivot_table(index=["exit_rule", "sl"], columns="tp", values="roi_pct").to_csv(f"{out}/roi_matrix.csv")       # ROI % : rows exit/SL, columns TP
+    for name, extra in (("by_year", "year"), ("by_month", "month"), ("by_direction", "direction"), ("by_stock", "stock")):
+        agg_by(t, base + [extra]).reset_index().to_csv(f"{out}/{name}.csv", index=False)
+    cols = ["exit_rule", "sl", "tp", "trades", "win_pct", "stops", "targets", "total_pnl", "roi_pct", "profit_factor"]
+    ok = tot[tot.trades >= mt]
+    print(f"\n{t.drop_duplicates(DK).shape[0]:,} entries, {len(t):,} trade rows over {len(tot)} variants (tp 0 = no target)\n"
+          f"\nBEST 15 VARIANTS BY ROI (min {mt} trades):\n" + ok.head(15)[cols].to_string(index=False) +
+          f"\n\nWORST 5:\n" + ok.tail(5)[cols].to_string(index=False), flush=True)
 
 
 def progress():
@@ -579,7 +604,12 @@ def report(n_trades):
     lines = [f"Top stocks tested: {' '.join(UNIVERSE)}",
              f"1. Daily setups (breakout + confirmed pullback + entry level reachable that day): {rows(cand[0]) if cand else 0}",
              f"2. Entries (1-minute stock price reached the level between 09:15 and {ENTRY_LAST}): {rows(f'{OUT}/events.csv')}",
-             f"3. Trade rows with option results (SL10 / exit 09:30): {n_trades}"]
+             f"3. Trade rows with option results ({len(SLS)} SL x {len(TPS)} TP x {len(EXITS)} exit times per entry): {n_trades}"]
+    sk = sorted(glob.glob(f"{OUT}/skipped/*.csv"))
+    if sk:
+        k = pd.concat([pd.read_csv(f) for f in sk], ignore_index=True).drop_duplicates(["stock", "direction", "date"])
+        k.to_csv(f"{OUT}/skipped.csv", index=False)
+        lines.append(f"4. Entries with NO option trade: {len(k)} - reasons: " + "; ".join(f"{r} = {n}" for r, n in k.reason.value_counts().items()))
     open(f"{OUT}/REPORT.txt", "w").write("\n".join(lines) + "\n"); print("\n" + "\n".join(lines), flush=True)
 
 
@@ -593,7 +623,7 @@ def summary():
     t = load_parts(fs)
     t.sort_values(["date", "stock", "direction"]).to_csv(f"{OUT}/trades_all.csv", index=False)
     print(f"ALL TRADES: {len(t):,} rows -> {OUT}/trades_all.csv", flush=True)
-    report(len(t)); tables(t, OUT)
+    report(len(t)); tables(t, OUT, int(os.environ.get("MIN_TRADES") or 30))
 
 
 def range_summary(start, end):
@@ -603,7 +633,7 @@ def range_summary(start, end):
     if t.empty: sys.exit(f"No trades with entry date between {start} and {end}")
     out = f"bpb_range_out/{start}_to_{end}"; os.makedirs(out, exist_ok=True)
     t.sort_values(["date", "stock"]).to_csv(f"{out}/trades_in_range.csv", index=False)
-    tables(t, out); print(f"\nSaved in {out}/")
+    tables(t, out, int(os.environ.get("MIN_TRADES") or 5)); print(f"\nSaved in {out}/")
 
 
 # ------------------------------------------------------------------ modes
