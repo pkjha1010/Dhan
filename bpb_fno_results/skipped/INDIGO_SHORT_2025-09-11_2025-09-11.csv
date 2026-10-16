@@ -1,0 +1,2 @@
+stock,direction,date,reason
+INDIGO,SHORT,2025-09-11,no option candles between entry and exit (or one lot costs more than the capital)
