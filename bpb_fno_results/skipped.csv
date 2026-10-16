@@ -1,0 +1,1041 @@
+stock,direction,date,reason
+360ONE,LONG,2024-02-21,Dhan returned no option candles for this period
+360ONE,LONG,2024-04-09,Dhan returned no option candles for this period
+360ONE,LONG,2024-06-26,Dhan returned no option candles for this period
+360ONE,LONG,2024-10-17,Dhan returned no option candles for this period
+360ONE,LONG,2025-08-26,Dhan returned no option candles for this period
+360ONE,LONG,2025-10-14,Dhan returned no option candles for this period
+360ONE,SHORT,2025-02-14,Dhan returned no option candles for this period
+ABB,LONG,2024-04-04,Dhan returned no option candles for this period
+ABB,LONG,2024-10-01,Dhan returned no option candles for this period
+ABB,LONG,2024-10-16,Dhan returned no option candles for this period
+ABB,LONG,2024-12-03,Dhan returned no option candles for this period
+ABB,LONG,2025-03-21,Dhan returned no option candles for this period
+ABB,LONG,2026-02-03,Dhan returned no option candles for this period
+ABB,SHORT,2026-01-12,Dhan returned no option candles for this period
+ADANIENSOL,LONG,2024-07-31,Dhan returned no option candles for this period
+ADANIENSOL,SHORT,2023-10-23,Dhan returned no option candles for this period
+ADANIENSOL,SHORT,2024-11-21,Dhan returned no option candles for this period
+ADANIENSOL,SHORT,2025-08-05,no ATM candle at the entry minute
+ADANIENT,LONG,2026-04-20,Dhan returned no option candles for this period
+ADANIENT,LONG,2026-05-04,Dhan returned no option candles for this period
+ADANIENT,LONG,2026-06-05,Dhan returned no option candles for this period
+ADANIGREEN,LONG,2023-12-04,Dhan returned no option candles for this period
+ADANIGREEN,LONG,2024-01-03,Dhan returned no option candles for this period
+ADANIGREEN,LONG,2024-09-26,Dhan returned no option candles for this period
+ADANIGREEN,SHORT,2023-10-19,Dhan returned no option candles for this period
+ADANIGREEN,SHORT,2025-02-17,Dhan returned no option candles for this period
+ADANIGREEN,SHORT,2026-07-30,Dhan returned no option candles for this period
+ADANIPORTS,LONG,2025-09-11,Dhan returned no option candles for this period
+ADANIPORTS,LONG,2026-02-09,Dhan returned no option candles for this period
+ADANIPORTS,SHORT,2025-01-08,Dhan returned no option candles for this period
+ADANIPORTS,SHORT,2026-03-23,Dhan returned no option candles for this period
+ADANIPOWER,LONG,2023-12-04,Dhan returned no option candles for this period
+ADANIPOWER,LONG,2024-04-03,Dhan returned no option candles for this period
+ADANIPOWER,LONG,2024-05-31,Dhan returned no option candles for this period
+ADANIPOWER,LONG,2025-07-01,Dhan returned no option candles for this period
+ADANIPOWER,LONG,2025-09-15,Dhan returned no option candles for this period
+ADANIPOWER,LONG,2026-04-16,Dhan returned no option candles for this period
+ADANIPOWER,LONG,2026-04-22,Dhan returned no option candles for this period
+ADANIPOWER,LONG,2026-04-27,Dhan returned no option candles for this period
+ADANIPOWER,LONG,2026-05-04,Dhan returned no option candles for this period
+ADANIPOWER,SHORT,2024-09-02,Dhan returned no option candles for this period
+ADANIPOWER,SHORT,2025-12-08,Dhan returned no option candles for this period
+ALKEM,LONG,2023-11-02,no ATM candle at the entry minute
+ALKEM,LONG,2024-05-13,Dhan returned no option candles for this period
+ALKEM,LONG,2025-05-19,Dhan returned no option candles for this period
+ALKEM,SHORT,2025-01-15,Dhan returned no option candles for this period
+AMBER,LONG,2024-06-14,Dhan returned no option candles for this period
+AMBER,LONG,2024-07-03,Dhan returned no option candles for this period
+AMBER,LONG,2026-04-10,Dhan returned no option candles for this period
+AMBER,SHORT,2025-05-06,Dhan returned no option candles for this period
+AMBUJACEM,LONG,2023-12-04,Dhan returned no option candles for this period
+AMBUJACEM,LONG,2023-12-15,Dhan returned no option candles for this period
+AMBUJACEM,LONG,2024-01-31,no option candles between entry and exit (or one lot costs more than the capital)
+AMBUJACEM,LONG,2025-05-20,Dhan returned no option candles for this period
+AMBUJACEM,SHORT,2024-05-09,Dhan returned no option candles for this period
+AMBUJACEM,SHORT,2024-05-13,Dhan returned no option candles for this period
+AMBUJACEM,SHORT,2024-11-21,no ATM candle at the entry minute
+AMBUJACEM,SHORT,2026-03-04,Dhan returned no option candles for this period
+AMBUJACEM,SHORT,2026-03-13,Dhan returned no option candles for this period
+AMBUJACEM,SHORT,2026-09-28,Dhan returned no option candles for this period
+AMBUJACEM,SHORT,2026-10-01,Dhan returned no option candles for this period
+ANGELONE,LONG,2023-11-28,Dhan returned no option candles for this period
+ANGELONE,LONG,2024-01-04,Dhan returned no option candles for this period
+ANGELONE,LONG,2024-04-03,Dhan returned no option candles for this period
+ANGELONE,LONG,2024-10-15,Dhan returned no option candles for this period
+ANGELONE,LONG,2024-12-05,no option candles between entry and exit (or one lot costs more than the capital)
+ANGELONE,LONG,2026-04-15,Dhan returned no option candles for this period
+ANGELONE,LONG,2026-04-17,Dhan returned no option candles for this period
+ANGELONE,LONG,2026-04-22,Dhan returned no option candles for this period
+ANGELONE,SHORT,2024-07-18,Dhan returned no option candles for this period
+ANGELONE,SHORT,2025-01-27,Dhan returned no option candles for this period
+APLAPOLLO,LONG,2023-11-16,Dhan returned no option candles for this period
+APLAPOLLO,LONG,2024-03-13,Dhan returned no option candles for this period
+APLAPOLLO,LONG,2024-09-27,Dhan returned no option candles for this period
+APLAPOLLO,LONG,2025-05-12,Dhan returned no option candles for this period
+APLAPOLLO,LONG,2025-05-26,Dhan returned no option candles for this period
+APLAPOLLO,SHORT,2024-02-09,Dhan returned no option candles for this period
+APLAPOLLO,SHORT,2024-08-19,Dhan returned no option candles for this period
+APLAPOLLO,SHORT,2026-04-02,no ATM candle at the entry minute
+APOLLOHOSP,LONG,2025-08-18,Dhan returned no option candles for this period
+APOLLOHOSP,LONG,2025-10-23,Dhan returned no option candles for this period
+APOLLOHOSP,LONG,2026-02-11,Dhan returned no option candles for this period
+APOLLOHOSP,LONG,2026-02-23,Dhan returned no option candles for this period
+APOLLOHOSP,SHORT,2025-02-11,Dhan returned no option candles for this period
+APOLLOHOSP,SHORT,2025-02-17,Dhan returned no option candles for this period
+APOLLOHOSP,SHORT,2025-08-11,Dhan returned no option candles for this period
+ASHOKLEY,LONG,2024-04-30,Dhan returned no option candles for this period
+ASHOKLEY,LONG,2024-06-03,Dhan returned no option candles for this period
+ASHOKLEY,LONG,2024-11-28,Dhan returned no option candles for this period
+ASHOKLEY,LONG,2025-05-14,Dhan returned no option candles for this period
+ASHOKLEY,LONG,2025-09-08,Dhan returned no option candles for this period
+ASHOKLEY,LONG,2025-09-23,Dhan returned no option candles for this period
+ASHOKLEY,LONG,2025-12-12,Dhan returned no option candles for this period
+ASHOKLEY,LONG,2026-01-23,Dhan returned no option candles for this period
+ASHOKLEY,LONG,2026-02-03,Dhan returned no option candles for this period
+ASHOKLEY,LONG,2026-08-05,Dhan returned no option candles for this period
+ASHOKLEY,SHORT,2024-10-09,no ATM candle at the entry minute
+ASHOKLEY,SHORT,2025-01-27,Dhan returned no option candles for this period
+ASHOKLEY,SHORT,2026-05-18,Dhan returned no option candles for this period
+ASHOKLEY,SHORT,2026-09-10,Dhan returned no option candles for this period
+ASHOKLEY,SHORT,2026-10-08,Dhan returned no option candles for this period
+ASIANPAINT,LONG,2025-12-04,Dhan returned no option candles for this period
+ASIANPAINT,SHORT,2024-01-12,Dhan returned no option candles for this period
+ASIANPAINT,SHORT,2024-10-11,Dhan returned no option candles for this period
+ASIANPAINT,SHORT,2024-12-26,no ATM candle at the entry minute
+ASIANPAINT,SHORT,2026-02-02,Dhan returned no option candles for this period
+ASIANPAINT,SHORT,2026-09-11,Dhan returned no option candles for this period
+ASTRAL,LONG,2023-11-17,Dhan returned no option candles for this period
+ASTRAL,LONG,2024-02-20,Dhan returned no option candles for this period
+ASTRAL,LONG,2024-02-27,Dhan returned no option candles for this period
+ASTRAL,SHORT,2025-08-04,Dhan returned no option candles for this period
+ASTRAL,SHORT,2025-08-12,Dhan returned no option candles for this period
+ASTRAL,SHORT,2026-09-17,Dhan returned no option candles for this period
+ATHERENERG,LONG,2025-08-08,Dhan returned no option candles for this period
+ATHERENERG,LONG,2025-12-24,Dhan returned no option candles for this period
+ATHERENERG,LONG,2026-07-15,Dhan returned no option candles for this period
+AUBANK,LONG,2025-10-08,Dhan returned no option candles for this period
+AUBANK,LONG,2025-10-20,Dhan returned no option candles for this period
+AUBANK,LONG,2025-10-23,Dhan returned no option candles for this period
+AUBANK,LONG,2026-04-10,Dhan returned no option candles for this period
+AUBANK,LONG,2026-04-20,Dhan returned no option candles for this period
+AUBANK,SHORT,2026-07-22,Dhan returned no option candles for this period
+AUROPHARMA,LONG,2023-11-20,Dhan returned no option candles for this period
+AUROPHARMA,SHORT,2025-08-05,no ATM candle at the entry minute
+AXISBANK,LONG,2025-06-11,Dhan returned no option candles for this period
+AXISBANK,LONG,2025-09-16,Dhan returned no option candles for this period
+AXISBANK,LONG,2025-11-20,Dhan returned no option candles for this period
+AXISBANK,LONG,2026-04-10,Dhan returned no option candles for this period
+AXISBANK,SHORT,2024-07-31,Dhan returned no option candles for this period
+AXISBANK,SHORT,2026-03-23,Dhan returned no option candles for this period
+AXISBANK,SHORT,2026-04-30,Dhan returned no option candles for this period
+AXISBANK,SHORT,2026-07-20,Dhan returned no option candles for this period
+AXISBANK,SHORT,2026-07-22,Dhan returned no option candles for this period
+BAJAJ-AUTO,LONG,2023-11-15,Dhan returned no option candles for this period
+BAJAJ-AUTO,LONG,2023-11-28,Dhan returned no option candles for this period
+BAJAJ-AUTO,LONG,2023-12-04,Dhan returned no option candles for this period
+BAJAJ-AUTO,LONG,2025-05-26,Dhan returned no option candles for this period
+BAJAJ-AUTO,SHORT,2024-10-29,Dhan returned no option candles for this period
+BAJAJFINSV,LONG,2025-04-24,Dhan returned no option candles for this period
+BAJAJFINSV,SHORT,2024-10-21,Dhan returned no option candles for this period
+BAJAJFINSV,SHORT,2025-10-01,Dhan returned no option candles for this period
+BAJAJFINSV,SHORT,2026-03-09,Dhan returned no option candles for this period
+BAJAJHLDNG,LONG,2023-11-22,Dhan returned no option candles for this period
+BAJAJHLDNG,LONG,2024-02-09,Dhan returned no option candles for this period
+BAJAJHLDNG,LONG,2024-05-14,Dhan returned no option candles for this period
+BAJAJHLDNG,LONG,2024-07-22,Dhan returned no option candles for this period
+BAJAJHLDNG,LONG,2024-11-06,Dhan returned no option candles for this period
+BAJAJHLDNG,LONG,2025-10-23,Dhan returned no option candles for this period
+BAJAJHLDNG,SHORT,2024-04-19,Dhan returned no option candles for this period
+BAJAJHLDNG,SHORT,2025-04-07,Dhan returned no option candles for this period
+BAJAJHLDNG,SHORT,2026-03-09,Dhan returned no option candles for this period
+BAJAJHLDNG,SHORT,2026-03-23,Dhan returned no option candles for this period
+BAJFINANCE,LONG,2023-12-06,no ATM candle at the entry minute
+BAJFINANCE,LONG,2023-12-18,no ATM candle at the entry minute
+BAJFINANCE,LONG,2023-12-20,no ATM candle at the entry minute
+BAJFINANCE,LONG,2024-06-13,no ATM candle at the entry minute
+BAJFINANCE,LONG,2024-08-26,no ATM candle at the entry minute
+BAJFINANCE,LONG,2024-09-30,Dhan returned no option candles for this period
+BAJFINANCE,LONG,2025-03-21,no ATM candle at the entry minute
+BAJFINANCE,LONG,2025-03-25,no ATM candle at the entry minute
+BAJFINANCE,LONG,2025-05-19,Dhan returned no option candles for this period
+BAJFINANCE,SHORT,2024-01-30,Dhan returned no option candles for this period
+BAJFINANCE,SHORT,2024-02-01,Dhan returned no option candles for this period
+BAJFINANCE,SHORT,2024-10-21,no ATM candle at the entry minute
+BAJFINANCE,SHORT,2024-11-21,no ATM candle at the entry minute
+BAJFINANCE,SHORT,2025-07-31,Dhan returned no option candles for this period
+BAJFINANCE,SHORT,2026-03-09,Dhan returned no option candles for this period
+BAJFINANCE,SHORT,2026-03-19,Dhan returned no option candles for this period
+BAJFINANCE,SHORT,2026-09-11,Dhan returned no option candles for this period
+BANDHANBNK,LONG,2024-04-04,Dhan returned no option candles for this period
+BANDHANBNK,LONG,2026-01-28,Dhan returned no option candles for this period
+BANDHANBNK,SHORT,2025-08-01,Dhan returned no option candles for this period
+BANKBARODA,LONG,2025-09-24,Dhan returned no option candles for this period
+BANKBARODA,LONG,2025-10-03,Dhan returned no option candles for this period
+BANKBARODA,SHORT,2024-04-19,Dhan returned no option candles for this period
+BANKBARODA,SHORT,2026-08-28,Dhan returned no option candles for this period
+BANKINDIA,LONG,2023-12-06,Dhan returned no option candles for this period
+BANKINDIA,LONG,2024-01-12,Dhan returned no option candles for this period
+BANKINDIA,LONG,2024-01-23,Dhan returned no option candles for this period
+BANKINDIA,SHORT,2024-09-19,Dhan returned no option candles for this period
+BANKINDIA,SHORT,2024-12-30,no ATM candle at the entry minute
+BDL,LONG,2023-12-05,Dhan returned no option candles for this period
+BDL,LONG,2023-12-18,Dhan returned no option candles for this period
+BDL,LONG,2023-12-26,Dhan returned no option candles for this period
+BDL,LONG,2024-01-16,Dhan returned no option candles for this period
+BDL,LONG,2024-12-02,Dhan returned no option candles for this period
+BDL,LONG,2024-12-09,Dhan returned no option candles for this period
+BDL,LONG,2025-03-19,Dhan returned no option candles for this period
+BDL,LONG,2025-04-21,Dhan returned no option candles for this period
+BDL,LONG,2025-07-04,Dhan returned no option candles for this period
+BDL,LONG,2026-01-05,Dhan returned no option candles for this period
+BDL,SHORT,2023-10-25,Dhan returned no option candles for this period
+BDL,SHORT,2024-10-04,Dhan returned no option candles for this period
+BDL,SHORT,2024-10-25,Dhan returned no option candles for this period
+BDL,SHORT,2025-08-01,no ATM candle at the entry minute
+BHARATFORG,LONG,2025-09-10,Dhan returned no option candles for this period
+BHARATFORG,LONG,2025-09-18,Dhan returned no option candles for this period
+BHARATFORG,LONG,2026-02-09,Dhan returned no option candles for this period
+BHARATFORG,LONG,2026-02-19,Dhan returned no option candles for this period
+BHARATFORG,LONG,2026-03-02,Dhan returned no option candles for this period
+BHARTIARTL,LONG,2026-08-05,Dhan returned no option candles for this period
+BIOCON,LONG,2024-05-03,no ATM candle at the entry minute
+BIOCON,LONG,2025-10-31,Dhan returned no option candles for this period
+BIOCON,LONG,2025-11-11,Dhan returned no option candles for this period
+BLUESTARCO,LONG,2024-02-15,Dhan returned no option candles for this period
+BLUESTARCO,LONG,2024-02-19,Dhan returned no option candles for this period
+BLUESTARCO,LONG,2024-02-23,Dhan returned no option candles for this period
+BLUESTARCO,LONG,2024-04-08,Dhan returned no option candles for this period
+BLUESTARCO,LONG,2024-09-11,Dhan returned no option candles for this period
+BLUESTARCO,LONG,2024-09-30,Dhan returned no option candles for this period
+BLUESTARCO,SHORT,2024-11-13,Dhan returned no option candles for this period
+BLUESTARCO,SHORT,2025-01-27,Dhan returned no option candles for this period
+BLUESTARCO,SHORT,2025-05-30,no ATM candle at the entry minute
+BOSCHLTD,LONG,2024-10-09,no ATM candle at the entry minute
+BOSCHLTD,SHORT,2025-02-17,no ATM candle at the entry minute
+BOSCHLTD,SHORT,2026-03-09,no ATM candle at the entry minute
+BPCL,LONG,2023-11-28,Dhan returned no option candles for this period
+BPCL,LONG,2023-12-04,Dhan returned no option candles for this period
+BPCL,LONG,2024-02-02,no ATM candle at the entry minute
+BPCL,LONG,2024-02-08,no ATM candle at the entry minute
+BPCL,SHORT,2026-03-09,Dhan returned no option candles for this period
+BPCL,SHORT,2026-03-16,Dhan returned no option candles for this period
+BPCL,SHORT,2026-03-19,Dhan returned no option candles for this period
+BPCL,SHORT,2026-04-02,Dhan returned no option candles for this period
+BSE,LONG,2023-11-13,Dhan returned no option candles for this period
+BSE,LONG,2023-11-17,Dhan returned no option candles for this period
+BSE,LONG,2023-12-04,Dhan returned no option candles for this period
+BSE,LONG,2024-02-05,Dhan returned no option candles for this period
+BSE,LONG,2024-04-12,Dhan returned no option candles for this period
+BSE,LONG,2024-12-12,Dhan returned no option candles for this period
+BSE,LONG,2025-03-28,Dhan returned no option candles for this period
+BSE,LONG,2025-04-02,Dhan returned no option candles for this period
+BSE,LONG,2025-04-17,Dhan returned no option candles for this period
+BSE,LONG,2025-05-19,Dhan returned no option candles for this period
+BSE,SHORT,2024-07-22,Dhan returned no option candles for this period
+CAMS,LONG,2023-11-20,Dhan returned no option candles for this period
+CAMS,LONG,2024-01-09,Dhan returned no option candles for this period
+CAMS,LONG,2024-01-17,Dhan returned no option candles for this period
+CAMS,LONG,2024-02-05,Dhan returned no option candles for this period
+CAMS,LONG,2024-02-27,Dhan returned no option candles for this period
+CAMS,LONG,2024-06-03,Dhan returned no option candles for this period
+CAMS,LONG,2024-07-30,Dhan returned no option candles for this period
+CAMS,LONG,2024-10-16,Dhan returned no option candles for this period
+CANBK,LONG,2023-11-02,Dhan returned no option candles for this period
+CANBK,LONG,2023-12-11,Dhan returned no option candles for this period
+CANBK,LONG,2024-02-07,Dhan returned no option candles for this period
+CANBK,LONG,2024-04-05,Dhan returned no option candles for this period
+CDSL,LONG,2023-11-08,Dhan returned no option candles for this period
+CDSL,LONG,2024-04-12,Dhan returned no option candles for this period
+CDSL,LONG,2024-04-23,Dhan returned no option candles for this period
+CDSL,LONG,2024-05-06,Dhan returned no option candles for this period
+CDSL,LONG,2024-07-31,Dhan returned no option candles for this period
+CDSL,LONG,2024-09-20,Dhan returned no option candles for this period
+CDSL,LONG,2024-10-16,Dhan returned no option candles for this period
+CDSL,LONG,2024-12-04,no ATM candle at the entry minute
+CGPOWER,LONG,2024-04-23,Dhan returned no option candles for this period
+CGPOWER,LONG,2024-05-13,Dhan returned no option candles for this period
+CGPOWER,LONG,2024-05-17,Dhan returned no option candles for this period
+CGPOWER,LONG,2024-08-23,Dhan returned no option candles for this period
+CGPOWER,SHORT,2024-09-04,Dhan returned no option candles for this period
+CHOLAFIN,SHORT,2024-10-22,no ATM candle at the entry minute
+CIPLA,SHORT,2024-10-29,Dhan returned no option candles for this period
+CIPLA,SHORT,2025-01-15,Dhan returned no option candles for this period
+COALINDIA,LONG,2024-01-01,no option candles between entry and exit (or one lot costs more than the capital)
+COALINDIA,SHORT,2024-11-05,no ATM candle at the entry minute
+COCHINSHIP,LONG,2023-12-04,Dhan returned no option candles for this period
+COCHINSHIP,LONG,2023-12-08,Dhan returned no option candles for this period
+COCHINSHIP,LONG,2024-01-16,Dhan returned no option candles for this period
+COCHINSHIP,LONG,2024-01-23,Dhan returned no option candles for this period
+COCHINSHIP,LONG,2024-04-05,Dhan returned no option candles for this period
+COCHINSHIP,LONG,2024-04-30,Dhan returned no option candles for this period
+COCHINSHIP,LONG,2024-05-23,Dhan returned no option candles for this period
+COCHINSHIP,LONG,2024-06-03,Dhan returned no option candles for this period
+COCHINSHIP,LONG,2024-12-02,Dhan returned no option candles for this period
+COCHINSHIP,LONG,2025-09-22,Dhan returned no option candles for this period
+COCHINSHIP,SHORT,2024-08-20,Dhan returned no option candles for this period
+COCHINSHIP,SHORT,2024-09-09,Dhan returned no option candles for this period
+COCHINSHIP,SHORT,2024-10-25,Dhan returned no option candles for this period
+COFORGE,LONG,2023-11-20,Dhan returned no option candles for this period
+COFORGE,LONG,2024-02-08,Dhan returned no option candles for this period
+COFORGE,LONG,2024-06-07,Dhan returned no option candles for this period
+COFORGE,LONG,2024-07-04,Dhan returned no option candles for this period
+COFORGE,LONG,2024-07-08,Dhan returned no option candles for this period
+COFORGE,LONG,2024-09-10,Dhan returned no option candles for this period
+COFORGE,LONG,2024-10-30,no ATM candle at the entry minute
+COFORGE,LONG,2024-11-19,Dhan returned no option candles for this period
+COFORGE,LONG,2024-12-12,no ATM candle at the entry minute
+COFORGE,LONG,2024-12-17,no ATM candle at the entry minute
+COFORGE,LONG,2025-05-14,Dhan returned no option candles for this period
+COFORGE,SHORT,2024-03-14,no ATM candle at the entry minute
+COFORGE,SHORT,2025-01-20,Dhan returned no option candles for this period
+COLPAL,LONG,2023-12-05,Dhan returned no option candles for this period
+COLPAL,LONG,2025-04-15,Dhan returned no option candles for this period
+COLPAL,LONG,2025-04-22,Dhan returned no option candles for this period
+COLPAL,SHORT,2024-10-21,Dhan returned no option candles for this period
+COLPAL,SHORT,2026-06-08,no ATM candle at the entry minute
+CONCOR,LONG,2023-11-21,Dhan returned no option candles for this period
+CONCOR,LONG,2024-02-05,no option candles between entry and exit (or one lot costs more than the capital)
+CONCOR,LONG,2024-12-04,Dhan returned no option candles for this period
+CONCOR,LONG,2025-06-03,Dhan returned no option candles for this period
+CONCOR,LONG,2026-08-03,Dhan returned no option candles for this period
+CONCOR,SHORT,2024-03-15,no ATM candle at the entry minute
+CONCOR,SHORT,2024-09-11,no ATM candle at the entry minute
+CONCOR,SHORT,2025-01-06,no ATM candle at the entry minute
+CONCOR,SHORT,2025-01-10,no ATM candle at the entry minute
+CUMMINSIND,SHORT,2024-12-26,no ATM candle at the entry minute
+DABUR,SHORT,2026-03-12,Dhan returned no option candles for this period
+DABUR,SHORT,2026-03-19,Dhan returned no option candles for this period
+DABUR,SHORT,2026-03-30,Dhan returned no option candles for this period
+DELHIVERY,LONG,2024-01-31,Dhan returned no option candles for this period
+DELHIVERY,LONG,2024-02-05,Dhan returned no option candles for this period
+DELHIVERY,SHORT,2024-07-19,Dhan returned no option candles for this period
+DELHIVERY,SHORT,2024-10-21,Dhan returned no option candles for this period
+DELHIVERY,SHORT,2024-11-18,Dhan returned no option candles for this period
+DELHIVERY,SHORT,2025-01-10,no ATM candle at the entry minute
+DIVISLAB,LONG,2024-10-11,Dhan returned no option candles for this period
+DIVISLAB,LONG,2026-07-31,Dhan returned no option candles for this period
+DIVISLAB,LONG,2026-08-12,Dhan returned no option candles for this period
+DIXON,LONG,2024-10-21,Dhan returned no option candles for this period
+DIXON,LONG,2024-12-04,no ATM candle at the entry minute
+DIXON,SHORT,2026-01-07,Dhan returned no option candles for this period
+DIXON,SHORT,2026-01-21,Dhan returned no option candles for this period
+DIXON,SHORT,2026-01-30,Dhan returned no option candles for this period
+DMART,LONG,2023-11-17,Dhan returned no option candles for this period
+DMART,LONG,2023-12-06,Dhan returned no option candles for this period
+DMART,LONG,2024-02-28,Dhan returned no option candles for this period
+DMART,LONG,2024-03-28,Dhan returned no option candles for this period
+DMART,LONG,2024-04-08,Dhan returned no option candles for this period
+DMART,SHORT,2024-01-24,Dhan returned no option candles for this period
+DMART,SHORT,2024-05-30,Dhan returned no option candles for this period
+DMART,SHORT,2024-10-04,Dhan returned no option candles for this period
+DMART,SHORT,2024-10-14,Dhan returned no option candles for this period
+DMART,SHORT,2024-10-29,Dhan returned no option candles for this period
+DRREDDY,LONG,2024-01-02,Dhan returned no option candles for this period
+DRREDDY,LONG,2024-01-30,Dhan returned no option candles for this period
+DRREDDY,LONG,2024-02-06,Dhan returned no option candles for this period
+DRREDDY,LONG,2024-02-12,Dhan returned no option candles for this period
+DRREDDY,LONG,2024-02-19,Dhan returned no option candles for this period
+DRREDDY,LONG,2024-07-24,Dhan returned no option candles for this period
+DRREDDY,SHORT,2025-02-19,Dhan returned no option candles for this period
+ETERNAL,LONG,2024-04-05,Dhan returned no option candles for this period
+ETERNAL,LONG,2024-06-25,Dhan returned no option candles for this period
+ETERNAL,LONG,2024-07-09,Dhan returned no option candles for this period
+ETERNAL,LONG,2024-08-01,Dhan returned no option candles for this period
+ETERNAL,LONG,2024-08-19,Dhan returned no option candles for this period
+ETERNAL,LONG,2024-09-20,Dhan returned no option candles for this period
+ETERNAL,LONG,2024-11-21,Dhan returned no option candles for this period
+ETERNAL,SHORT,2024-09-04,Dhan returned no option candles for this period
+ETERNAL,SHORT,2025-01-21,Dhan returned no option candles for this period
+ETERNAL,SHORT,2025-03-17,Dhan returned no option candles for this period
+FORCEMOT,LONG,2024-02-28,Dhan returned no option candles for this period
+FORCEMOT,LONG,2024-04-25,Dhan returned no option candles for this period
+FORCEMOT,LONG,2025-03-28,Dhan returned no option candles for this period
+FORCEMOT,LONG,2025-06-05,Dhan returned no option candles for this period
+FORCEMOT,LONG,2025-07-15,Dhan returned no option candles for this period
+FORCEMOT,LONG,2025-08-18,Dhan returned no option candles for this period
+FORCEMOT,LONG,2025-08-21,Dhan returned no option candles for this period
+FORCEMOT,LONG,2025-11-06,Dhan returned no option candles for this period
+FORCEMOT,LONG,2025-12-29,Dhan returned no option candles for this period
+FORCEMOT,SHORT,2025-10-06,Dhan returned no option candles for this period
+FORTIS,LONG,2023-12-04,Dhan returned no option candles for this period
+FORTIS,LONG,2023-12-19,Dhan returned no option candles for this period
+FORTIS,LONG,2024-02-06,Dhan returned no option candles for this period
+FORTIS,LONG,2024-04-05,Dhan returned no option candles for this period
+FORTIS,LONG,2024-04-18,Dhan returned no option candles for this period
+FORTIS,LONG,2024-09-20,Dhan returned no option candles for this period
+FORTIS,LONG,2024-11-25,Dhan returned no option candles for this period
+FORTIS,LONG,2025-10-06,Dhan returned no option candles for this period
+FORTIS,LONG,2025-10-09,Dhan returned no option candles for this period
+FORTIS,LONG,2025-10-13,Dhan returned no option candles for this period
+FORTIS,LONG,2025-10-17,Dhan returned no option candles for this period
+FORTIS,LONG,2026-02-11,Dhan returned no option candles for this period
+FORTIS,LONG,2026-02-26,Dhan returned no option candles for this period
+GAIL,SHORT,2025-08-05,no ATM candle at the entry minute
+GLENMARK,SHORT,2025-08-05,no ATM candle at the entry minute
+GMRAIRPORT,LONG,2023-12-04,Dhan returned no option candles for this period
+GMRAIRPORT,LONG,2023-12-19,Dhan returned no option candles for this period
+GMRAIRPORT,LONG,2024-04-04,Dhan returned no option candles for this period
+GMRAIRPORT,LONG,2024-05-27,Dhan returned no option candles for this period
+GMRAIRPORT,LONG,2024-06-27,Dhan returned no option candles for this period
+GMRAIRPORT,SHORT,2023-10-26,Dhan returned no option candles for this period
+GMRAIRPORT,SHORT,2024-10-25,Dhan returned no option candles for this period
+GODFRYPHLP,LONG,2024-01-31,Dhan returned no option candles for this period
+GODFRYPHLP,LONG,2024-02-21,Dhan returned no option candles for this period
+GODFRYPHLP,LONG,2024-08-29,Dhan returned no option candles for this period
+GODFRYPHLP,LONG,2025-04-03,Dhan returned no option candles for this period
+GODFRYPHLP,LONG,2025-04-17,Dhan returned no option candles for this period
+GODFRYPHLP,LONG,2025-04-22,Dhan returned no option candles for this period
+GODFRYPHLP,SHORT,2023-11-24,Dhan returned no option candles for this period
+GODFRYPHLP,SHORT,2024-11-21,Dhan returned no option candles for this period
+GODFRYPHLP,SHORT,2024-12-03,Dhan returned no option candles for this period
+GODFRYPHLP,SHORT,2025-01-17,Dhan returned no option candles for this period
+GODFRYPHLP,SHORT,2025-11-17,Dhan returned no option candles for this period
+GODFRYPHLP,SHORT,2025-11-24,Dhan returned no option candles for this period
+GODFRYPHLP,SHORT,2026-02-02,Dhan returned no option candles for this period
+GODFRYPHLP,SHORT,2026-07-03,no ATM candle at the entry minute
+GODFRYPHLP,SHORT,2026-07-14,no ATM candle at the entry minute
+GVT&D,LONG,2023-12-29,Dhan returned no option candles for this period
+GVT&D,LONG,2024-01-18,Dhan returned no option candles for this period
+GVT&D,LONG,2024-02-06,Dhan returned no option candles for this period
+GVT&D,LONG,2024-02-28,Dhan returned no option candles for this period
+GVT&D,LONG,2024-03-11,Dhan returned no option candles for this period
+GVT&D,LONG,2024-04-08,Dhan returned no option candles for this period
+GVT&D,LONG,2024-04-26,Dhan returned no option candles for this period
+GVT&D,LONG,2024-05-22,Dhan returned no option candles for this period
+GVT&D,LONG,2024-07-04,Dhan returned no option candles for this period
+GVT&D,LONG,2024-08-19,Dhan returned no option candles for this period
+GVT&D,LONG,2025-05-14,Dhan returned no option candles for this period
+GVT&D,LONG,2025-05-23,Dhan returned no option candles for this period
+GVT&D,LONG,2025-05-29,Dhan returned no option candles for this period
+GVT&D,LONG,2025-08-13,Dhan returned no option candles for this period
+GVT&D,LONG,2025-09-19,Dhan returned no option candles for this period
+GVT&D,LONG,2025-10-31,Dhan returned no option candles for this period
+GVT&D,LONG,2026-04-23,Dhan returned no option candles for this period
+GVT&D,LONG,2026-05-07,Dhan returned no option candles for this period
+GVT&D,SHORT,2024-07-23,Dhan returned no option candles for this period
+GVT&D,SHORT,2025-01-27,Dhan returned no option candles for this period
+GVT&D,SHORT,2025-02-18,Dhan returned no option candles for this period
+GVT&D,SHORT,2025-04-09,Dhan returned no option candles for this period
+HAVELLS,LONG,2024-12-03,Dhan returned no option candles for this period
+HDFCAMC,SHORT,2026-05-14,entry at/after the exit time
+HDFCAMC,SHORT,2026-06-08,no ATM candle at the entry minute
+HEROMOTOCO,LONG,2024-01-16,Dhan returned no option candles for this period
+HEROMOTOCO,LONG,2025-11-19,Dhan returned no option candles for this period
+HEROMOTOCO,LONG,2025-12-04,Dhan returned no option candles for this period
+HINDALCO,SHORT,2026-06-10,Dhan returned no option candles for this period
+HINDALCO,SHORT,2026-06-25,Dhan returned no option candles for this period
+HINDALCO,SHORT,2026-06-30,Dhan returned no option candles for this period
+HINDPETRO,LONG,2023-11-15,no ATM candle at the entry minute
+HINDPETRO,LONG,2023-11-28,no ATM candle at the entry minute
+HINDPETRO,LONG,2023-12-04,no ATM candle at the entry minute
+HINDPETRO,LONG,2023-12-07,no ATM candle at the entry minute
+HINDPETRO,LONG,2024-01-08,Dhan returned no option candles for this period
+HINDPETRO,LONG,2024-01-16,Dhan returned no option candles for this period
+HINDPETRO,LONG,2024-09-02,no option candles between entry and exit (or one lot costs more than the capital)
+HINDPETRO,SHORT,2026-03-09,Dhan returned no option candles for this period
+HINDPETRO,SHORT,2026-03-23,Dhan returned no option candles for this period
+HINDUNILVR,SHORT,2026-03-19,Dhan returned no option candles for this period
+HINDZINC,LONG,2023-11-15,Dhan returned no option candles for this period
+HINDZINC,LONG,2024-04-30,Dhan returned no option candles for this period
+HINDZINC,LONG,2024-09-30,Dhan returned no option candles for this period
+HINDZINC,LONG,2026-08-10,Dhan returned no option candles for this period
+HINDZINC,SHORT,2024-03-15,Dhan returned no option candles for this period
+HINDZINC,SHORT,2024-08-16,Dhan returned no option candles for this period
+HINDZINC,SHORT,2024-09-04,Dhan returned no option candles for this period
+HINDZINC,SHORT,2024-12-30,Dhan returned no option candles for this period
+HINDZINC,SHORT,2025-02-17,Dhan returned no option candles for this period
+HYUNDAI,LONG,2025-08-18,Dhan returned no option candles for this period
+HYUNDAI,SHORT,2025-10-09,Dhan returned no option candles for this period
+ICICIGI,LONG,2023-11-17,Dhan returned no option candles for this period
+IDEA,SHORT,2026-03-04,Dhan returned no option candles for this period
+IDEA,SHORT,2026-03-19,Dhan returned no option candles for this period
+IDFCFIRSTB,SHORT,2026-03-09,Dhan returned no option candles for this period
+IDFCFIRSTB,SHORT,2026-03-23,Dhan returned no option candles for this period
+IEX,LONG,2024-04-29,Dhan returned no option candles for this period
+IEX,LONG,2024-12-04,no ATM candle at the entry minute
+IEX,SHORT,2025-08-04,no ATM candle at the entry minute
+IEX,SHORT,2026-10-01,no ATM candle at the entry minute
+INDHOTEL,LONG,2024-12-04,no ATM candle at the entry minute
+INDIANB,LONG,2023-12-12,Dhan returned no option candles for this period
+INDIANB,LONG,2026-01-29,Dhan returned no option candles for this period
+INDIANB,LONG,2026-08-13,Dhan returned no option candles for this period
+INDIANB,SHORT,2024-11-18,Dhan returned no option candles for this period
+INDIGO,SHORT,2025-09-11,no option candles between entry and exit (or one lot costs more than the capital)
+INDIGO,SHORT,2026-03-09,Dhan returned no option candles for this period
+INDUSINDBK,SHORT,2024-05-13,Dhan returned no option candles for this period
+INDUSINDBK,SHORT,2026-03-12,Dhan returned no option candles for this period
+INDUSINDBK,SHORT,2026-03-23,Dhan returned no option candles for this period
+INDUSTOWER,SHORT,2024-05-13,Dhan returned no option candles for this period
+INFY,SHORT,2024-10-29,Dhan returned no option candles for this period
+INOXWIND,LONG,2023-12-01,Dhan returned no option candles for this period
+INOXWIND,LONG,2024-02-08,Dhan returned no option candles for this period
+INOXWIND,LONG,2024-02-27,Dhan returned no option candles for this period
+INOXWIND,LONG,2024-07-09,Dhan returned no option candles for this period
+INOXWIND,LONG,2024-08-28,Dhan returned no option candles for this period
+INOXWIND,SHORT,2024-11-21,Dhan returned no option candles for this period
+INOXWIND,SHORT,2024-12-31,Dhan returned no option candles for this period
+INOXWIND,SHORT,2025-01-08,Dhan returned no option candles for this period
+INOXWIND,SHORT,2025-01-24,Dhan returned no option candles for this period
+INOXWIND,SHORT,2025-07-31,no ATM candle at the entry minute
+INOXWIND,SHORT,2026-05-18,no ATM candle at the entry minute
+INOXWIND,SHORT,2026-10-07,no ATM candle at the entry minute
+IOC,LONG,2025-04-30,Dhan returned no option candles for this period
+IOC,LONG,2025-09-17,Dhan returned no option candles for this period
+IOC,SHORT,2025-08-05,no ATM candle at the entry minute
+IOC,SHORT,2026-03-12,Dhan returned no option candles for this period
+IOC,SHORT,2026-03-19,Dhan returned no option candles for this period
+IOC,SHORT,2026-03-23,Dhan returned no option candles for this period
+IOC,SHORT,2026-04-02,Dhan returned no option candles for this period
+IREDA,LONG,2024-01-19,Dhan returned no option candles for this period
+IREDA,LONG,2024-01-24,Dhan returned no option candles for this period
+IREDA,LONG,2024-02-01,Dhan returned no option candles for this period
+IREDA,LONG,2024-04-05,Dhan returned no option candles for this period
+IREDA,LONG,2024-05-27,Dhan returned no option candles for this period
+IREDA,LONG,2024-12-11,Dhan returned no option candles for this period
+IREDA,SHORT,2024-09-26,Dhan returned no option candles for this period
+IREDA,SHORT,2024-10-28,Dhan returned no option candles for this period
+IREDA,SHORT,2024-11-18,Dhan returned no option candles for this period
+IREDA,SHORT,2025-02-17,Dhan returned no option candles for this period
+IREDA,SHORT,2026-07-24,no ATM candle at the entry minute
+IRFC,LONG,2023-12-14,Dhan returned no option candles for this period
+IRFC,LONG,2024-05-23,Dhan returned no option candles for this period
+IRFC,LONG,2024-05-27,Dhan returned no option candles for this period
+IRFC,LONG,2025-06-03,Dhan returned no option candles for this period
+IRFC,LONG,2025-06-09,Dhan returned no option candles for this period
+IRFC,SHORT,2024-10-03,Dhan returned no option candles for this period
+IRFC,SHORT,2024-12-26,no ATM candle at the entry minute
+ITC,SHORT,2026-07-13,Dhan returned no option candles for this period
+JIOFIN,LONG,2024-02-22,Dhan returned no option candles for this period
+JIOFIN,LONG,2024-03-11,Dhan returned no option candles for this period
+JIOFIN,LONG,2025-08-04,no ATM candle at the entry minute
+JIOFIN,SHORT,2024-05-09,Dhan returned no option candles for this period
+JSWENERGY,LONG,2023-11-24,Dhan returned no option candles for this period
+JSWENERGY,LONG,2024-01-19,Dhan returned no option candles for this period
+JSWENERGY,LONG,2024-11-11,Dhan returned no option candles for this period
+JSWSTEEL,LONG,2024-10-03,no ATM candle at the entry minute
+JSWSTEEL,SHORT,2025-05-09,Dhan returned no option candles for this period
+JUBLFOOD,SHORT,2024-10-29,Dhan returned no option candles for this period
+JUBLFOOD,SHORT,2026-01-05,Dhan returned no option candles for this period
+JUBLFOOD,SHORT,2026-01-08,Dhan returned no option candles for this period
+JUBLFOOD,SHORT,2026-01-20,Dhan returned no option candles for this period
+JUBLFOOD,SHORT,2026-03-02,Dhan returned no option candles for this period
+JUBLFOOD,SHORT,2026-03-11,Dhan returned no option candles for this period
+KALYANKJIL,LONG,2023-11-06,Dhan returned no option candles for this period
+KALYANKJIL,LONG,2023-12-28,Dhan returned no option candles for this period
+KALYANKJIL,LONG,2024-03-11,Dhan returned no option candles for this period
+KALYANKJIL,LONG,2024-09-23,Dhan returned no option candles for this period
+KALYANKJIL,LONG,2026-01-07,Dhan returned no option candles for this period
+KALYANKJIL,SHORT,2025-03-03,Dhan returned no option candles for this period
+KALYANKJIL,SHORT,2026-05-13,Dhan returned no option candles for this period
+KAYNES,LONG,2023-12-19,Dhan returned no option candles for this period
+KAYNES,LONG,2024-12-11,Dhan returned no option candles for this period
+KAYNES,LONG,2025-03-21,Dhan returned no option candles for this period
+KAYNES,LONG,2025-05-15,Dhan returned no option candles for this period
+KAYNES,LONG,2025-08-05,no ATM candle at the entry minute
+KAYNES,SHORT,2025-02-10,Dhan returned no option candles for this period
+KEI,LONG,2023-12-07,Dhan returned no option candles for this period
+KEI,LONG,2024-03-11,Dhan returned no option candles for this period
+KEI,SHORT,2023-10-31,Dhan returned no option candles for this period
+KEI,SHORT,2024-09-30,Dhan returned no option candles for this period
+KFINTECH,LONG,2023-11-16,Dhan returned no option candles for this period
+KFINTECH,LONG,2024-01-16,Dhan returned no option candles for this period
+KFINTECH,LONG,2024-04-30,Dhan returned no option candles for this period
+KFINTECH,LONG,2024-07-09,Dhan returned no option candles for this period
+KFINTECH,LONG,2024-12-24,Dhan returned no option candles for this period
+KFINTECH,LONG,2025-06-10,Dhan returned no option candles for this period
+KFINTECH,SHORT,2026-03-09,no ATM candle at the entry minute
+KOTAKBANK,LONG,2024-07-09,Dhan returned no option candles for this period
+KOTAKBANK,SHORT,2024-05-02,Dhan returned no option candles for this period
+KPITTECH,LONG,2023-11-10,Dhan returned no option candles for this period
+KPITTECH,LONG,2024-05-03,Dhan returned no option candles for this period
+KPITTECH,LONG,2024-10-16,Dhan returned no option candles for this period
+KPITTECH,LONG,2026-04-16,Dhan returned no option candles for this period
+KPITTECH,SHORT,2024-03-19,Dhan returned no option candles for this period
+KPITTECH,SHORT,2024-09-09,Dhan returned no option candles for this period
+KPITTECH,SHORT,2024-10-29,Dhan returned no option candles for this period
+KPITTECH,SHORT,2024-11-18,Dhan returned no option candles for this period
+KPITTECH,SHORT,2026-01-29,no ATM candle at the entry minute
+LAURUSLABS,LONG,2025-12-24,Dhan returned no option candles for this period
+LAURUSLABS,LONG,2026-01-06,Dhan returned no option candles for this period
+LICI,LONG,2023-11-30,Dhan returned no option candles for this period
+LICI,LONG,2023-12-06,Dhan returned no option candles for this period
+LICI,LONG,2023-12-13,Dhan returned no option candles for this period
+LICI,LONG,2024-01-23,Dhan returned no option candles for this period
+LICI,LONG,2024-08-01,Dhan returned no option candles for this period
+LICI,SHORT,2024-10-25,Dhan returned no option candles for this period
+LICI,SHORT,2024-11-21,Dhan returned no option candles for this period
+LICI,SHORT,2025-01-28,Dhan returned no option candles for this period
+LICI,SHORT,2025-08-04,no ATM candle at the entry minute
+LODHA,LONG,2023-11-06,Dhan returned no option candles for this period
+LODHA,LONG,2024-01-12,Dhan returned no option candles for this period
+LODHA,LONG,2024-09-19,Dhan returned no option candles for this period
+LODHA,LONG,2026-04-21,Dhan returned no option candles for this period
+LODHA,LONG,2026-05-04,Dhan returned no option candles for this period
+LODHA,SHORT,2024-08-26,Dhan returned no option candles for this period
+LODHA,SHORT,2024-10-22,Dhan returned no option candles for this period
+LTF,LONG,2024-02-02,Dhan returned no option candles for this period
+LTF,LONG,2024-12-10,Dhan returned no option candles for this period
+LTF,LONG,2025-04-17,Dhan returned no option candles for this period
+LTF,LONG,2025-06-26,Dhan returned no option candles for this period
+LTF,LONG,2025-08-21,Dhan returned no option candles for this period
+LTF,LONG,2025-09-05,Dhan returned no option candles for this period
+LTM,LONG,2024-12-12,Dhan returned no option candles for this period
+LTM,LONG,2025-04-25,Dhan returned no option candles for this period
+LTM,LONG,2026-04-15,Dhan returned no option candles for this period
+LTM,SHORT,2026-09-11,Dhan returned no option candles for this period
+LTM,SHORT,2026-09-18,Dhan returned no option candles for this period
+LTM,SHORT,2026-09-25,Dhan returned no option candles for this period
+LT,LONG,2024-03-01,Dhan returned no option candles for this period
+LT,LONG,2026-02-09,Dhan returned no option candles for this period
+LT,LONG,2026-02-12,Dhan returned no option candles for this period
+LT,SHORT,2026-03-09,Dhan returned no option candles for this period
+LT,SHORT,2026-03-23,Dhan returned no option candles for this period
+LT,SHORT,2026-07-24,no ATM candle at the entry minute
+LUPIN,LONG,2026-06-23,Dhan returned no option candles for this period
+LUPIN,LONG,2026-07-03,Dhan returned no option candles for this period
+LUPIN,LONG,2026-07-08,Dhan returned no option candles for this period
+LUPIN,SHORT,2026-08-19,Dhan returned no option candles for this period
+LUPIN,SHORT,2026-08-27,Dhan returned no option candles for this period
+LUPIN,SHORT,2026-09-10,Dhan returned no option candles for this period
+M&M,LONG,2023-12-04,Dhan returned no option candles for this period
+M&M,LONG,2024-07-31,Dhan returned no option candles for this period
+M&M,SHORT,2024-10-21,no ATM candle at the entry minute
+M&M,SHORT,2025-01-17,Dhan returned no option candles for this period
+MAHABANK,LONG,2023-12-11,Dhan returned no option candles for this period
+MAHABANK,LONG,2025-04-29,Dhan returned no option candles for this period
+MAHABANK,LONG,2025-09-19,Dhan returned no option candles for this period
+MAHABANK,LONG,2026-01-14,Dhan returned no option candles for this period
+MAHABANK,LONG,2026-02-23,Dhan returned no option candles for this period
+MAHABANK,LONG,2026-04-10,Dhan returned no option candles for this period
+MAHABANK,LONG,2026-05-06,Dhan returned no option candles for this period
+MAHABANK,LONG,2026-06-18,Dhan returned no option candles for this period
+MAHABANK,SHORT,2024-11-18,Dhan returned no option candles for this period
+MAHABANK,SHORT,2025-12-04,Dhan returned no option candles for this period
+MANAPPURAM,LONG,2025-09-03,Dhan returned no option candles for this period
+MANAPPURAM,LONG,2026-07-23,Dhan returned no option candles for this period
+MANAPPURAM,SHORT,2026-08-17,no ATM candle at the entry minute
+MANKIND,LONG,2024-04-01,Dhan returned no option candles for this period
+MANKIND,LONG,2024-06-18,Dhan returned no option candles for this period
+MANKIND,LONG,2024-08-26,Dhan returned no option candles for this period
+MANKIND,SHORT,2024-08-05,Dhan returned no option candles for this period
+MARICO,SHORT,2026-03-19,Dhan returned no option candles for this period
+MARUTI,SHORT,2026-01-21,Dhan returned no option candles for this period
+MARUTI,SHORT,2026-02-02,Dhan returned no option candles for this period
+MARUTI,SHORT,2026-03-09,Dhan returned no option candles for this period
+MARUTI,SHORT,2026-03-23,Dhan returned no option candles for this period
+MAXHEALTH,LONG,2023-12-13,Dhan returned no option candles for this period
+MAXHEALTH,LONG,2024-01-11,Dhan returned no option candles for this period
+MAXHEALTH,LONG,2024-02-13,Dhan returned no option candles for this period
+MAXHEALTH,LONG,2024-04-01,Dhan returned no option candles for this period
+MAXHEALTH,LONG,2024-06-14,Dhan returned no option candles for this period
+MAXHEALTH,LONG,2024-09-24,Dhan returned no option candles for this period
+MAXHEALTH,LONG,2024-11-04,Dhan returned no option candles for this period
+MAXHEALTH,SHORT,2024-08-26,Dhan returned no option candles for this period
+MAZDOCK,LONG,2024-01-16,Dhan returned no option candles for this period
+MAZDOCK,LONG,2024-04-03,Dhan returned no option candles for this period
+MAZDOCK,LONG,2024-05-23,Dhan returned no option candles for this period
+MAZDOCK,LONG,2025-05-29,no ATM candle at the entry minute
+MAZDOCK,SHORT,2024-12-30,Dhan returned no option candles for this period
+MAZDOCK,SHORT,2025-01-06,Dhan returned no option candles for this period
+MAZDOCK,SHORT,2026-05-18,Dhan returned no option candles for this period
+MAZDOCK,SHORT,2026-09-02,no ATM candle at the entry minute
+MAZDOCK,SHORT,2026-09-28,Dhan returned no option candles for this period
+MCX,LONG,2023-10-20,no ATM candle at the entry minute
+MCX,LONG,2024-09-24,Dhan returned no option candles for this period
+MCX,SHORT,2024-03-15,no option candles between entry and exit (or one lot costs more than the capital)
+MCX,SHORT,2025-08-01,Dhan returned no option candles for this period
+MFSL,LONG,2025-04-24,no ATM candle at the entry minute
+MFSL,SHORT,2024-06-04,no ATM candle at the entry minute
+MFSL,SHORT,2025-08-01,Dhan returned no option candles for this period
+MOTHERSON,LONG,2024-02-05,Dhan returned no option candles for this period
+MOTHERSON,LONG,2024-02-12,Dhan returned no option candles for this period
+MOTHERSON,LONG,2024-03-05,Dhan returned no option candles for this period
+MOTHERSON,LONG,2024-04-04,Dhan returned no option candles for this period
+MOTHERSON,LONG,2024-04-26,Dhan returned no option candles for this period
+MOTHERSON,LONG,2024-04-30,Dhan returned no option candles for this period
+MOTHERSON,LONG,2024-06-03,Dhan returned no option candles for this period
+MOTHERSON,LONG,2024-06-13,Dhan returned no option candles for this period
+MOTHERSON,LONG,2024-08-23,no ATM candle at the entry minute
+MOTHERSON,LONG,2024-09-23,Dhan returned no option candles for this period
+MOTHERSON,LONG,2025-03-28,Dhan returned no option candles for this period
+MOTHERSON,LONG,2025-04-29,Dhan returned no option candles for this period
+MOTHERSON,SHORT,2024-12-19,Dhan returned no option candles for this period
+MOTILALOFS,LONG,2023-10-17,Dhan returned no option candles for this period
+MOTILALOFS,LONG,2024-08-26,Dhan returned no option candles for this period
+MOTILALOFS,LONG,2025-05-22,Dhan returned no option candles for this period
+MUTHOOTFIN,LONG,2025-09-16,Dhan returned no option candles for this period
+MUTHOOTFIN,LONG,2025-09-24,Dhan returned no option candles for this period
+MUTHOOTFIN,LONG,2025-11-27,Dhan returned no option candles for this period
+NAM-INDIA,LONG,2023-11-06,Dhan returned no option candles for this period
+NAM-INDIA,LONG,2023-11-16,Dhan returned no option candles for this period
+NAM-INDIA,LONG,2024-04-19,Dhan returned no option candles for this period
+NAM-INDIA,LONG,2024-06-18,Dhan returned no option candles for this period
+NAM-INDIA,LONG,2024-10-15,Dhan returned no option candles for this period
+NAM-INDIA,LONG,2025-06-03,Dhan returned no option candles for this period
+NAM-INDIA,SHORT,2025-01-24,Dhan returned no option candles for this period
+NAM-INDIA,SHORT,2026-03-09,Dhan returned no option candles for this period
+NATIONALUM,LONG,2025-12-05,Dhan returned no option candles for this period
+NATIONALUM,LONG,2025-12-17,Dhan returned no option candles for this period
+NATIONALUM,LONG,2025-12-24,Dhan returned no option candles for this period
+NATIONALUM,LONG,2026-01-02,Dhan returned no option candles for this period
+NAUKRI,LONG,2023-11-15,Dhan returned no option candles for this period
+NAUKRI,LONG,2023-12-19,Dhan returned no option candles for this period
+NAUKRI,LONG,2024-04-08,Dhan returned no option candles for this period
+NAUKRI,LONG,2024-05-23,Dhan returned no option candles for this period
+NAUKRI,LONG,2024-08-22,no ATM candle at the entry minute
+NAUKRI,LONG,2024-09-02,no ATM candle at the entry minute
+NAUKRI,LONG,2024-12-02,Dhan returned no option candles for this period
+NAUKRI,SHORT,2026-03-02,Dhan returned no option candles for this period
+NAUKRI,SHORT,2026-03-12,Dhan returned no option candles for this period
+NBCC,LONG,2023-12-04,Dhan returned no option candles for this period
+NBCC,LONG,2024-01-12,Dhan returned no option candles for this period
+NBCC,LONG,2024-01-25,Dhan returned no option candles for this period
+NBCC,LONG,2024-02-01,Dhan returned no option candles for this period
+NBCC,LONG,2025-04-16,Dhan returned no option candles for this period
+NBCC,SHORT,2025-01-10,Dhan returned no option candles for this period
+NBCC,SHORT,2025-07-31,no ATM candle at the entry minute
+NESTLEIND,LONG,2023-12-12,Dhan returned no option candles for this period
+NESTLEIND,LONG,2024-02-27,Dhan returned no option candles for this period
+NESTLEIND,LONG,2024-09-27,no ATM candle at the entry minute
+NESTLEIND,LONG,2025-04-23,no ATM candle at the entry minute
+NESTLEIND,SHORT,2024-01-23,no ATM candle at the entry minute
+NESTLEIND,SHORT,2024-10-09,no ATM candle at the entry minute
+NHPC,LONG,2023-12-14,Dhan returned no option candles for this period
+NHPC,LONG,2024-02-01,Dhan returned no option candles for this period
+NHPC,LONG,2024-07-09,Dhan returned no option candles for this period
+NMDC,LONG,2023-12-01,no ATM candle at the entry minute
+NMDC,LONG,2023-12-15,no ATM candle at the entry minute
+NMDC,LONG,2024-01-04,Dhan returned no option candles for this period
+NMDC,LONG,2024-02-15,no ATM candle at the entry minute
+NMDC,LONG,2024-05-03,Dhan returned no option candles for this period
+NMDC,LONG,2024-09-30,Dhan returned no option candles for this period
+NMDC,LONG,2024-11-08,Dhan returned no option candles for this period
+NMDC,LONG,2024-12-06,Dhan returned no option candles for this period
+NTPC,LONG,2023-11-16,no ATM candle at the entry minute
+NTPC,LONG,2023-11-20,no ATM candle at the entry minute
+NTPC,SHORT,2025-08-04,no ATM candle at the entry minute
+NYKAA,LONG,2023-11-15,Dhan returned no option candles for this period
+NYKAA,LONG,2023-11-30,Dhan returned no option candles for this period
+NYKAA,LONG,2024-03-27,Dhan returned no option candles for this period
+NYKAA,LONG,2025-08-25,Dhan returned no option candles for this period
+NYKAA,LONG,2026-06-17,Dhan returned no option candles for this period
+NYKAA,SHORT,2024-10-24,Dhan returned no option candles for this period
+OBEROIRLTY,LONG,2024-12-04,no ATM candle at the entry minute
+OFSS,LONG,2026-04-15,Dhan returned no option candles for this period
+OFSS,LONG,2026-04-23,Dhan returned no option candles for this period
+OIL,LONG,2024-02-15,Dhan returned no option candles for this period
+OIL,LONG,2024-07-02,Dhan returned no option candles for this period
+OIL,LONG,2024-08-27,Dhan returned no option candles for this period
+OIL,SHORT,2024-10-31,Dhan returned no option candles for this period
+PAGEIND,SHORT,2026-03-04,no ATM candle at the entry minute
+PATANJALI,LONG,2024-08-23,Dhan returned no option candles for this period
+PATANJALI,SHORT,2024-05-13,Dhan returned no option candles for this period
+PAYTM,LONG,2024-01-05,Dhan returned no option candles for this period
+PAYTM,LONG,2024-01-16,Dhan returned no option candles for this period
+PAYTM,LONG,2024-01-19,Dhan returned no option candles for this period
+PAYTM,LONG,2024-07-11,Dhan returned no option candles for this period
+PAYTM,LONG,2024-08-01,Dhan returned no option candles for this period
+PAYTM,LONG,2024-08-22,Dhan returned no option candles for this period
+PAYTM,LONG,2024-11-08,Dhan returned no option candles for this period
+PAYTM,LONG,2024-11-28,no ATM candle at the entry minute
+PAYTM,SHORT,2024-02-02,Dhan returned no option candles for this period
+PAYTM,SHORT,2024-02-13,Dhan returned no option candles for this period
+PERSISTENT,LONG,2023-10-27,Dhan returned no option candles for this period
+PERSISTENT,LONG,2023-11-03,Dhan returned no option candles for this period
+PERSISTENT,LONG,2024-01-30,Dhan returned no option candles for this period
+PERSISTENT,SHORT,2026-03-02,no option candles between entry and exit (or one lot costs more than the capital)
+PGEL,LONG,2023-10-23,Dhan returned no option candles for this period
+PGEL,LONG,2023-11-20,Dhan returned no option candles for this period
+PGEL,LONG,2024-04-16,Dhan returned no option candles for this period
+PGEL,LONG,2024-04-23,Dhan returned no option candles for this period
+PGEL,LONG,2024-06-03,Dhan returned no option candles for this period
+PGEL,LONG,2024-06-14,Dhan returned no option candles for this period
+PGEL,LONG,2024-06-24,Dhan returned no option candles for this period
+PGEL,LONG,2024-07-01,Dhan returned no option candles for this period
+PGEL,LONG,2024-07-10,Dhan returned no option candles for this period
+PGEL,LONG,2024-11-08,Dhan returned no option candles for this period
+PGEL,LONG,2024-12-11,Dhan returned no option candles for this period
+PGEL,LONG,2024-12-31,Dhan returned no option candles for this period
+PGEL,LONG,2025-02-07,Dhan returned no option candles for this period
+PGEL,SHORT,2025-01-27,Dhan returned no option candles for this period
+PHOENIXLTD,LONG,2024-02-07,Dhan returned no option candles for this period
+PHOENIXLTD,LONG,2024-04-08,Dhan returned no option candles for this period
+PHOENIXLTD,LONG,2024-07-11,Dhan returned no option candles for this period
+PHOENIXLTD,LONG,2024-12-10,Dhan returned no option candles for this period
+PHOENIXLTD,LONG,2026-04-10,no ATM candle at the entry minute
+PHOENIXLTD,SHORT,2024-10-25,Dhan returned no option candles for this period
+PHOENIXLTD,SHORT,2026-07-29,Dhan returned no option candles for this period
+PHOENIXLTD,SHORT,2026-08-12,Dhan returned no option candles for this period
+PIDILITIND,SHORT,2026-09-10,no ATM candle at the entry minute
+PIIND,SHORT,2025-03-03,entry at/after the exit time
+PNBHOUSING,LONG,2024-04-09,Dhan returned no option candles for this period
+PNBHOUSING,LONG,2024-08-28,Dhan returned no option candles for this period
+PNBHOUSING,LONG,2026-04-21,no option candles between entry and exit (or one lot costs more than the capital)
+PNBHOUSING,SHORT,2024-02-29,Dhan returned no option candles for this period
+PNBHOUSING,SHORT,2024-10-07,Dhan returned no option candles for this period
+PNBHOUSING,SHORT,2025-08-01,no ATM candle at the entry minute
+POLICYBZR,LONG,2023-11-15,Dhan returned no option candles for this period
+POLICYBZR,LONG,2024-03-26,Dhan returned no option candles for this period
+POLICYBZR,LONG,2024-05-21,Dhan returned no option candles for this period
+POLICYBZR,LONG,2024-09-16,Dhan returned no option candles for this period
+POWERINDIA,LONG,2023-12-18,Dhan returned no option candles for this period
+POWERINDIA,LONG,2025-04-29,Dhan returned no option candles for this period
+POWERINDIA,LONG,2025-05-22,Dhan returned no option candles for this period
+POWERINDIA,LONG,2025-06-04,Dhan returned no option candles for this period
+POWERINDIA,LONG,2025-06-27,Dhan returned no option candles for this period
+POWERINDIA,LONG,2026-03-06,Dhan returned no option candles for this period
+POWERINDIA,LONG,2026-05-06,Dhan returned no option candles for this period
+POWERINDIA,SHORT,2025-01-24,Dhan returned no option candles for this period
+PREMIERENE,LONG,2025-07-14,Dhan returned no option candles for this period
+PREMIERENE,SHORT,2025-05-09,Dhan returned no option candles for this period
+PREMIERENE,SHORT,2025-06-16,Dhan returned no option candles for this period
+PREMIERENE,SHORT,2025-08-07,Dhan returned no option candles for this period
+PREMIERENE,SHORT,2025-12-11,Dhan returned no option candles for this period
+PRESTIGE,LONG,2023-11-16,Dhan returned no option candles for this period
+PRESTIGE,LONG,2024-01-15,Dhan returned no option candles for this period
+PRESTIGE,LONG,2024-04-05,Dhan returned no option candles for this period
+PRESTIGE,LONG,2024-05-16,Dhan returned no option candles for this period
+PRESTIGE,LONG,2024-06-13,Dhan returned no option candles for this period
+PRESTIGE,LONG,2026-04-29,entry at/after the exit time
+RADICO,LONG,2024-06-20,Dhan returned no option candles for this period
+RADICO,LONG,2024-09-06,Dhan returned no option candles for this period
+RADICO,LONG,2024-10-24,Dhan returned no option candles for this period
+RADICO,LONG,2025-03-25,Dhan returned no option candles for this period
+RADICO,LONG,2025-09-19,Dhan returned no option candles for this period
+RADICO,SHORT,2024-03-05,Dhan returned no option candles for this period
+RELIANCE,LONG,2023-12-04,Dhan returned no option candles for this period
+RELIANCE,LONG,2023-12-06,Dhan returned no option candles for this period
+RELIANCE,LONG,2024-02-02,Dhan returned no option candles for this period
+RELIANCE,SHORT,2023-10-26,Dhan returned no option candles for this period
+RELIANCE,SHORT,2026-01-12,Dhan returned no option candles for this period
+RELIANCE,SHORT,2026-01-27,Dhan returned no option candles for this period
+RVNL,LONG,2023-11-21,Dhan returned no option candles for this period
+RVNL,LONG,2024-01-12,Dhan returned no option candles for this period
+RVNL,LONG,2024-01-17,Dhan returned no option candles for this period
+RVNL,LONG,2024-01-19,Dhan returned no option candles for this period
+RVNL,LONG,2024-05-27,Dhan returned no option candles for this period
+RVNL,LONG,2024-07-05,Dhan returned no option candles for this period
+RVNL,LONG,2024-07-11,Dhan returned no option candles for this period
+RVNL,LONG,2024-07-15,Dhan returned no option candles for this period
+RVNL,LONG,2025-04-24,Dhan returned no option candles for this period
+RVNL,SHORT,2024-03-05,Dhan returned no option candles for this period
+RVNL,SHORT,2024-09-19,Dhan returned no option candles for this period
+RVNL,SHORT,2024-10-23,Dhan returned no option candles for this period
+RVNL,SHORT,2025-01-10,Dhan returned no option candles for this period
+RVNL,SHORT,2025-02-17,Dhan returned no option candles for this period
+RVNL,SHORT,2026-07-20,Dhan returned no option candles for this period
+SAGILITY,LONG,2024-12-06,Dhan returned no option candles for this period
+SAGILITY,LONG,2024-12-12,Dhan returned no option candles for this period
+SAGILITY,LONG,2025-02-06,Dhan returned no option candles for this period
+SAGILITY,LONG,2025-05-19,Dhan returned no option candles for this period
+SAGILITY,LONG,2025-10-28,Dhan returned no option candles for this period
+SAGILITY,SHORT,2026-02-02,Dhan returned no option candles for this period
+SAGILITY,SHORT,2026-03-09,Dhan returned no option candles for this period
+SAIL,LONG,2024-05-03,Dhan returned no option candles for this period
+SAIL,LONG,2026-04-21,no ATM candle at the entry minute
+SAIL,LONG,2026-08-28,no ATM candle at the entry minute
+SAIL,SHORT,2023-10-23,Dhan returned no option candles for this period
+SAIL,SHORT,2023-10-26,Dhan returned no option candles for this period
+SBILIFE,SHORT,2024-10-22,no ATM candle at the entry minute
+SBIN,LONG,2024-11-08,Dhan returned no option candles for this period
+SBIN,LONG,2025-11-17,Dhan returned no option candles for this period
+SHREECEM,SHORT,2026-03-12,no ATM candle at the entry minute
+SHREECEM,SHORT,2026-08-19,no ATM candle at the entry minute
+SHRIRAMFIN,LONG,2024-01-11,no ATM candle at the entry minute
+SHRIRAMFIN,LONG,2024-01-25,no ATM candle at the entry minute
+SHRIRAMFIN,LONG,2025-10-14,Dhan returned no option candles for this period
+SHRIRAMFIN,LONG,2025-10-23,Dhan returned no option candles for this period
+SHRIRAMFIN,SHORT,2025-01-20,Dhan returned no option candles for this period
+SIEMENS,LONG,2026-04-10,Dhan returned no option candles for this period
+SIEMENS,LONG,2026-04-17,Dhan returned no option candles for this period
+SOLARINDS,LONG,2024-03-11,Dhan returned no option candles for this period
+SOLARINDS,LONG,2024-12-03,Dhan returned no option candles for this period
+SOLARINDS,LONG,2025-02-01,no ATM candle at the entry minute
+SOLARINDS,LONG,2026-08-18,no option candles between entry and exit (or one lot costs more than the capital)
+SOLARINDS,LONG,2026-09-15,no option candles between entry and exit (or one lot costs more than the capital)
+SOLARINDS,SHORT,2026-03-30,no option candles between entry and exit (or one lot costs more than the capital)
+SONACOMS,LONG,2026-07-24,Dhan returned no option candles for this period
+SONACOMS,LONG,2026-08-03,Dhan returned no option candles for this period
+SONACOMS,LONG,2026-08-10,Dhan returned no option candles for this period
+SONACOMS,SHORT,2024-05-10,Dhan returned no option candles for this period
+SONACOMS,SHORT,2024-10-11,Dhan returned no option candles for this period
+SONACOMS,SHORT,2025-02-03,no ATM candle at the entry minute
+SRF,LONG,2026-07-06,Dhan returned no option candles for this period
+SRF,LONG,2026-07-21,Dhan returned no option candles for this period
+SRF,SHORT,2026-08-10,Dhan returned no option candles for this period
+SUPREMEIND,LONG,2025-08-21,Dhan returned no option candles for this period
+SUPREMEIND,LONG,2026-02-10,Dhan returned no option candles for this period
+SUPREMEIND,LONG,2026-02-24,Dhan returned no option candles for this period
+SUPREMEIND,SHORT,2024-11-04,Dhan returned no option candles for this period
+SUPREMEIND,SHORT,2026-05-20,Dhan returned no option candles for this period
+SUPREMEIND,SHORT,2026-07-08,Dhan returned no option candles for this period
+SUZLON,LONG,2023-11-03,Dhan returned no option candles for this period
+SUZLON,LONG,2023-11-13,Dhan returned no option candles for this period
+SUZLON,LONG,2024-06-03,Dhan returned no option candles for this period
+SUZLON,LONG,2024-07-05,Dhan returned no option candles for this period
+SUZLON,LONG,2024-07-29,Dhan returned no option candles for this period
+SUZLON,LONG,2024-09-12,Dhan returned no option candles for this period
+SUZLON,LONG,2025-05-19,Dhan returned no option candles for this period
+SUZLON,LONG,2025-05-30,Dhan returned no option candles for this period
+SUZLON,SHORT,2024-03-14,Dhan returned no option candles for this period
+SUZLON,SHORT,2024-10-23,Dhan returned no option candles for this period
+SUZLON,SHORT,2024-11-13,Dhan returned no option candles for this period
+SUZLON,SHORT,2025-05-09,Dhan returned no option candles for this period
+SUZLON,SHORT,2025-07-31,Dhan returned no option candles for this period
+SUZLON,SHORT,2026-01-19,Dhan returned no option candles for this period
+SUZLON,SHORT,2026-01-27,Dhan returned no option candles for this period
+SWIGGY,LONG,2025-06-19,Dhan returned no option candles for this period
+SWIGGY,SHORT,2025-01-13,Dhan returned no option candles for this period
+SWIGGY,SHORT,2025-11-07,Dhan returned no option candles for this period
+TATACONSUM,LONG,2024-01-12,no option candles between entry and exit (or one lot costs more than the capital)
+TATACONSUM,SHORT,2024-10-21,Dhan returned no option candles for this period
+TATACONSUM,SHORT,2026-06-08,Dhan returned no option candles for this period
+TATAELXSI,LONG,2023-12-14,Dhan returned no option candles for this period
+TATAELXSI,LONG,2024-05-23,Dhan returned no option candles for this period
+TATAELXSI,LONG,2025-05-19,Dhan returned no option candles for this period
+TATAELXSI,SHORT,2024-04-18,Dhan returned no option candles for this period
+TATAELXSI,SHORT,2025-01-08,Dhan returned no option candles for this period
+TATAELXSI,SHORT,2025-08-11,Dhan returned no option candles for this period
+TATAELXSI,SHORT,2026-04-30,Dhan returned no option candles for this period
+TATAPOWER,SHORT,2026-01-20,Dhan returned no option candles for this period
+TATAPOWER,SHORT,2026-10-07,Dhan returned no option candles for this period
+TATASTEEL,LONG,2024-06-13,Dhan returned no option candles for this period
+TATASTEEL,LONG,2024-09-30,Dhan returned no option candles for this period
+TATASTEEL,LONG,2025-03-19,Dhan returned no option candles for this period
+TATASTEEL,SHORT,2025-04-09,Dhan returned no option candles for this period
+TATASTEEL,SHORT,2026-06-12,Dhan returned no option candles for this period
+TATASTEEL,SHORT,2026-06-30,Dhan returned no option candles for this period
+TCS,LONG,2026-07-17,Dhan returned no option candles for this period
+TCS,SHORT,2024-10-22,no ATM candle at the entry minute
+TECHM,LONG,2024-01-23,Dhan returned no option candles for this period
+TECHM,LONG,2026-07-16,Dhan returned no option candles for this period
+TECHM,LONG,2026-07-21,Dhan returned no option candles for this period
+TECHM,LONG,2026-07-30,Dhan returned no option candles for this period
+TECHM,SHORT,2026-02-12,Dhan returned no option candles for this period
+TECHM,SHORT,2026-02-20,Dhan returned no option candles for this period
+TECHM,SHORT,2026-03-02,Dhan returned no option candles for this period
+TIINDIA,LONG,2023-10-31,Dhan returned no option candles for this period
+TIINDIA,LONG,2023-11-03,Dhan returned no option candles for this period
+TIINDIA,LONG,2025-03-20,Dhan returned no option candles for this period
+TIINDIA,LONG,2026-04-10,Dhan returned no option candles for this period
+TIINDIA,LONG,2026-04-22,Dhan returned no option candles for this period
+TIINDIA,LONG,2026-06-22,Dhan returned no option candles for this period
+TIINDIA,SHORT,2024-11-27,Dhan returned no option candles for this period
+TIINDIA,SHORT,2025-06-18,Dhan returned no option candles for this period
+TIINDIA,SHORT,2026-09-11,Dhan returned no option candles for this period
+TITAN,LONG,2023-11-21,Dhan returned no option candles for this period
+TITAN,LONG,2023-12-04,Dhan returned no option candles for this period
+TITAN,LONG,2025-05-09,Dhan returned no option candles for this period
+TITAN,LONG,2025-10-16,Dhan returned no option candles for this period
+TITAN,LONG,2025-10-23,Dhan returned no option candles for this period
+TITAN,LONG,2025-12-19,Dhan returned no option candles for this period
+TITAN,LONG,2025-12-31,Dhan returned no option candles for this period
+TITAN,LONG,2026-01-05,Dhan returned no option candles for this period
+TITAN,LONG,2026-02-11,Dhan returned no option candles for this period
+TITAN,LONG,2026-08-10,Dhan returned no option candles for this period
+TITAN,SHORT,2026-10-07,Dhan returned no option candles for this period
+TMPV,LONG,2024-02-05,no option candles between entry and exit (or one lot costs more than the capital)
+TMPV,LONG,2025-04-29,Dhan returned no option candles for this period
+TMPV,LONG,2026-04-22,Dhan returned no option candles for this period
+TMPV,SHORT,2024-11-08,Dhan returned no option candles for this period
+TMPV,SHORT,2025-06-23,Dhan returned no option candles for this period
+TMPV,SHORT,2025-08-01,Dhan returned no option candles for this period
+TMPV,SHORT,2025-11-17,Dhan returned no option candles for this period
+TMPV,SHORT,2025-11-24,Dhan returned no option candles for this period
+TMPV,SHORT,2026-01-19,Dhan returned no option candles for this period
+TMPV,SHORT,2026-03-09,Dhan returned no option candles for this period
+TMPV,SHORT,2026-03-12,Dhan returned no option candles for this period
+TMPV,SHORT,2026-03-23,Dhan returned no option candles for this period
+TORNTPHARM,LONG,2024-05-03,Dhan returned no option candles for this period
+TORNTPHARM,LONG,2024-07-16,Dhan returned no option candles for this period
+TORNTPHARM,SHORT,2025-01-20,no ATM candle at the entry minute
+TORNTPHARM,SHORT,2026-10-06,Dhan returned no option candles for this period
+TORNTPHARM,SHORT,2026-10-16,Dhan returned no option candles for this period
+TRENT,LONG,2023-10-31,Dhan returned no option candles for this period
+TRENT,LONG,2023-11-06,Dhan returned no option candles for this period
+TRENT,LONG,2023-11-17,Dhan returned no option candles for this period
+TRENT,LONG,2023-11-23,Dhan returned no option candles for this period
+TRENT,LONG,2023-11-30,Dhan returned no option candles for this period
+TRENT,LONG,2023-12-05,Dhan returned no option candles for this period
+TRENT,LONG,2023-12-07,Dhan returned no option candles for this period
+TRENT,LONG,2023-12-15,Dhan returned no option candles for this period
+TRENT,LONG,2024-08-22,Dhan returned no option candles for this period
+TRENT,LONG,2024-08-26,Dhan returned no option candles for this period
+TRENT,LONG,2024-09-23,Dhan returned no option candles for this period
+TRENT,LONG,2024-09-25,Dhan returned no option candles for this period
+TRENT,SHORT,2025-02-12,Dhan returned no option candles for this period
+TRENT,SHORT,2025-12-03,no ATM candle at the entry minute
+TVSMOTOR,LONG,2025-12-01,Dhan returned no option candles for this period
+TVSMOTOR,SHORT,2026-01-27,no ATM candle at the entry minute
+ULTRACEMCO,LONG,2024-06-27,no option candles between entry and exit (or one lot costs more than the capital)
+ULTRACEMCO,SHORT,2026-03-09,Dhan returned no option candles for this period
+ULTRACEMCO,SHORT,2026-03-12,Dhan returned no option candles for this period
+UNIONBANK,LONG,2024-01-23,Dhan returned no option candles for this period
+UNIONBANK,LONG,2024-03-07,Dhan returned no option candles for this period
+UNIONBANK,LONG,2024-04-05,Dhan returned no option candles for this period
+UNIONBANK,LONG,2024-06-03,Dhan returned no option candles for this period
+UNIONBANK,LONG,2024-11-04,Dhan returned no option candles for this period
+UNIONBANK,LONG,2026-02-23,Dhan returned no option candles for this period
+UNIONBANK,LONG,2026-02-26,Dhan returned no option candles for this period
+UNIONBANK,SHORT,2024-10-07,Dhan returned no option candles for this period
+UNITDSPR,LONG,2026-02-11,Dhan returned no option candles for this period
+UNITDSPR,SHORT,2024-10-24,Dhan returned no option candles for this period
+UNITDSPR,SHORT,2026-04-07,Dhan returned no option candles for this period
+UNOMINDA,LONG,2024-04-01,Dhan returned no option candles for this period
+UNOMINDA,LONG,2024-05-30,Dhan returned no option candles for this period
+UNOMINDA,LONG,2024-08-21,Dhan returned no option candles for this period
+UNOMINDA,LONG,2024-09-26,Dhan returned no option candles for this period
+UNOMINDA,LONG,2024-11-25,Dhan returned no option candles for this period
+UNOMINDA,LONG,2025-04-23,Dhan returned no option candles for this period
+UNOMINDA,SHORT,2025-02-27,Dhan returned no option candles for this period
+UPL,LONG,2023-12-15,Dhan returned no option candles for this period
+UPL,LONG,2025-10-31,Dhan returned no option candles for this period
+UPL,SHORT,2024-10-22,no ATM candle at the entry minute
+VBL,LONG,2023-11-07,Dhan returned no option candles for this period
+VBL,LONG,2023-11-16,Dhan returned no option candles for this period
+VBL,LONG,2024-02-08,Dhan returned no option candles for this period
+VBL,LONG,2024-02-21,Dhan returned no option candles for this period
+VBL,LONG,2024-05-02,Dhan returned no option candles for this period
+VBL,LONG,2024-06-13,Dhan returned no option candles for this period
+VBL,LONG,2024-06-19,Dhan returned no option candles for this period
+VBL,SHORT,2024-05-31,Dhan returned no option candles for this period
+VBL,SHORT,2024-10-03,Dhan returned no option candles for this period
+VBL,SHORT,2026-07-13,Dhan returned no option candles for this period
+VEDL,LONG,2023-12-08,Dhan returned no option candles for this period
+VEDL,LONG,2024-04-04,Dhan returned no option candles for this period
+VEDL,LONG,2024-04-09,Dhan returned no option candles for this period
+VEDL,LONG,2024-04-18,Dhan returned no option candles for this period
+VEDL,LONG,2025-12-29,Dhan returned no option candles for this period
+VEDL,SHORT,2023-10-26,no option candles between entry and exit (or one lot costs more than the capital)
+VMM,LONG,2025-07-21,Dhan returned no option candles for this period
+VMM,SHORT,2026-01-28,Dhan returned no option candles for this period
+VMM,SHORT,2026-03-09,Dhan returned no option candles for this period
+VMM,SHORT,2026-07-23,Dhan returned no option candles for this period
+VMM,SHORT,2026-09-11,Dhan returned no option candles for this period
+VOLTAS,LONG,2024-07-15,Dhan returned no option candles for this period
+VOLTAS,LONG,2025-09-04,Dhan returned no option candles for this period
+VOLTAS,LONG,2026-04-29,Dhan returned no option candles for this period
+VOLTAS,SHORT,2025-08-07,Dhan returned no option candles for this period
+VOLTAS,SHORT,2026-09-02,Dhan returned no option candles for this period
+VOLTAS,SHORT,2026-09-08,Dhan returned no option candles for this period
+WAAREEENER,LONG,2026-02-11,Dhan returned no option candles for this period
+WAAREEENER,SHORT,2025-04-07,Dhan returned no option candles for this period
+WAAREEENER,SHORT,2025-11-04,Dhan returned no option candles for this period
+WAAREEENER,SHORT,2025-11-19,Dhan returned no option candles for this period
+WAAREEENER,SHORT,2025-12-09,Dhan returned no option candles for this period
+WIPRO,LONG,2023-11-20,Dhan returned no option candles for this period
+WIPRO,LONG,2023-12-08,Dhan returned no option candles for this period
+WIPRO,LONG,2024-06-18,no ATM candle at the entry minute
+WIPRO,LONG,2024-06-21,no ATM candle at the entry minute
+WIPRO,LONG,2024-07-04,no ATM candle at the entry minute
+WIPRO,SHORT,2024-06-04,Dhan returned no option candles for this period
+YESBANK,LONG,2023-11-17,Dhan returned no option candles for this period
+YESBANK,LONG,2024-01-09,Dhan returned no option candles for this period
+YESBANK,LONG,2024-04-29,Dhan returned no option candles for this period
+YESBANK,SHORT,2024-10-18,Dhan returned no option candles for this period
+YESBANK,SHORT,2026-03-09,Dhan returned no option candles for this period
+YESBANK,SHORT,2026-03-23,Dhan returned no option candles for this period
+ZYDUSLIFE,LONG,2024-01-30,no ATM candle at the entry minute
+ZYDUSLIFE,SHORT,2025-11-03,Dhan returned no option candles for this period
