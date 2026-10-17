@@ -20,13 +20,13 @@ ENTRY TYPES  ALL (first 1-minute touch) | OPEN_0915 | FROM_0920_4C | RECROSS_092
 EXIT       trade stop-loss 10 % of the premium (TL_SLS) or the time exit at 09:30.   CAPITAL: at most Rs 60,000 per trade (lots = 60000 // (premium x lot)).
 Charges, taxes and slippage are not included.  Lot sizes are today's values for all years.
 
-Results in trendline_results/ : all_trades.csv, summary.csv, top_by_pnl.csv, top_by_roi.csv, top_by_profit_factor.csv, top_by_win_rate.csv
+Results in trendline_1h4h_results/ : all_trades.csv, summary.csv, top_by_pnl.csv, top_by_roi.csv, top_by_profit_factor.csv, top_by_win_rate.csv
   (+ events.csv, parts/, candidates_*.csv, REPORT.txt)
 """
 import os, sys, time
 for k in ("START", "END", "SYMBOLS", "CAP"):                                # TL_* names -> the COMBO_* names the engine reads
     if os.environ.get("TL_" + k): os.environ["COMBO_" + k] = os.environ["TL_" + k]
-os.environ["COMBO_OUT"] = os.environ.get("TL_OUT") or "trendline_results"
+os.environ["COMBO_OUT"] = os.environ.get("TL_OUT") or "trendline_1h4h_results"
 os.environ["DAY_SLS"] = "0"                                                # no day stop-loss in this test
 
 import numpy as np, pandas as pd
