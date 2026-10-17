@@ -1,0 +1,3 @@
+stock,direction,date,entry_minute,reason
+ATHERENERG,LONG,2026-08-14,09:16,no ATM candle at the entry minute
+ATHERENERG,LONG,2026-08-28,09:15,no option candles between entry and exit

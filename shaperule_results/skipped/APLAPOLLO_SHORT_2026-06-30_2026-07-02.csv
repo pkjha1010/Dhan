@@ -1,0 +1,4 @@
+stock,direction,date,entry_minute,reason
+APLAPOLLO,SHORT,2026-06-30,09:15,no ATM candle at the entry minute
+APLAPOLLO,SHORT,2026-07-01,09:15,no ATM candle at the entry minute
+APLAPOLLO,SHORT,2026-07-02,09:15,no ATM candle at the entry minute
