@@ -1,0 +1,4 @@
+stock,direction,date,entry_minute,reason
+IEX,SHORT,2023-02-06,09:15,no ATM candle at the entry minute
+IEX,SHORT,2023-02-09,09:18,no ATM candle at the entry minute
+IEX,SHORT,2023-02-09,09:21,no ATM candle at the entry minute

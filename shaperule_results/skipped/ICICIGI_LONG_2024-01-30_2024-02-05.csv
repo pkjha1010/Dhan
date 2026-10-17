@@ -1,0 +1,4 @@
+stock,direction,date,entry_minute,reason
+ICICIGI,LONG,2024-02-01,09:19,no ATM candle at the entry minute
+ICICIGI,LONG,2024-02-01,09:22,no ATM candle at the entry minute
+ICICIGI,LONG,2024-02-05,09:15,no ATM candle at the entry minute

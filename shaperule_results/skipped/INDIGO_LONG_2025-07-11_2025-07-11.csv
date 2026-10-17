@@ -1,0 +1,2 @@
+stock,direction,date,entry_minute,reason
+INDIGO,LONG,2025-07-11,09:15,no option candles between entry and exit
