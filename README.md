@@ -68,3 +68,17 @@ Actions -> "SHAPE-RULE backtest" -> Run workflow (use `check` first). Offline te
 
 **`trendline_backtest.py` -> `trendline_1h4h_results/`** - trendline through the last two swing highs (falling = resistance) / swing lows (rising = support), drawn on the 1-hour chart and on the 4-hour chart (Dhan 60-minute candles; 4H = 09:15-13:15 and 13:15-15:30). A close beyond the line stores the breakout candle's high (`H_break`) / low (`L_break`); a later candle touches the line and closes back on the breakout side; next morning the entry fires when price breaks `H_break` (LONG) / `L_break` (SHORT). No candle-shape filter.
 Actions -> "TRENDLINE backtest" -> Run workflow (use `check` first). Offline test: `python test_trendline.py`. Swing / window settings: `PARAMS` at the top of the script.
+
+## ALL-8 combined backtest (4 wick patterns + 2 trendlines + breakout + recross 4C)
+`all8_backtest.py`, workflow **ALL-8 combined backtest**, results in `all8_results/`.  One run tests eight entry strategies on every F&O stock option from Jan 2023 to Aug 2026:
+`WICK_GREEN_UPPER`, `WICK_RED_UPPER`, `WICK_GREEN_LOWER`, `WICK_RED_LOWER` (SHAPECMP daily signal, split by the previous candle), `TRENDLINE_1H`, `TRENDLINE_4H`, `BREAKOUT_BPB`, `SHAPECMP_RECROSS_4C`.
+
+* **Entry** is checked through the whole day (09:15 to `entry_last`, default 15:20): the first 1-minute touch of the level (RECROSS_4C uses its own rule).
+* **Exit variants** (all combined): stop-loss 10 / 20 / 30 / none x target 20 / 40 / 60 / 80 / 109 / 120 / 200 / 300 / 400 % x exit 09:30 / 10:00 / 12:00 / 15:30 / **UNTIL_HIT**.
+  UNTIL_HIT has no time exit: the trade is held day after day until the stop or target is touched, or closed on the expiry day (`EXPIRY`).  Max Rs 60,000 per trade.
+* **Files**: `summary.csv` (every strategy x exit variant, with **average / median / p90 / max days held**), `top_by_pnl.csv`, `top_by_roi.csv`, `top_by_win_rate.csv`, `top_by_profit_factor.csv`,
+  `best_per_strategy.csv`, `until_hit_days_held.csv`, `trades_summary.csv` (signals, entries, option-data coverage, skip reasons per strategy), `all_trades_top_variants.csv.gz` (every trade of the top
+  variants with strategy, entry type, `days_held`, `trading_days_held`), `summary_by_year_top.csv`, `REPORT.txt`.
+* **Resumable**: it needs ~40,000+ Dhan calls; run the workflow again until `PROGRESS.txt` says COMPLETE.  `mode = check` first (also prints an expiry-calendar check), `mode = summary` rebuilds the files with no API calls
+  (e.g. `sum_entry_to = 09:25` to summarise only entries up to 09:25).
+* Option contract is locked at entry (strike + nearest monthly expiry; expiry = last Thursday up to Aug 2025, last Tuesday from Sep 2025) and followed to the end; charges, taxes and slippage are not included.

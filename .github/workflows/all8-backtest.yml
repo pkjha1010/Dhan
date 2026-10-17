@@ -1,0 +1,95 @@
+name: ALL-8 combined backtest (4 wick patterns, 2 trendlines, breakout, recross 4C - all F&O stocks, Dhan)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "check = test Dhan access + expiry calendar | run = full backtest (resumable - run again until PROGRESS says COMPLETE) | summary = rebuild result files from saved data (no API calls)"
+        type: choice
+        options: [check, run, summary]
+        default: run
+      start:
+        description: "Start date YYYY-MM-DD (entry dates)"
+        required: false
+        default: "2023-01-01"
+      end:
+        description: "End date YYYY-MM-DD (entry dates)"
+        required: false
+        default: "2026-08-31"
+      symbols:
+        description: "Stocks (space or comma separated). Blank = all F&O stocks"
+        required: false
+        default: ""
+      sls:
+        description: "Stop-loss % list (0 = no stop-loss)"
+        required: false
+        default: "10,20,30,0"
+      tps:
+        description: "Target % list"
+        required: false
+        default: "20,40,60,80,109,120,200,300,400"
+      entry_last:
+        description: "Last minute an entry is accepted (entries are checked from 09:15)"
+        required: false
+        default: "15:20"
+      sum_entry_to:
+        description: "Optional: summarise only entries up to this time, e.g. 09:25 (blank = all day)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: all8-backtest
+  cancel-in-progress: false
+
+jobs:
+  all8:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install packages
+        run: pip install -r requirements.txt
+
+      - name: Offline logic test
+        run: python test_all8.py
+
+      - name: Run
+        env:
+          DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
+          DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
+          A8_START: ${{ inputs.start }}
+          A8_END: ${{ inputs.end }}
+          A8_SYMBOLS: ${{ inputs.symbols }}
+          A8_SLS: ${{ inputs.sls }}
+          A8_TPS: ${{ inputs.tps }}
+          A8_ENTRY_LAST: ${{ inputs.entry_last }}
+          A8_SUM_ENTRY_TO: ${{ inputs.sum_entry_to }}
+          BUDGET_MIN: "320"
+        run: python all8_backtest.py "${{ inputs.mode }}"
+
+      - name: Save results to the repo
+        if: always() && inputs.mode != 'check'
+        run: |
+          git config user.name "all8-bot"
+          git config user.email "all8-bot@users.noreply.github.com"
+          git add all8_results || true
+          git commit -m "all8 results" || echo "nothing new to commit"
+          git pull --no-rebase -X ours --no-edit || true
+          git push || true
+
+      - name: Upload results
+        if: always() && inputs.mode != 'check'
+        uses: actions/upload-artifact@v4
+        with:
+          name: all8-results-${{ github.run_number }}
+          path: all8_results/
+          if-no-files-found: ignore
