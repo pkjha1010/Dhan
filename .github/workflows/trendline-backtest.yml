@@ -1,4 +1,4 @@
-name: TRENDLINE break-retest backtest (all F&O stocks, Dhan 1-min)
+name: TRENDLINE backtest (1H + 4H chart, all F&O stocks, Dhan)
 
 on:
   workflow_dispatch:
@@ -22,10 +22,6 @@ on:
         description: "Trade stop-loss % list"
         required: false
         default: "10"
-      day_sls:
-        description: "Day stop-loss list in Rs (0 = no day stop-loss)"
-        required: false
-        default: "0"
 
 permissions:
   contents: write
@@ -60,7 +56,6 @@ jobs:
           TL_END: ${{ inputs.end }}
           TL_SYMBOLS: ${{ inputs.symbols }}
           TL_SLS: ${{ inputs.sls }}
-          DAY_SLS: ${{ inputs.day_sls }}
           BUDGET_MIN: "320"
         run: python trendline_backtest.py "${{ inputs.mode }}"
 
