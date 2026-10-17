@@ -1,0 +1,3 @@
+stock,direction,date,entry_minute,reason
+CANBK,LONG,2024-02-27,09:16,no ATM candle at the entry minute
+CANBK,LONG,2024-03-04,09:15,no ATM candle at the entry minute

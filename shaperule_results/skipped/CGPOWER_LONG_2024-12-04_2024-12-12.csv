@@ -1,0 +1,4 @@
+stock,direction,date,entry_minute,reason
+CGPOWER,LONG,2024-12-04,09:19,no ATM candle at the entry minute
+CGPOWER,LONG,2024-12-04,09:20,no ATM candle at the entry minute
+CGPOWER,LONG,2024-12-12,09:17,no ATM candle at the entry minute

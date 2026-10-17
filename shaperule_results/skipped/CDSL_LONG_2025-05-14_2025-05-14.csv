@@ -1,0 +1,3 @@
+stock,direction,date,entry_minute,reason
+CDSL,LONG,2025-05-14,09:15,no ATM candle at the entry minute
+CDSL,LONG,2025-05-14,09:22,no ATM candle at the entry minute

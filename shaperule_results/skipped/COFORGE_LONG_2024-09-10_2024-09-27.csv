@@ -1,0 +1,6 @@
+stock,direction,date,entry_minute,reason
+COFORGE,LONG,2024-09-10,09:15,no ATM candle at the entry minute
+COFORGE,LONG,2024-09-19,09:15,no ATM candle at the entry minute
+COFORGE,LONG,2024-09-20,09:15,no ATM candle at the entry minute
+COFORGE,LONG,2024-09-26,09:15,no ATM candle at the entry minute
+COFORGE,LONG,2024-09-27,09:15,no ATM candle at the entry minute
