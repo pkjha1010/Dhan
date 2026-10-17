@@ -1,0 +1,3 @@
+stock,direction,date,entry_minute,reason
+SBICARD,SHORT,2024-10-21,09:15,no ATM candle at the entry minute
+SBICARD,SHORT,2024-10-30,09:15,no ATM candle at the entry minute

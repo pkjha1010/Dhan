@@ -1,0 +1,3 @@
+stock,direction,date,entry_minute,reason
+RECLTD,LONG,2023-05-10,09:15,no ATM candle at the entry minute
+RECLTD,LONG,2023-05-11,09:15,no ATM candle at the entry minute

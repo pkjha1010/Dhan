@@ -1,0 +1,3 @@
+stock,direction,date,entry_minute,reason
+POWERGRID,SHORT,2023-05-29,09:16,no ATM candle at the entry minute
+POWERGRID,SHORT,2023-05-31,09:15,no ATM candle at the entry minute

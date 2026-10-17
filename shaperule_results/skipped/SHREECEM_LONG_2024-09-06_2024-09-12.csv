@@ -1,0 +1,4 @@
+stock,direction,date,entry_minute,reason
+SHREECEM,LONG,2024-09-11,09:15,no ATM candle at the entry minute
+SHREECEM,LONG,2024-09-12,09:21,no ATM candle at the entry minute
+SHREECEM,LONG,2024-09-12,09:25,no ATM candle at the entry minute

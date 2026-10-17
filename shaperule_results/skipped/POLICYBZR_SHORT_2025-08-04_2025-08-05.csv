@@ -1,0 +1,4 @@
+stock,direction,date,entry_minute,reason
+POLICYBZR,SHORT,2025-08-04,09:20,no ATM candle at the entry minute
+POLICYBZR,SHORT,2025-08-04,09:25,no ATM candle at the entry minute
+POLICYBZR,SHORT,2025-08-05,09:15,no ATM candle at the entry minute

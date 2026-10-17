@@ -1,0 +1,5 @@
+stock,direction,date,entry_minute,reason
+SHRIRAMFIN,SHORT,2023-02-16,09:19,no ATM candle at the entry minute
+SHRIRAMFIN,SHORT,2023-02-27,09:18,no ATM candle at the entry minute
+SHRIRAMFIN,SHORT,2023-03-02,09:15,no ATM candle at the entry minute
+SHRIRAMFIN,SHORT,2023-02-17,09:15,no option candles between entry and exit

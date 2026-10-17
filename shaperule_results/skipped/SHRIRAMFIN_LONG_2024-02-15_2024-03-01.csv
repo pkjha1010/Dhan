@@ -1,0 +1,4 @@
+stock,direction,date,entry_minute,reason
+SHRIRAMFIN,LONG,2024-02-15,09:17,no ATM candle at the entry minute
+SHRIRAMFIN,LONG,2024-02-16,09:15,no ATM candle at the entry minute
+SHRIRAMFIN,LONG,2024-03-01,09:15,no ATM candle at the entry minute

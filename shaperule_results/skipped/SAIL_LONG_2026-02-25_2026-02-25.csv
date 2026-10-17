@@ -1,0 +1,2 @@
+stock,direction,date,entry_minute,reason
+SAIL,LONG,2026-02-25,09:16,no ATM candle at the entry minute
