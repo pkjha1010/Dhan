@@ -58,8 +58,13 @@ Entry 09:15-09:25, exit 09:30, trade stop-loss 10 / 20 / 30 %, at most Rs 60,000
 Run it from GitHub: **Actions -> "COMBO day-SL backtest" -> Run workflow**, type the start and end date (use `check` first). Results go to `combo_results/` (`summary.csv`, `roi_matrix.csv`, `daily_pnl.csv.gz`, `day_sl_vs_no_day_sl.csv`).
 Offline logic test (no login): `python test_combo.py`. `mode = summary` rebuilds the tables from saved data for a new date range or a new day-SL list without calling Dhan.
 
-## TRENDLINE break-retest backtest (all F&O stocks, shape filter)
+## Two separate backtests: SHAPE-RULE (daily) and TRENDLINE (1H / 4H)
 
-`trendline_backtest.py` - daily trendline through the last two swing highs (falling = resistance) / swing lows (rising = support). A close beyond the line stores the breakout candle's high (`H_break`) / low (`L_break`); a later candle must touch the line and close back on the breakout side (the line holds); next day the entry fires when price breaks `H_break` (LONG, ATM call) or `L_break` (SHORT, ATM put).
-Entry 09:15-09:25, exit 09:30, trade stop-loss 10 %, at most Rs 60,000 per trade, all F&O stocks. The validation candle ("previous candle") is filtered in 5 variants (no shape rule, green, red, upper wick longer, lower wick longer) x 4 entry types (ALL / OPEN_0915 / FROM_0920_4C / RECROSS_0920_4C). Uses the engine of `combo_dayrisk_backtest.py`.
-Run it from GitHub: **Actions -> "TRENDLINE break-retest backtest" -> Run workflow** (use `check` first). Results go to `trendline_results/`. Offline logic test: `python test_trendline.py`. Tunables (env): `PIVOT_K` 3, `MIN_GAP` 5, `MAX_AGE` 60, `WAIT` 15, `TL_SLS` 10, `DAY_SLS` 0.
+Both: all F&O stocks, entry 09:15-09:25 (4 entry types ALL / OPEN_0915 / FROM_0920_4C / RECROSS_0920_4C), exit 09:30, trade stop-loss 10 %, at most Rs 60,000 per trade, ATM option (LONG = call, SHORT = put). Engine = `combo_dayrisk_backtest.py`.
+Result files in each folder: `all_trades.csv`, `summary.csv`, `top_by_pnl.csv`, `top_by_roi.csv`, `top_by_profit_factor.csv`, `top_by_win_rate.csv` (top lists need >= 30 trades per variant).
+
+**`shaperule_backtest.py` -> `shaperule_results/`** - the SHAPECMP daily signal (10-day-high/low breakout, close back, re-cross next day) with the previous (signal) candle in four patterns, each its own strategy: GREEN_UPPER_WICK_LONGER, RED_UPPER_WICK_LONGER, GREEN_LOWER_WICK_LONGER, RED_LOWER_WICK_LONGER.
+Actions -> "SHAPE-RULE backtest" -> Run workflow (use `check` first). Offline test: `python test_shaperule.py`.
+
+**`trendline_backtest.py` -> `trendline_1h4h_results/`** - trendline through the last two swing highs (falling = resistance) / swing lows (rising = support), drawn on the 1-hour chart and on the 4-hour chart (Dhan 60-minute candles; 4H = 09:15-13:15 and 13:15-15:30). A close beyond the line stores the breakout candle's high (`H_break`) / low (`L_break`); a later candle touches the line and closes back on the breakout side; next morning the entry fires when price breaks `H_break` (LONG) / `L_break` (SHORT). No candle-shape filter.
+Actions -> "TRENDLINE backtest" -> Run workflow (use `check` first). Offline test: `python test_trendline.py`. Swing / window settings: `PARAMS` at the top of the script.
