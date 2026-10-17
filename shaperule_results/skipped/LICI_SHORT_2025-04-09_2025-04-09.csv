@@ -1,0 +1,4 @@
+stock,direction,date,entry_minute,reason
+LICI,SHORT,2025-04-09,09:15,no ATM candle at the entry minute
+LICI,SHORT,2025-04-09,09:22,no ATM candle at the entry minute
+LICI,SHORT,2025-04-09,09:24,no ATM candle at the entry minute

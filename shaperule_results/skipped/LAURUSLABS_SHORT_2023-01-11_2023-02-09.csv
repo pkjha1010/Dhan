@@ -1,0 +1,4 @@
+stock,direction,date,entry_minute,reason
+LAURUSLABS,SHORT,2023-01-11,09:25,no ATM candle at the entry minute
+LAURUSLABS,SHORT,2023-01-19,09:15,no ATM candle at the entry minute
+LAURUSLABS,SHORT,2023-02-09,09:15,no ATM candle at the entry minute

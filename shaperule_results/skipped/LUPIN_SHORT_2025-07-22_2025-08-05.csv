@@ -1,0 +1,5 @@
+stock,direction,date,entry_minute,reason
+LUPIN,SHORT,2025-08-01,09:16,no ATM candle at the entry minute
+LUPIN,SHORT,2025-08-05,09:15,no ATM candle at the entry minute
+LUPIN,SHORT,2025-08-05,09:22,no ATM candle at the entry minute
+LUPIN,SHORT,2025-08-05,09:24,no ATM candle at the entry minute
