@@ -1,0 +1,4 @@
+stock,direction,date,entry_minute,reason
+UNOMINDA,LONG,2025-05-26,09:18,no ATM candle at the entry minute
+UNOMINDA,LONG,2025-05-27,09:16,no ATM candle at the entry minute
+UNOMINDA,LONG,2025-06-03,09:15,no ATM candle at the entry minute

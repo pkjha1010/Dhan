@@ -1,0 +1,3 @@
+stock,direction,date,entry_minute,reason
+VMM,SHORT,2026-06-03,09:15,no ATM candle at the entry minute
+VMM,SHORT,2026-06-04,09:15,no ATM candle at the entry minute

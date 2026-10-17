@@ -1,0 +1,5 @@
+stock,direction,date,entry_minute,reason
+WIPRO,LONG,2023-04-24,09:15,no ATM candle at the entry minute
+WIPRO,LONG,2023-04-24,09:21,no ATM candle at the entry minute
+WIPRO,LONG,2023-04-27,09:15,no ATM candle at the entry minute
+WIPRO,LONG,2023-04-28,09:15,no ATM candle at the entry minute
