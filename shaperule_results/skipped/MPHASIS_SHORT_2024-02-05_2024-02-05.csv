@@ -1,0 +1,3 @@
+stock,direction,date,entry_minute,reason
+MPHASIS,SHORT,2024-02-05,09:20,no ATM candle at the entry minute
+MPHASIS,SHORT,2024-02-05,09:21,no option candles between entry and exit

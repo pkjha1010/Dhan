@@ -1,0 +1,7 @@
+stock,direction,date,entry_minute,reason
+MFSL,SHORT,2024-12-26,09:15,no ATM candle at the entry minute
+MFSL,SHORT,2024-12-30,09:16,no ATM candle at the entry minute
+MFSL,SHORT,2024-12-31,09:20,no ATM candle at the entry minute
+MFSL,SHORT,2025-01-01,09:25,no ATM candle at the entry minute
+MFSL,SHORT,2025-01-02,09:15,no ATM candle at the entry minute
+MFSL,SHORT,2025-01-06,09:15,no ATM candle at the entry minute

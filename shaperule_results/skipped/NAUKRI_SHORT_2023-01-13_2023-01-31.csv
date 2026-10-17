@@ -1,0 +1,8 @@
+stock,direction,date,entry_minute,reason
+NAUKRI,SHORT,2023-01-13,09:15,no ATM candle at the entry minute
+NAUKRI,SHORT,2023-01-19,09:16,no ATM candle at the entry minute
+NAUKRI,SHORT,2023-01-20,09:17,no ATM candle at the entry minute
+NAUKRI,SHORT,2023-01-20,09:22,no ATM candle at the entry minute
+NAUKRI,SHORT,2023-01-25,09:16,no ATM candle at the entry minute
+NAUKRI,SHORT,2023-01-31,09:20,no ATM candle at the entry minute
+NAUKRI,SHORT,2023-01-25,09:22,no option candles between entry and exit
