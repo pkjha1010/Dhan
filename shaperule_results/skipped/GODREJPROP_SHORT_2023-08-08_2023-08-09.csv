@@ -1,0 +1,4 @@
+stock,direction,date,entry_minute,reason
+GODREJPROP,SHORT,2023-08-08,09:20,no ATM candle at the entry minute
+GODREJPROP,SHORT,2023-08-08,09:23,no ATM candle at the entry minute
+GODREJPROP,SHORT,2023-08-09,09:15,no ATM candle at the entry minute
