@@ -1,0 +1,4 @@
+stock,direction,date,entry_minute,reason
+BOSCHLTD,LONG,2024-01-04,09:15,no ATM candle at the entry minute
+BOSCHLTD,LONG,2024-01-09,09:17,no ATM candle at the entry minute
+BOSCHLTD,LONG,2024-01-11,09:15,no ATM candle at the entry minute

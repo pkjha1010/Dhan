@@ -1,0 +1,5 @@
+stock,direction,date,entry_minute,reason
+BAJFINANCE,LONG,2025-02-27,09:15,no ATM candle at the entry minute
+BAJFINANCE,LONG,2025-03-10,09:20,no ATM candle at the entry minute
+BAJFINANCE,LONG,2025-03-13,09:15,no ATM candle at the entry minute
+BAJFINANCE,LONG,2025-03-17,09:18,no ATM candle at the entry minute
