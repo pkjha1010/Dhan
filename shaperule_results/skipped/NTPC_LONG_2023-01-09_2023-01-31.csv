@@ -1,0 +1,3 @@
+stock,direction,date,entry_minute,reason
+NTPC,LONG,2023-01-20,09:15,no ATM candle at the entry minute
+NTPC,LONG,2023-01-23,09:15,no ATM candle at the entry minute

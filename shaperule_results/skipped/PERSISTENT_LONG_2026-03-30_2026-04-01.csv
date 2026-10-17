@@ -1,0 +1,2 @@
+stock,direction,date,entry_minute,reason
+PERSISTENT,LONG,2026-04-01,09:15,no ATM candle at the entry minute

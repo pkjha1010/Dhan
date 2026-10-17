@@ -1,0 +1,2 @@
+stock,direction,date,entry_minute,reason
+NTPC,LONG,2024-08-06,09:15,no option candles between entry and exit

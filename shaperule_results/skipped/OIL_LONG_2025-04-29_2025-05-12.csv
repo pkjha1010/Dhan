@@ -1,0 +1,2 @@
+stock,direction,date,entry_minute,reason
+OIL,LONG,2025-05-06,09:15,no option candles between entry and exit
