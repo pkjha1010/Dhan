@@ -1,0 +1,3 @@
+stock,direction,date,entry_minute,reason
+CONCOR,LONG,2023-07-12,09:15,no ATM candle at the entry minute
+CONCOR,LONG,2023-07-24,09:15,no ATM candle at the entry minute

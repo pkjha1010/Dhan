@@ -1,0 +1,4 @@
+stock,direction,date,entry_minute,reason
+DMART,SHORT,2024-12-26,09:15,no ATM candle at the entry minute
+DMART,SHORT,2024-12-26,09:25,no ATM candle at the entry minute
+DMART,SHORT,2024-12-11,09:15,no option candles between entry and exit
