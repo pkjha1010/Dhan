@@ -1,0 +1,4 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+TL_1H,RBLBANK,LONG,145.9,2023-04-10,2023-04-11,145.1,2023-04-10,143.56,0,1,0,1
+TL_4H,RBLBANK,LONG,267.7,2024-02-27,2024-02-28,266.25,2024-02-22,263.81,0,1,0,1
+TL_4H,RBLBANK,LONG,393.9,2026-08-21,2026-08-24,394.0,2026-08-20,389.48,0,1,0,1
