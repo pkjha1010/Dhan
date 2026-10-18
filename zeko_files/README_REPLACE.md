@@ -12,11 +12,11 @@
 
 No new secrets are needed (same KITE_*, ZERODHA_*, ANGEL_*, ORDER_PROXY).  Run `shape_live_offline_test.yml` first - it must print `ALL OFFLINE TESTS PASSED`.
 
-## What the three strategies are (all with a +60 % target, backtest = no gap-fill trades)
+## What the three strategies are (+60 % target for WRL and BPB, +400 % for WRU; backtest = no gap-fill trades)
 | code | strategy | direction | stop-loss | entries | square off |
 |---|---|---|---|---|---|
 | WRL | WICK_RED_LOWER  (red signal candle, lower wick longer) | LONG (buy call)  | none | 09:15 - 09:59 | 10:00:00 |
-| WRU | WICK_RED_UPPER  (red signal candle, upper wick longer) | SHORT (buy put)  | -20 % | 09:15 - 09:29 | 09:30:00 |
+| WRU | WICK_RED_UPPER  (red signal candle, upper wick longer), target +400 % | SHORT (buy put)  | -20 % | 09:15 - 09:29 | 09:30:00 |
 | BPB | BREAKOUT_BPB (breakout -> pullback -> re-cross of the 10-day low) | SHORT (buy put) | none | 09:15 - 15:20 | 15:30:00 |
 Change a percentage or time with an environment value on the plan step, e.g. `WRU_TP=60`, `WRU_SL=20`, `BPB_EXIT_AT=15:30:00`.  Per trade capital: Rs 60,000 (`max_cost`).
 
@@ -31,5 +31,5 @@ Change a percentage or time with an environment value on the plan step, e.g. `WR
 6. `DRY_RUN=1` sends nothing.  The manager can be started again at any time: it rebuilds its state from Kite.
 
 ## What the backtest says (Jan 2023 - Aug 2026, partial data, gap-target trades removed)
-WRL (10:00 exit) ROI about 6 %, BPB short (15:30) ROI about 9 %, WRU (09:30, SL20) ROI about 5 % with a 60 % target - all three are small samples and were chosen
+WRL (10:00 exit) ROI about 6 %, BPB short (15:30) ROI about 9 %, WRU (09:30, SL20, target 400 %) ROI about 15 % on only 58 trades, most of it from a few trades - all three are small samples and were chosen
 from over 1,600 variants, so treat them as a paper-trading candidate first.  The strategies were NOT tested with the 30 % fund rule.

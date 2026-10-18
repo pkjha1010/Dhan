@@ -26,8 +26,8 @@ Set the cron-job.org "failure notifications" on, and keep GitHub's "workflow run
 at 15:45 (open position, waiting order, GTT or alert).
 
 ## One thing to check once before the first live day (GTT layout)
-The plan asks Zerodha for a built-in GTT with a **target +60 %** for all three strategies and a **stop-loss -20 %** for WRU only
-(`"gtt": {"target": 60, "stoploss": 0}` and `{"target": 60, "stoploss": -20}`; `stoploss: 0` = no stop-loss).  Your old plan used `{"target": 0, "stoploss": -10}`, so the
+The plan asks Zerodha for a built-in GTT with a **target +60 %** for WRL and BPB, a **target +400 % and stop-loss -20 %** for WRU
+(`"gtt": {"target": 60, "stoploss": 0}` and `{"target": 400, "stoploss": -20}`; `stoploss: 0` = no stop-loss).  Your old plan used `{"target": 0, "stoploss": -10}`, so the
 field names are the same, but I could not test the NEW target leg against Zerodha.  Do this once:
 1. In the Kite app create ONE ATO alert by hand with a 60 % target and a 20 % stop-loss, validity Day, and another with only the 60 % target.
 2. Run `shape_live_plan.yml` with `mode = probe` and look at how the two alerts are printed.

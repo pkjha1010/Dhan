@@ -1,4 +1,4 @@
-name: SHAPELIVE manager (09:00-15:45 IST - entries, 60 % targets, stop-loss, per-strategy square-off, 30 % fund limit)
+name: SHAPELIVE manager (09:00-15:45 IST - entries, targets, stop-loss, per-strategy square-off, 30 % fund limit)
 
 on:
   workflow_dispatch:

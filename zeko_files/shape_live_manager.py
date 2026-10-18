@@ -4,7 +4,7 @@ SHAPELIVE MANAGER  -  runs on every trading day, from about 09:00 IST until the 
 of its own: the second run rebuilds everything from Kite (today's orders, positions, alerts) and the plan file.
 
 Three strategies (shape_live_plan.py makes one ATO alert per setup; Zerodha does the ENTRY on its servers: BUY option NRML, validity DAY, with the built-in
-GTT: target +60 % for all three, stop-loss -20 % for WRU only):
+GTT: target +60 % for WRL and BPB, +400 % for WRU, stop-loss -20 % for WRU only):
     WRU WICK_RED_UPPER  SHORT  entries to 09:30:00, square off 09:30:00        WRL WICK_RED_LOWER  LONG   entries to 10:00:00, square off 10:00:00
     BPB BREAKOUT_BPB    SHORT  entries to 15:21:00, square off 15:30:00        (the times come from the plan file; env EXIT_AT / ENTRY_END do not exist any more)
 
@@ -45,7 +45,7 @@ def hhmmss(s):
 
 
 DEFAULT_STRATS = {   # used only when an old plan file has no "strategies" block
-    "WRU": dict(name="WICK_RED_UPPER", entry_end="09:30:00", exit_at="09:30:00", sl_pct=20.0, tp_pct=60.0),
+    "WRU": dict(name="WICK_RED_UPPER", entry_end="09:30:00", exit_at="09:30:00", sl_pct=20.0, tp_pct=400.0),
     "WRL": dict(name="WICK_RED_LOWER", entry_end="10:00:00", exit_at="10:00:00", sl_pct=0.0, tp_pct=60.0),
     "BPB": dict(name="BREAKOUT_BPB", entry_end="15:21:00", exit_at="15:30:00", sl_pct=0.0, tp_pct=60.0)}
 FINAL_END = hhmmss(os.environ.get("FINAL_END") or "15:45:00")       # all strategies must be clean by now, otherwise the job fails

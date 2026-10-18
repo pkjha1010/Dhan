@@ -1,11 +1,11 @@
 """
 SHAPELIVE PLAN  -  run every trading morning at 06:00 IST (before the market opens).
 
-THREE strategies are planned (backtest: all8_backtest.py, no-gap results, every one with a 60 % TARGET):
+THREE strategies are planned (backtest: all8_backtest.py, no-gap results; target +60 % for WRL and BPB, +400 % for WRU):
   WRL  WICK_RED_LOWER   LONG  (buy CALL)  SHAPECMP signal whose previous (signal) candle is RED with the LOWER wick longer than the upper wick.
                                           No stop-loss.  Target +60 %.  Entries 09:15-09:59, time exit 10:00.
   WRU  WICK_RED_UPPER   SHORT (buy PUT)   SHAPECMP signal whose previous candle is RED with the UPPER wick longer.
-                                          Stop-loss -20 %.  Target +60 %.  Entries 09:15-09:29, time exit 09:30.
+                                          Stop-loss -20 %.  Target +400 % (practically none: the best tested setting; WRL and BPB use +60 %).  Entries 09:15-09:29, time exit 09:30.
   BPB  BREAKOUT_BPB     SHORT (buy PUT)   breakout -> pullback -> re-cross of the 10-day low (bpb_fno_backtest.py state machine).
                                           No stop-loss.  Target +60 %.  Entries 09:15-15:20, time exit 15:30.
   (SHAPECMP signal = a daily close beyond the 10-day high/low, a later close back across it = the reference line; entry when the stock crosses that line again.)
@@ -22,7 +22,7 @@ What it does
         lots = cap // (price x lot size), cap = MAX_COST (default Rs 60,000 per trade, as in the backtest) or CAPITAL_PCT % of the Kite funds.
         Fewer than 1 lot -> SKIPPED.  Option price below MIN_PRICE -> SKIPPED.
   4. Creates one Kite ATO alert per setup: when the STOCK price crosses the entry price (>= for LONG, <= for SHORT) Zerodha sends the BUY MARKET order
-     for the option (NRML, validity DAY) with the built-in GTT:  target +60 %  and (WRU only) stop-loss -20 %.
+     for the option (NRML, validity DAY) with the built-in GTT:  target +60 % (WRU: +400 %)  and (WRU only) stop-loss -20 %.
      Alert names: SHP|WRL|STOCK|price, SHP|WRU|..., SHP|BPB|...   Orders carry the tag SHPWRL / SHPWRU / SHPBPB.
   5. Saves live_plan/plan.json (items + the strategy rules + the alert definitions).  The manager reads it: it deletes a strategy's waiting alerts when its
      entry time ends, squares the strategy off at its exit time, cancels unfilled BUY / stop-loss orders at once and stops new entries while the account
@@ -38,7 +38,7 @@ from kiteconnect import KiteConnect
 
 PFX = "SHP|"
 STRATS = {   # code: rules.  entry_end = the alert is deleted / waiting BUYs are cancelled from this second on; exit_at = square-off second.
-    "WRU": dict(name="WICK_RED_UPPER", direction="SHORT", kind="SHAPE", red=True, lower_longer=False, entry_end="09:30:00", exit_at="09:30:00", sl_pct=20.0, tp_pct=60.0),
+    "WRU": dict(name="WICK_RED_UPPER", direction="SHORT", kind="SHAPE", red=True, lower_longer=False, entry_end="09:30:00", exit_at="09:30:00", sl_pct=20.0, tp_pct=400.0),
     "WRL": dict(name="WICK_RED_LOWER", direction="LONG", kind="SHAPE", red=True, lower_longer=True, entry_end="10:00:00", exit_at="10:00:00", sl_pct=0.0, tp_pct=60.0),
     "BPB": dict(name="BREAKOUT_BPB", direction="SHORT", kind="BPB", entry_end="15:21:00", exit_at="15:30:00", sl_pct=0.0, tp_pct=60.0),
 }
