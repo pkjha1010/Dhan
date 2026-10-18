@@ -38,9 +38,9 @@ from kiteconnect import KiteConnect
 
 PFX = "SHP|"
 STRATS = {   # code: rules.  entry_end = the alert is deleted / waiting BUYs are cancelled from this second on; exit_at = square-off second.
-    "WRU": dict(name="WICK_RED_UPPER", direction="SHORT", kind="SHAPE", red=True, lower_longer=False, entry_end="09:30:00", exit_at="09:30:00", sl_pct=20.0, tp_pct=400.0),
-    "WRL": dict(name="WICK_RED_LOWER", direction="LONG", kind="SHAPE", red=True, lower_longer=True, entry_end="10:00:00", exit_at="10:00:00", sl_pct=0.0, tp_pct=60.0),
-    "BPB": dict(name="BREAKOUT_BPB", direction="SHORT", kind="BPB", entry_end="15:21:00", exit_at="15:30:00", sl_pct=0.0, tp_pct=60.0),
+    "WRU": dict(name="WICK_RED_UPPER", direction="SHORT", kind="SHAPE", red=True, lower_longer=False, entry_end="09:25:00", exit_at="09:30:00", sl_pct=20.0, tp_pct=400.0),
+    "WRL": dict(name="WICK_RED_LOWER", direction="LONG", kind="SHAPE", red=True, lower_longer=True, entry_end="09:50:00", exit_at="10:00:00", sl_pct=0.0, tp_pct=60.0),
+    "BPB": dict(name="BREAKOUT_BPB", direction="SHORT", kind="BPB", entry_end="15:00:00", exit_at="15:30:00", sl_pct=0.0, tp_pct=60.0),
 }
 for _c, _r in STRATS.items():                                   # env overrides, e.g. WRU_TP=60  WRU_SL=20  BPB_EXIT_AT=15:30:00  WRL_ENTRY_END=10:00:00
     for _k, _t in (("tp_pct", "TP"), ("sl_pct", "SL")):
