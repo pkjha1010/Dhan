@@ -19,14 +19,18 @@ on:
         description: 'Options priced below this many rupees are not traded'
         required: false
         default: '2'
-      max_cost:
-        description: 'Fixed rupee cap per trade (backtest: 60000). 0 = use capital_pct of the funds instead'
-        required: false
-        default: '60000'
       capital_pct:
-        description: 'Only used when max_cost is 0: each trade may use this percent of the funds available in your Kite account'
+        description: 'Each trade may use this percent of the funds available in your Kite account'
         required: false
         default: '10'
+      total_funds:
+        description: 'OPTIONAL total funds in rupees: trades are sized on this instead of the funds available in Kite (blank = use Kite)'
+        required: false
+        default: ''
+      max_cost:
+        description: 'OPTIONAL fixed rupee cap per trade. Leave empty to use the percentage above'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -63,6 +67,7 @@ jobs:
           DRY_RUN: ${{ github.event.inputs.dry_run }}
           MAX_COST: ${{ github.event.inputs.max_cost }}
           CAPITAL_PCT: ${{ github.event.inputs.capital_pct }}
+          TOTAL_FUNDS: ${{ github.event.inputs.total_funds }}
           STRATEGIES: ${{ github.event.inputs.strategies }}
           MIN_PRICE: ${{ github.event.inputs.min_price }}
         run: python -u shape_live_plan.py ${{ github.event.inputs.mode || 'plan' }}

@@ -19,7 +19,7 @@ What it does
         nearest MONTHLY expiry that is still open.
      If two strategies pick the SAME option, only the first one (order WRU, WRL, BPB) is kept - the manager squares off option by option.
   3. Reads that option's last price from Angel One (before the open = yesterday's close) and works out
-        lots = cap // (price x lot size), cap = MAX_COST (default Rs 60,000 per trade, as in the backtest) or CAPITAL_PCT % of the Kite funds.
+        lots = cap // (price x lot size), cap = CAPITAL_PCT % (default 10 %) of the funds available in your Kite account (or of TOTAL_FUNDS when given); MAX_COST = optional fixed rupee cap instead.
         Fewer than 1 lot -> SKIPPED.  Option price below MIN_PRICE -> SKIPPED.
   4. Creates one Kite ATO alert per setup: when the STOCK price crosses the entry price (>= for LONG, <= for SHORT) Zerodha sends the BUY MARKET order
      for the option (NRML, validity DAY) with the built-in GTT:  target +60 % (WRU: +400 %)  and (WRU only) stop-loss -20 %.
@@ -50,9 +50,10 @@ for _c, _r in STRATS.items():                                   # env overrides,
 ORDER = ["WRU", "WRL", "BPB"]                                  # priority when two strategies pick the same option
 ACTIVE = [c for c in ORDER if c in {x.strip().upper() for x in (os.environ.get("STRATEGIES") or "WRL,WRU,BPB").replace(" ", "").split(",") if x.strip()}]
 BPB_LOOKBACK = int(os.environ.get("BPB_LOOKBACK") or 10)       # rolling-high window of the breakout strategy (days), same as the backtest
-CAPITAL_PCT = float(os.environ.get("CAPITAL_PCT") or 10)       # used only when MAX_COST is 0: each trade may use this % of the funds available in the Kite account
+CAPITAL_PCT = float(os.environ.get("CAPITAL_PCT") or 10)       # each trade may use this % of the funds available in the Kite account (10 % = the old rule)
 MIN_PRICE = float(os.environ.get("MIN_PRICE") or 5)            # options priced below this (Rs, per unit) are not traded
-MAX_COST_FIXED = float(os.environ.get("MAX_COST") or 60000)    # fixed rupee cap per trade (backtest: Rs 60,000). 0 = use CAPITAL_PCT of the funds instead
+MAX_COST_FIXED = float(os.environ.get("MAX_COST") or 0)        # OPTIONAL fixed rupee cap per trade instead of the percentage (0 = use CAPITAL_PCT of the funds)
+TOTAL_FUNDS = float(os.environ.get("TOTAL_FUNDS") or 0)        # OPTIONAL: size the trades on this total (Rs) instead of the funds available in Kite at planning time
 PRODUCT = os.environ.get("PRODUCT") or "NRML"                  # overnight product: this is what carries the built-in GTT
 # basket params["gtt"] layout.  {tp} / {sl} are replaced by the percentages.  If probe mode shows your account stores GTT differently, set these two env values.
 GTT_TP_ONLY = os.environ.get("GTT_TP_ONLY") or '{"target": {tp}, "stoploss": 0}'
@@ -445,10 +446,10 @@ def main():
     funds = None
     if MAX_COST_FIXED > 0: cap = MAX_COST_FIXED; log(f"capital per trade: fixed Rs {cap:,.0f}")
     else:
-        funds = funds_available(k)
+        funds = TOTAL_FUNDS if TOTAL_FUNDS > 0 else funds_available(k)
         if not funds or funds <= 0: sys.exit("Cannot read the available funds from Kite - nothing placed (set MAX_COST to use a fixed amount)")
         cap = round(funds * CAPITAL_PCT / 100, 2)
-        log(f"available funds Rs {funds:,.0f} -> capital per trade {CAPITAL_PCT:g}% = Rs {cap:,.0f}")
+        log(f"{'total funds' if TOTAL_FUNDS > 0 else 'available funds'} Rs {funds:,.0f} -> capital per trade {CAPITAL_PCT:g}% = Rs {cap:,.0f}")
     picks, skipped = pick_options(setups, inst, td)
     px = option_prices(ang, opt, picks)
 
