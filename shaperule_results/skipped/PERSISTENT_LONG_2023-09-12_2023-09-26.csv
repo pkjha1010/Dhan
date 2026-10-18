@@ -1,4 +1,0 @@
-stock,direction,date,entry_minute,reason
-PERSISTENT,LONG,2023-09-12,09:16,no ATM candle at the entry minute
-PERSISTENT,LONG,2023-09-15,09:15,no ATM candle at the entry minute
-PERSISTENT,LONG,2023-09-26,09:16,no ATM candle at the entry minute

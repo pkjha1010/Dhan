@@ -1,4 +1,0 @@
-stock,direction,date,entry_minute,reason
-INDIANB,LONG,2025-04-11,09:15,no ATM candle at the entry minute
-INDIANB,LONG,2025-04-15,09:15,no ATM candle at the entry minute
-INDIANB,LONG,2025-05-05,09:15,no option candles between entry and exit

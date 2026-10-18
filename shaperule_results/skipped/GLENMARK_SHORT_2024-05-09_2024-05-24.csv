@@ -1,4 +1,0 @@
-stock,direction,date,entry_minute,reason
-GLENMARK,SHORT,2024-05-09,09:15,no ATM candle at the entry minute
-GLENMARK,SHORT,2024-05-23,09:15,no ATM candle at the entry minute
-GLENMARK,SHORT,2024-05-24,09:15,no option candles between entry and exit

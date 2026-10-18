@@ -1,3 +1,0 @@
-stock,direction,date,entry_minute,reason
-COLPAL,SHORT,2024-12-31,09:15,no ATM candle at the entry minute
-COLPAL,SHORT,2025-01-15,09:16,no option candles between entry and exit
