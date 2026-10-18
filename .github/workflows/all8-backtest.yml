@@ -73,6 +73,7 @@ jobs:
           A8_TPS: ${{ inputs.tps }}
           A8_ENTRY_LAST: ${{ inputs.entry_last }}
           A8_SUM_ENTRY_TO: ${{ inputs.sum_entry_to }}
+          A8_TRADES_ALL: "1"
           BUDGET_MIN: "320"
         run: python all8_backtest.py "${{ inputs.mode }}"
 

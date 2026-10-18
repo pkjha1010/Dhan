@@ -503,6 +503,14 @@ def summary():
                                                                           pd.DataFrame(best)]).drop_duplicates(["strategy", "exit_rule", "sl", "tp"])
         pick = {}
         for r in chosen.itertuples(): pick.setdefault(r.strategy, []).append(vi[(r.exit_rule, int(r.sl), int(r.tp))])
+    if os.environ.get("A8_TRADES_ALL") == "1":   # every trade of every variant, one file per strategy (keeps each file small enough for GitHub)
+        os.makedirs(f"{OUT}/all_trades", exist_ok=True)
+        for s, vs in pick.items():
+            if s in sims: sims[s].trades(vs, s).to_csv(f"{OUT}/all_trades/{s}.csv.gz", index=False, compression={"method": "gzip", "compresslevel": 6})
+        print("all-variant trade files written to", f"{OUT}/all_trades/", flush=True)
+        pick = {}
+        for r in pd.concat([good.sort_values("total_pnl", ascending=False).head(10), good.sort_values("roi_pct", ascending=False).head(10), pd.DataFrame(best)]).drop_duplicates(["strategy", "exit_rule", "sl", "tp"]).itertuples():
+            pick.setdefault(r.strategy, []).append(vi[(r.exit_rule, int(r.sl), int(r.tp))])
     T_ = pd.concat([sims[s].trades(vs, s) for s, vs in pick.items() if s in sims], ignore_index=True)
     T_.to_csv(f"{OUT}/all_trades_top_variants.csv.gz", index=False, compression={"method": "gzip", "compresslevel": 6})
     yr = T_.assign(year=T_.entry_date.str[:4]).groupby(["strategy", "exit_rule", "sl", "tp", "year"]).agg(trades=("pnl", "size"), win_pct=("pnl", lambda x: round((x > 0).mean() * 100, 1)),
