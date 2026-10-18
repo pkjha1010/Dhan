@@ -1,4 +1,4 @@
-name: SHAPELIVE manager (09:00-15:45 IST - entries, targets, stop-loss, per-strategy square-off, 30 % fund limit)
+name: SHAPELIVE manager (08:55-15:45 IST - entries, targets, stop-loss, per-strategy square-off, 30 % fund limit)
 
 on:
   workflow_dispatch:
@@ -8,9 +8,9 @@ on:
         required: false
         default: 'run'
       job_end:
-        description: 'This job stops at this time (IST). 12:58:00 = the MORNING job (hands over to the next one) | 15:45:00 = the AFTERNOON job (must end clean)'
+        description: 'BLANK = automatic (started before 12:30 -> hands over at 12:58:00, started later -> runs to 15:45:00). Or give a time, e.g. 12:58:00 or 15:45:00'
         required: false
-        default: '15:45:00'
+        default: ''
       dry_run:
         description: '1 = print the orders, send nothing'
         required: false

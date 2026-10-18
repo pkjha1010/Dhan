@@ -10,10 +10,10 @@ All three jobs call the GitHub API the same way:
 | # | Time (IST) | Workflow file | Request body |
 |---|-----------|---------------|--------------|
 | 1 | **06:00** Mon-Fri | `shape_live_plan.yml`    | `{"ref":"main"}` |
-| 2 | **09:00** Mon-Fri | `shape_live_manager.yml` | `{"ref":"main","inputs":{"job_end":"12:58:00"}}`  (morning job, hands over quietly) |
-| 3 | **12:55** Mon-Fri | `shape_live_manager.yml` | `{"ref":"main","inputs":{"job_end":"15:45:00"}}`  (afternoon job, must end clean) |
+| 2 | **08:55** Mon-Fri | `shape_live_manager.yml` | `{"ref":"main"}`  (morning job: started before 12:30 it hands over quietly at 12:58) |
+| 3 | **12:55** Mon-Fri | `shape_live_manager.yml` | `{"ref":"main"}`  (afternoon job: runs to 15:45 and must end clean; it waits in the queue until the morning job has handed over at 12:58) |
 
-Why two manager jobs: one GitHub job may run at most 6 hours; 09:00 -> 15:45 is 6 h 45 min.  The manager keeps no memory of its own - the afternoon job rebuilds everything
+Why two manager jobs: one GitHub job may run at most 6 hours; 08:55 -> 15:45 is 6 h 50 min.  The manager keeps no memory of its own - the afternoon job rebuilds everything
 from Kite (today's orders, positions, alerts) and the plan file, so it can also be started at any other time (e.g. after a crash) with the same call.  The two jobs share a
 queue (`concurrency`), job 3 waits until job 2 has finished at 12:58; the gap of a few seconds is harmless: ENTRY and the target / stop-loss GTT are carried by Zerodha itself.
 

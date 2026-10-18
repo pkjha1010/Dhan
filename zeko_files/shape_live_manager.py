@@ -1,6 +1,6 @@
 """
-SHAPELIVE MANAGER  -  runs on every trading day, from about 09:00 IST until the last strategy is squared off (about 15:30).  It is started by cron-job.org
-(see CRON_JOB_ORG.md); because one GitHub job may not run more than 6 hours it is started TWICE (09:00 -> 12:58 and 12:55 -> 15:45).  It keeps no state
+SHAPELIVE MANAGER  -  runs on every trading day, from about 08:55 IST until the last strategy is squared off (about 15:30).  It is started by cron-job.org
+(see CRON_JOB_ORG.md); because one GitHub job may not run more than 6 hours it is started TWICE (08:55 -> 12:58 and 12:55 -> 15:45).  It keeps no state
 of its own: the second run rebuilds everything from Kite (today's orders, positions, alerts) and the plan file.
 
 Three strategies (shape_live_plan.py makes one ATO alert per setup; Zerodha does the ENTRY on its servers: BUY option NRML, validity DAY, with the built-in
@@ -589,9 +589,12 @@ def iptest():
 
 
 def main():
+    global JOB_END
     if len(sys.argv) > 1 and sys.argv[1] == "cleanup": return cleanup_now()
     if len(sys.argv) > 1 and sys.argv[1] == "iptest": return iptest()
     t = now_ist().time()
+    if not (os.environ.get("JOB_END") or "").strip() and t < dtime(12, 30):        # started in the morning without a job_end: hand over to the 12:55 job (GitHub stops a job after 6 hours)
+        JOB_END = dtime(12, 58); log("no job_end given and it is morning -> this job hands over at 12:58:00")
     if t >= FINAL_END or t < JOB_START or t >= JOB_END:
         log(f"It is {t:%H:%M:%S}. The manager only works between {JOB_START} and {JOB_END} IST. Outside that window it does nothing. To delete waiting alerts right now use mode=cleanup.")
         return
