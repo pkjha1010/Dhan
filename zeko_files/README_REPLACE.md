@@ -17,7 +17,7 @@ No new secrets are needed (same KITE_*, ZERODHA_*, ANGEL_*, ORDER_PROXY).  Run `
 |---|---|---|---|---|---|
 | WRL | WICK_RED_LOWER  (red signal candle, lower wick longer) | LONG (buy call)  | none | 09:15 - 09:59 | 10:00:00 |
 | WRU | WICK_RED_UPPER  (red signal candle, upper wick longer), target +400 % | SHORT (buy put)  | -20 % | 09:15 - 09:29 | 09:30:00 |
-| BPB | BREAKOUT_BPB (breakout -> pullback -> re-cross of the 10-day low) | SHORT (buy put) | none | 09:15 - 15:20 | 15:30:00 |
+| BPB | BREAKOUT_BPB (breakout -> pullback -> re-cross of the 10-day low) | SHORT (buy put) | none | 09:15 - 15:28 | 15:30:00 |
 Change a percentage or time with an environment value on the plan step, e.g. `WRU_TP=60`, `WRU_SL=20`, `BPB_EXIT_AT=15:30:00`.  Per trade capital: 10 % of the funds available in your Kite account (`capital_pct`, as in your old plan; optional `total_funds` or a fixed `max_cost`).
 
 ## Safety rules in the manager

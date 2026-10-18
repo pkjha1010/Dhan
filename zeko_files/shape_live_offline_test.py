@@ -119,7 +119,7 @@ class Fake:
 LOGS = []
 RULES = {"WRU": dict(name="WICK_RED_UPPER", entry_end="09:30:00", exit_at="09:30:00", sl_pct=20.0, tp_pct=400.0),
          "WRL": dict(name="WICK_RED_LOWER", entry_end="10:00:00", exit_at="10:00:00", sl_pct=0.0, tp_pct=60.0),
-         "BPB": dict(name="BREAKOUT_BPB", entry_end="15:21:00", exit_at="15:30:00", sl_pct=0.0, tp_pct=60.0)}
+         "BPB": dict(name="BREAKOUT_BPB", entry_end="15:29:00", exit_at="15:30:00", sl_pct=0.0, tp_pct=60.0)}
 
 
 def setup(sweep_all=False, dry=False, start=(9, 14), job_end=None):
