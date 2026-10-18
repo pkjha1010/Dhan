@@ -1,28 +1,40 @@
 name: Decompress CSV.GZ
 
 on:
+  workflow_dispatch:
   push:
-    branches: [ main ] # Runs when you push to the main branch
+    branches: [ main ]
+    paths:
+      - "**.csv.gz"
+      - ".github/workflows/decompress.yml"
 
 jobs:
   decompress:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # This grants write access to push changes
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Decompress the file
+      - name: Decompress all .csv.gz files
         run: |
-          # Finds all .csv.gz files and decompresses them into .csv
-          gzip -d -k *.csv.gz || true 
+          # every .csv.gz in the repo (root, all8_results/all_trades, ...), except the thousands of small backtest part files
+          find . -name "*.csv.gz" -not -path "./.git/*" -not -path "*/parts/*" | while read -r f; do
+            out="${f%.gz}"
+            if [ ! -f "$out" ] || [ "$f" -nt "$out" ]; then
+              echo "decompress $f"
+              gzip -dc "$f" > "$out"
+            fi
+          done
 
-      - name: Commit and Push the CSV file
+      - name: Commit and push the CSV files
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add *.csv
-          git commit -m "Automated conversion of csv.gz to csv" || exit 0
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          find . -name "*.csv" -not -path "./.git/*" -not -path "*/parts/*" | while read -r c; do
+            [ -f "$c.gz" ] && git add -f "$c"
+          done
+          git commit -m "Automated conversion of csv.gz to csv" || { echo "nothing new to commit"; exit 0; }
+          git pull --rebase --autostash
           git push
-          
