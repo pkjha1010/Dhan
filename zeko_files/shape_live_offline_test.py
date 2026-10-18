@@ -6,7 +6,7 @@ It runs whole trading mornings / afternoons on a fake clock and checks:
   - a stop-loss SELL that waits (price below the entry, unfilled) is cancelled and the position sold at once; a target SELL that waits is cancelled and sold after TP_WAIT_S
   - FUND LIMIT 30 %: above it every waiting SHP| alert is deleted and waiting BUYs are cancelled at once; below it the alerts are re-created (only strategies still inside their
     entry time, only setups that have not traded)
-  - every strategy has its OWN entry end and square-off: WRU entries to 09:25 exit 09:30, WRL entries to 09:50 exit 10:00, BPB entries to 15:00 exit 15:30 (a position of another strategy is not touched earlier)
+  - every strategy has its OWN entry end and square-off: WRU 09:30:00, WRL 10:00:00, BPB 15:30:00 (a position of another strategy is not touched earlier)
   - a BUY placed after the strategy's entry end that still fills is sold at once; its waiting alerts are deleted at the entry end only for that strategy
   - a market order that keeps waiting is closed by the aggressive LIMIT order
   - the manager can be restarted any time (state rebuilt from orders / positions / alerts), hand-over jobs end quietly
@@ -117,9 +117,9 @@ class Fake:
 
 
 LOGS = []
-RULES = {"WRU": dict(name="WICK_RED_UPPER", entry_end="09:25:00", exit_at="09:30:00", sl_pct=20.0, tp_pct=400.0),
-         "WRL": dict(name="WICK_RED_LOWER", entry_end="09:50:00", exit_at="10:00:00", sl_pct=0.0, tp_pct=60.0),
-         "BPB": dict(name="BREAKOUT_BPB", entry_end="15:00:00", exit_at="15:30:00", sl_pct=0.0, tp_pct=60.0)}
+RULES = {"WRU": dict(name="WICK_RED_UPPER", entry_end="09:30:00", exit_at="09:30:00", sl_pct=20.0, tp_pct=400.0),
+         "WRL": dict(name="WICK_RED_LOWER", entry_end="10:00:00", exit_at="10:00:00", sl_pct=0.0, tp_pct=60.0),
+         "BPB": dict(name="BREAKOUT_BPB", entry_end="15:21:00", exit_at="15:30:00", sl_pct=0.0, tp_pct=60.0)}
 
 
 def setup(sweep_all=False, dry=False, start=(9, 14), job_end=None):
@@ -165,7 +165,7 @@ def check_morning():
     def D2(): fake.bid["DDD"], fake.ask["DDD"] = 45.0, 45.5; fake.gtts[2]["status"] = "triggered"; T["D"] = fake.add_order("DDD", "SELL", "OPEN", "LIMIT", 48, 100)   # stop-loss limit order waits
     def E1(): fake.add_order("EEE", "BUY", "COMPLETE", avg=50, qty=100, ts=fake.stamp(), tag="SHPWRL"); fake.gtts.append(dict(id=4, status="active", condition=dict(tradingsymbol="EEE")))
     def E2(): fake.bid["EEE"], fake.ask["EEE"] = 70.0, 70.5; fake.gtts[3]["status"] = "triggered"; T["E"] = fake.add_order("EEE", "SELL", "OPEN", "LIMIT", 80, 100)       # target limit order waits
-    def F(): fake.add_order("FFF", "BUY", "COMPLETE", avg=55, qty=100, ts="2026-10-19 09:24:30", tag="SHPWRU"); fake.gtts.append(dict(id=5, status="active", condition=dict(tradingsymbol="FFF")))
+    def F(): fake.add_order("FFF", "BUY", "COMPLETE", avg=55, qty=100, ts="2026-10-19 09:25:30", tag="SHPWRU"); fake.gtts.append(dict(id=5, status="active", condition=dict(tradingsymbol="FFF")))
     def G(): T["G"] = fake.add_order("GGG", "BUY", "OPEN", "MARKET", qty=100)                          # WRU BUY waiting after its entry end 09:30
     def H(): fake.add_order("HHH", "BUY", "COMPLETE", avg=40, qty=100, ts=fake.stamp(), tag="SHPBPB")  # BPB: stays open all day
     for hh, mm, ss, fn in ((9, 16, 0, A), (9, 17, 0, B), (9, 18, 0, C), (9, 20, 0, D1), (9, 22, 0, D2), (9, 24, 0, E1), (9, 24, 30, E2), (9, 26, 0, F), (9, 30, 10, G), (9, 40, 0, H)): fake.at(hh, mm, ss, fn)
@@ -199,8 +199,8 @@ def check_morning():
     need(fake.qty("ZZZ") == 50 and len(fake.open_orders("ZZZ")) == 1, "another strategy's position / order was touched")
     ae = {a["name"]: t for t, k, a in fake.audit if k == "alert-"}
     wru_t = [t for n, t in ae.items() if n.startswith("SHP|WRU|")]; wrl_t = [t for n, t in ae.items() if n.startswith("SHP|WRL|")]
-    need(wru_t and all(at(9, 25) <= t <= at(9, 25, 2) for t in wru_t), f"WRU alerts deleted at {[f'{t:%H:%M:%S}' for t in wru_t]}, expected 09:25:00")
-    need(wrl_t and all(at(9, 50) <= t <= at(9, 50, 2) for t in wrl_t), f"WRL alerts deleted at {[f'{t:%H:%M:%S}' for t in wrl_t]}, expected 09:50:00")
+    need(wru_t and all(at(9, 30) <= t <= at(9, 30, 2) for t in wru_t), f"WRU alerts deleted at {[f'{t:%H:%M:%S}' for t in wru_t]}, expected 09:30:00")
+    need(wrl_t and all(at(10, 0) <= t <= at(10, 0, 2) for t in wrl_t), f"WRL alerts deleted at {[f'{t:%H:%M:%S}' for t in wrl_t]}, expected 10:00:00")
     need(any("hand-over" in l for l in LOGS), "no hand-over line")
     print("PASS morning: stuck BUY cancelled in %.1fs | stop-loss SELL cancelled in %.1fs and position sold | waiting target SELL cancelled in %.1fs and sold | WRU squared off 09:30:00 and its alerts "
           "deleted | WRL squared off 10:00:00 | BPB left open | late BUY cancelled at once | SWG alert and other strategies untouched | hand-over quiet" % (a_dt, d_cancel, e_cancel))
