@@ -3,47 +3,47 @@ Variants: 4 stop-loss x 7 targets x 2 exits = 56 per strategy, 8 strategies; 448
 
 Entries by strategy:
       strategy  signals_with_entry  entries_with_option_data  dropped_low_coverage  skipped_no_option_data
-   RLOW_1H_WRU                3007                       573                   412                    1275
-   RLOW_4H_WRU                1761                       283                   191                     817
-  WRU_RES_LINE                 324                        52                    37                     164
-WRU_ROLL5_HIGH                 218                        35                    24                      98
-  WRU_SUP_LINE                1158                       231                   157                     499
- WRU_ROLL5_LOW                4298                       807                   562                    1847
-WRU_PIVOT_HIGH                  69                        12                     8                      28
- WRU_PIVOT_LOW                2562                       458                   308                    1148
+   RLOW_1H_WRU                3007                      1129                   649                    2004
+   RLOW_4H_WRU                1761                       581                   310                    1227
+  WRU_RES_LINE                 324                        97                    52                     228
+WRU_ROLL5_HIGH                 218                        77                    43                     149
+  WRU_SUP_LINE                1158                       430                   215                     764
+ WRU_ROLL5_LOW                4298                      1583                   844                    2833
+WRU_PIVOT_HIGH                  69                        30                    18                      39
+ WRU_PIVOT_LOW                2562                       890                   463                    1734
 
 TOP 15 BY TOTAL PnL (min 30 trades):
                             variant  trades  win_pct  total_pnl  roi_pct  profit_factor  avg_days_held  max_days_held
-  WRU_ROLL5_LOW | 10:00 | SL0 | TP0     241    40.66     872983     6.57           1.56            0.0              0
-   RLOW_1H_WRU | 10:00 | SL0 | TP60     160    55.62     861345     9.91           2.40            0.0              0
-   RLOW_1H_WRU | 10:00 | SL0 | TP40     160    57.50     845154     9.73           2.47            0.0              0
-   RLOW_1H_WRU | 10:00 | SL0 | TP30     160    60.00     804434     9.26           2.55            0.0              0
- WRU_PIVOT_LOW | 09:30 | SL0 | TP60     145    53.79     718740     9.08           2.41            0.0              0
- WRU_ROLL5_LOW | 10:00 | SL0 | TP60     241    43.57     696938     5.24           1.47            0.0              0
-WRU_ROLL5_LOW | 09:30 | SL30 | TP60     234    48.72     688266     5.33           1.69            0.0              0
-  RLOW_1H_WRU | 10:00 | SL0 | TP400     160    54.37     682708     7.86           2.07            0.0              0
-    RLOW_1H_WRU | 10:00 | SL0 | TP0     160    54.37     682708     7.86           2.07            0.0              0
- WRU_ROLL5_LOW | 09:30 | SL0 | TP60     234    49.57     678733     5.26           1.67            0.0              0
- WRU_ROLL5_LOW | 10:00 | SL0 | TP30     241    51.04     675220     5.08           1.51            0.0              0
- WRU_ROLL5_LOW | 10:00 | SL0 | TP40     241    46.47     670416     5.04           1.47            0.0              0
-   RLOW_1H_WRU | 10:00 | SL0 | TP20     160    63.75     663728     7.64           2.39            0.0              0
-WRU_PIVOT_LOW | 09:30 | SL30 | TP60     145    52.41     646921     8.17           2.18            0.0              0
- WRU_ROLL5_LOW | 10:00 | SL0 | TP10     241    69.29     645605     4.86           1.75            0.0              0
+ WRU_ROLL5_LOW | 10:00 | SL0 | TP60     737    44.10    2335458     5.79           1.53            0.0              0
+  WRU_ROLL5_LOW | 10:00 | SL0 | TP0     737    41.79    2248414     5.58           1.48            0.0              0
+ WRU_ROLL5_LOW | 10:00 | SL0 | TP40     737    46.54    2161952     5.36           1.50            0.0              0
+WRU_ROLL5_LOW | 10:00 | SL0 | TP400     737    41.79    2014704     5.00           1.43            0.0              0
+ WRU_ROLL5_LOW | 10:00 | SL0 | TP30     737    50.07    1957880     4.86           1.48            0.0              0
+   RLOW_1H_WRU | 10:00 | SL0 | TP20     477    59.75    1930243     7.43           2.09            0.0              0
+   RLOW_1H_WRU | 10:00 | SL0 | TP40     477    52.20    1926227     7.41           1.88            0.0              0
+   RLOW_1H_WRU | 10:00 | SL0 | TP30     477    54.09    1858409     7.15           1.89            0.0              0
+   RLOW_1H_WRU | 10:00 | SL0 | TP60     477    50.31    1853474     7.13           1.83            0.0              0
+ WRU_ROLL5_LOW | 10:00 | SL0 | TP20     737    55.09    1815411     4.50           1.49            0.0              0
+ WRU_ROLL5_LOW | 09:30 | SL0 | TP60     720    46.94    1697726     4.31           1.53            0.0              0
+WRU_ROLL5_LOW | 10:00 | SL10 | TP60     737    30.66    1661719     4.12           1.48            0.0              0
+WRU_ROLL5_LOW | 09:30 | SL30 | TP60     720    46.11    1631872     4.14           1.51            0.0              0
+    RLOW_1H_WRU | 10:00 | SL0 | TP0     477    48.22    1614224     6.21           1.68            0.0              0
+WRU_ROLL5_LOW | 10:00 | SL10 | TP40     737    33.11    1595535     3.96           1.48            0.0              0
 
 TOP 15 BY ROI (min 30 trades):
-                            variant  trades  win_pct  total_pnl  roi_pct  profit_factor  avg_days_held  max_days_held
-   RLOW_1H_WRU | 10:00 | SL0 | TP60     160    55.62     861345     9.91           2.40            0.0              0
-   RLOW_1H_WRU | 10:00 | SL0 | TP40     160    57.50     845154     9.73           2.47            0.0              0
-   RLOW_1H_WRU | 10:00 | SL0 | TP30     160    60.00     804434     9.26           2.55            0.0              0
- WRU_PIVOT_LOW | 09:30 | SL0 | TP60     145    53.79     718740     9.08           2.41            0.0              0
-WRU_PIVOT_LOW | 09:30 | SL30 | TP60     145    52.41     646921     8.17           2.18            0.0              0
- WRU_PIVOT_LOW | 10:00 | SL0 | TP60     147    47.62     636470     7.94           1.76            0.0              0
-    RLOW_1H_WRU | 10:00 | SL0 | TP0     160    54.37     682708     7.86           2.07            0.0              0
-  RLOW_1H_WRU | 10:00 | SL0 | TP400     160    54.37     682708     7.86           2.07            0.0              0
-WRU_PIVOT_LOW | 09:30 | SL10 | TP60     145    43.45     615478     7.77           2.27            0.0              0
-   RLOW_1H_WRU | 10:00 | SL0 | TP20     160    63.75     663728     7.64           2.39            0.0              0
- WRU_PIVOT_LOW | 10:00 | SL0 | TP30     147    54.42     610251     7.61           1.86            0.0              0
-WRU_PIVOT_LOW | 09:30 | SL20 | TP60     145    50.34     602161     7.61           2.11            0.0              0
- WRU_PIVOT_LOW | 09:30 | SL0 | TP40     145    54.48     580815     7.34           2.14            0.0              0
-  RLOW_4H_WRU | 09:30 | SL20 | TP60      85    49.41     319160     6.99           2.17            0.0              0
- WRU_PIVOT_LOW | 09:30 | SL0 | TP30     145    55.86     549813     6.94           2.13            0.0              0
+                             variant  trades  win_pct  total_pnl  roi_pct  profit_factor  avg_days_held  max_days_held
+  WRU_ROLL5_HIGH | 10:00 | SL0 | TP0      34    35.29     314681    17.73           2.67            0.0              0
+    WRU_RES_LINE | 10:00 | SL0 | TP0      45    66.67     383869    15.46           3.38            0.0              0
+  WRU_RES_LINE | 10:00 | SL0 | TP400      45    66.67     383869    15.46           3.38            0.0              0
+ WRU_ROLL5_HIGH | 10:00 | SL10 | TP0      34    17.65     257973    14.54           2.40            0.0              0
+ WRU_ROLL5_HIGH | 10:00 | SL20 | TP0      34    23.53     219675    12.38           1.94            0.0              0
+ WRU_ROLL5_HIGH | 10:00 | SL30 | TP0      34    26.47     211254    11.91           1.85            0.0              0
+ WRU_RES_LINE | 10:00 | SL30 | TP400      45    64.44     287022    11.56           2.56            0.0              0
+   WRU_RES_LINE | 10:00 | SL30 | TP0      45    64.44     287022    11.56           2.56            0.0              0
+   WRU_RES_LINE | 10:00 | SL0 | TP60      45    66.67     280797    11.31           2.74            0.0              0
+   WRU_RES_LINE | 10:00 | SL0 | TP40      45    66.67     265952    10.71           2.65            0.0              0
+WRU_ROLL5_HIGH | 10:00 | SL0 | TP400      34    35.29     184181    10.38           1.98            0.0              0
+   WRU_RES_LINE | 10:00 | SL0 | TP30      45    68.89     237102     9.55           2.50            0.0              0
+   RLOW_4H_WRU | 09:30 | SL30 | TP60     260    49.23    1311058     9.37           2.43            0.0              0
+    RLOW_4H_WRU | 09:30 | SL0 | TP60     260    49.62    1305835     9.34           2.41            0.0              0
+   RLOW_4H_WRU | 09:30 | SL20 | TP60     260    48.08    1299318     9.29           2.47            0.0              0
