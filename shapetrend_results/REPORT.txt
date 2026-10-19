@@ -1,0 +1,131 @@
+Stocks tested: 210; entry dates 2023-01-01 .. 2026-09-30; entry checked 09:15 .. 15:20
+Variants: 5 stop-loss x 7 targets x 3 exits = 105 per strategy, 90 strategies; 9450 variant rows with trades.
+
+Entries by strategy:
+             strategy  signals_with_entry  entries_with_option_data  dropped_low_coverage  skipped_no_option_data
+     RLOW_1H_WRU__NOF                3868                       529                   285                     844
+    RLOW_1H_WRU__MA50                1889                       260                   137                     414
+  RLOW_1H_WRU__MA2050                1627                       223                   107                     359
+   RLOW_1H_WRU__ROC10                2152                       290                   162                     462
+   RLOW_1H_WRU__ADXDI                1145                       181                    96                     253
+  RLOW_1H_WRU__STRUCT                1359                       172                    88                     312
+   WRU_ROLL5_LOW__NOF                5652                       754                   406                    1254
+  WRU_ROLL5_LOW__MA50                3262                       399                   211                     737
+WRU_ROLL5_LOW__MA2050                2569                       321                   161                     593
+ WRU_ROLL5_LOW__ROC10                3829                       485                   275                     870
+ WRU_ROLL5_LOW__ADXDI                1770                       263                   148                     398
+WRU_ROLL5_LOW__STRUCT                2017                       249                   145                     461
+             WRL__NOF                4873                       692                   395                    1027
+            WRL__MA50                4144                       592                   344                     891
+          WRL__MA2050                3583                       490                   291                     774
+           WRL__ROC10                4016                       588                   334                     828
+           WRL__ADXDI                2814                       389                   230                     607
+          WRL__STRUCT                3268                       469                   261                     687
+             WRU__NOF                2045                       253                   125                     479
+            WRU__MA50                1559                       197                    92                     360
+          WRU__MA2050                1241                       165                    77                     283
+           WRU__ROC10                1548                       182                    91                     377
+           WRU__ADXDI                 829                       113                    53                     190
+          WRU__STRUCT                1144                       130                    62                     275
+             BPB__NOF                2768                       370                   211                     624
+            BPB__MA50                2456                       316                   179                     562
+          BPB__MA2050                1696                       221                   123                     396
+           BPB__ROC10                2719                       361                   205                     613
+           BPB__ADXDI                1798                       250                   146                     413
+          BPB__STRUCT                1923                       237                   133                     440
+           WGU_L__NOF                2988                       432                   244                     639
+          WGU_L__MA50                2589                       376                   211                     568
+        WGU_L__MA2050                2264                       336                   190                     499
+         WGU_L__ROC10                2179                       312                   173                     464
+         WGU_L__ADXDI                1453                       200                   115                     354
+        WGU_L__STRUCT                1686                       234                   132                     383
+           WGU_S__NOF                2417                       258                   121                     582
+          WGU_S__MA50                1829                       187                    89                     446
+        WGU_S__MA2050                1466                       155                    67                     363
+         WGU_S__ROC10                2008                       212                    98                     483
+         WGU_S__ADXDI                1246                       127                    59                     308
+        WGU_S__STRUCT                1562                       144                    74                     388
+           WGL_L__NOF                2464                       399                   226                     537
+          WGL_L__MA50                2114                       339                   193                     449
+        WGL_L__MA2050                1842                       298                   171                     395
+         WGL_L__ROC10                1808                       307                   170                     370
+         WGL_L__ADXDI                1144                       188                   111                     255
+        WGL_L__STRUCT                1403                       244                   142                     294
+           WGL_S__NOF                2470                       299                   153                     560
+          WGL_S__MA50                1878                       235                   113                     424
+        WGL_S__MA2050                1481                       190                    89                     330
+         WGL_S__ROC10                2079                       250                   135                     478
+         WGL_S__ADXDI                1371                       176                    90                     315
+        WGL_S__STRUCT                1635                       190                   103                     386
+         TL_1H_L__NOF                1475                       209                   114                     363
+        TL_1H_L__MA50                 834                       132                    74                     193
+      TL_1H_L__MA2050                 874                       135                    77                     208
+       TL_1H_L__ROC10                 712                       102                    58                     170
+       TL_1H_L__ADXDI                 515                        75                    42                     124
+      TL_1H_L__STRUCT                 612                        94                    49                     148
+         TL_1H_S__NOF                1042                       132                    69                     269
+        TL_1H_S__MA50                 375                        49                    23                      93
+      TL_1H_S__MA2050                 423                        48                    18                     114
+       TL_1H_S__ROC10                 403                        49                    24                     112
+       TL_1H_S__ADXDI                 230                        30                    10                      68
+      TL_1H_S__STRUCT                 326                        42                    18                      86
+         TL_4H_L__NOF                 490                        65                    33                     109
+        TL_4H_L__MA50                 271                        40                    20                      62
+      TL_4H_L__MA2050                 253                        39                    23                      59
+       TL_4H_L__ROC10                 257                        32                    18                      51
+       TL_4H_L__ADXDI                 129                        22                    13                      30
+      TL_4H_L__STRUCT                 143                        18                    11                      32
+         TL_4H_S__NOF                 452                        57                    27                     100
+        TL_4H_S__MA50                 170                        22                    10                      37
+      TL_4H_S__MA2050                 168                        16                     8                      36
+       TL_4H_S__ROC10                 208                        29                    17                      50
+       TL_4H_S__ADXDI                  86                        12                     4                      22
+      TL_4H_S__STRUCT                 104                        15                     8                      31
+          RC4C_L__NOF                7835                      1269                   711                    1570
+         RC4C_L__MA50                6725                      1081                   612                    1380
+       RC4C_L__MA2050                5863                       936                   537                    1207
+        RC4C_L__ROC10                6151                      1025                   564                    1195
+        RC4C_L__ADXDI                4330                       664                   383                     913
+       RC4C_L__STRUCT                4982                       795                   437                    1014
+          RC4C_S__NOF                5703                       821                   390                    1228
+         RC4C_S__MA50                4349                       626                   288                     953
+       RC4C_S__MA2050                3444                       504                   220                     750
+        RC4C_S__ROC10                4592                       642                   305                    1011
+        RC4C_S__ADXDI                2706                       406                   189                     591
+       RC4C_S__STRUCT                3415                       443                   216                     769
+
+TOP 15 BY TOTAL PnL (min 30 trades):
+                             variant  trades  win_pct  total_pnl  roi_pct  profit_factor  avg_days_held  max_days_held
+    RC4C_S__NOF | 15:30 | SL0 | TP60     431    50.35   14982440    63.10           6.00            0.0              0
+   RC4C_S__NOF | 15:30 | SL0 | TP100     431    46.17   14881047    62.67           5.37            0.0              0
+   RC4C_S__MA50 | 15:30 | SL0 | TP60     338    50.59   14757389    78.84           7.27            0.0              0
+  RC4C_S__MA50 | 15:30 | SL0 | TP100     338    46.45   14708385    78.58           6.50            0.0              0
+  RC4C_S__ROC10 | 15:30 | SL0 | TP60     337    50.74   14471908    77.66           7.09            0.0              0
+RC4C_S__MA2050 | 15:30 | SL0 | TP100     284    46.83   14454913    91.84           7.72            0.0              0
+ RC4C_S__MA2050 | 15:30 | SL0 | TP60     284    50.70   14431591    91.69           8.68            0.0              0
+ RC4C_S__ROC10 | 15:30 | SL0 | TP100     337    46.29   14420873    77.39           6.23            0.0              0
+    RC4C_S__NOF | 15:30 | SL0 | TP20     431    62.41   14219306    59.89           7.75            0.0              0
+    RC4C_S__NOF | 15:30 | SL0 | TP40     431    53.60   14192404    59.77           6.18            0.0              0
+    RC4C_S__NOF | 15:30 | SL0 | TP30     431    56.61   14113366    59.44           6.60            0.0              0
+   RC4C_S__MA50 | 15:30 | SL0 | TP40     338    54.73   14010120    74.85           7.69            0.0              0
+   RC4C_S__MA50 | 15:30 | SL0 | TP30     338    57.69   13880625    74.16           8.27            0.0              0
+ RC4C_S__ADXDI | 15:30 | SL0 | TP100     217    47.00   13822480   116.28           9.88            0.0              0
+   RC4C_S__NOF | 15:30 | SL60 | TP20     431    61.02   13812751    58.18           6.90            0.0              0
+
+TOP 15 BY ROI (min 30 trades):
+                             variant  trades  win_pct  total_pnl  roi_pct  profit_factor  avg_days_held  max_days_held
+ RC4C_S__ADXDI | 15:30 | SL0 | TP100     217    47.00   13822480   116.28           9.88            0.0              0
+  RC4C_S__ADXDI | 15:30 | SL0 | TP60     217    50.69   13690510   115.17          10.53            0.0              0
+  RC4C_S__ADXDI | 15:30 | SL0 | TP20     217    63.59   12971000   109.11          13.98            0.0              0
+  RC4C_S__ADXDI | 15:30 | SL0 | TP40     217    53.46   12873645   108.29          10.82            0.0              0
+  RC4C_S__ADXDI | 15:30 | SL0 | TP30     217    56.68   12862060   108.20          11.52            0.0              0
+ RC4C_S__ADXDI | 15:30 | SL60 | TP20     217    62.67   12862923   108.20          12.95            0.0              0
+  RC4C_S__ADXDI | 15:30 | SL0 | TP10     217    75.12   12804832   107.72          19.92            0.0              0
+RC4C_S__ADXDI | 15:30 | SL60 | TP100     217    45.62   12751329   107.27           8.55            0.0              0
+ RC4C_S__ADXDI | 15:30 | SL60 | TP30     217    55.76   12734928   107.13          10.70            0.0              0
+ RC4C_S__ADXDI | 15:30 | SL60 | TP10     217    74.19   12703975   106.87          17.60            0.0              0
+ RC4C_S__ADXDI | 15:30 | SL60 | TP60     217    49.31   12640372   106.33           9.16            0.0              0
+ RC4C_S__ADXDI | 15:30 | SL60 | TP40     217    52.07   12630398   106.25           9.73            0.0              0
+ RC4C_S__ADXDI | 15:30 | SL10 | TP10     217    53.46   12106799   101.84          15.36            0.0              0
+ RC4C_S__ADXDI | 15:30 | SL20 | TP20     217    49.77   12099366   101.78           9.55            0.0              0
+ RC4C_S__ADXDI | 15:30 | SL20 | TP10     217    62.21   12070967   101.54          12.14            0.0              0
