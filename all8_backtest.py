@@ -365,6 +365,7 @@ def simulate_one(entry, ls, hs, tx, last):
         thr = round(entry * (1 - s / 100), 6); i = int(np.searchsorted(-ls[:, 1], -thr, side="left"))
         if i < len(ls): gap = ls[i, 2] <= thr; slh[s] = (int(ls[i, 0]), float(ls[i, 2]) if gap else thr, 2 if gap else 1)
     for tp in TPS:
+        if not tp: continue                                                      # 0 = no target
         thr = round(entry * (1 + tp / 100), 6); i = int(np.searchsorted(hs[:, 1], thr, side="left"))
         if i < len(hs): gap = hs[i, 2] >= thr; tph[tp] = (int(hs[i, 0]), float(hs[i, 2]) if gap else thr, 4 if gap else 3)
     out = []
