@@ -9,13 +9,14 @@ strike locked at entry), exactly like all8_backtest.py (same option data, same e
 
 THE 8 STRATEGIES
   1) RLOW_1H_WRU / RLOW_4H_WRU     the SHAPECMP rolling-LOW rule run on the 1-hour / 4-hour chart: a candle closes below the ROLLING LOW of the previous 10 candles of that chart (W_LOOKBACK),
-                                   a later candle (within 20 candles) closes back above that low = the signal candle; it must be a WRU candle.  The rolling low is the LINE.
-                                   Entry on the NEXT trading day when price falls to the line (skipped if it already did so later on the signal day).
-  2) WRU_RES_LINE / WRU_ROLL5_HIGH WRU DAILY candle whose HIGH is above and whose CLOSE is above the RESISTANCE (falling trendline through the last two daily pivot highs, 2 candles each side;
+                                   a later candle (within 20 candles) closes back above that low = the signal candle; it must be a WRU candle AND the PREVIOUS candle, i.e. the LAST
+                                   candle of the day before the entry day.  The rolling low is the LINE.  Entry on the NEXT trading day when price falls to the line.
+  In EVERY strategy the WRU candle is the PREVIOUS candle (the one just before the entry day) and it CLOSES ABOVE the entry level.
+  2) WRU_RES_LINE / WRU_ROLL5_HIGH WRU DAILY candle whose CLOSE is above the RESISTANCE (falling trendline through the last two daily pivot highs, 2 candles each side;
                                    the first close above it) / the 5-DAY ROLLING HIGH (highest high of the 5 days before).  Entry next day when price falls back to that level.
-  3) WRU_SUP_LINE / WRU_ROLL5_LOW  the same WRU candle (high above and close above) with SUPPORT (rising trendline through the last two daily pivot lows) / the 5-DAY ROLLING LOW as the level.
+  3) WRU_SUP_LINE / WRU_ROLL5_LOW  the same WRU candle (close above the level) with SUPPORT (rising trendline through the last two daily pivot lows) / the 5-DAY ROLLING LOW as the level.
                                    Entry next day when price falls to / through the level (a break of support).
-  4) WRU_PIVOT_HIGH                WRU daily candle whose high and close are above the latest confirmed PIVOT HIGH (2 candles each side; first close above it).  Entry next day when price falls to the pivot.
+  4) WRU_PIVOT_HIGH                WRU daily candle whose close is above the latest confirmed PIVOT HIGH (2 candles each side; first close above it).  Entry next day when price falls to the pivot.
   5) WRU_PIVOT_LOW                 the same with the latest confirmed PIVOT LOW.
   The line value used for the entry is the value of the line ON THE ENTRY DAY.
 ENTRY      the first 1-minute candle from 09:15 to 09:30 whose LOW touches the level (a gap down through the level = entry at 09:15).  Option price = close of the entry-minute option candle.
@@ -83,7 +84,7 @@ def daily_signals(O, H, L, C_):
     ph, pl = pivots(H, PIV_K, True), pivots(L, PIV_K, False)
     for n in range(max(ROLL_DAYS, 2 * PIV_K + 2), N - 1):
         if not is_wru(O, H, L, C_, n): continue
-        def above(v): return H[n] > v and C_[n] > v
+        def above(v): return C_[n] > v                                          # the WRU candle (the previous candle) CLOSES above the entry level (so its high is above too)
         hi5, lo5 = H[n - ROLL_DAYS:n].max(), L[n - ROLL_DAYS:n].min()
         if above(hi5): out["WRU_ROLL5_HIGH"].append((n, hi5))
         if above(lo5): out["WRU_ROLL5_LOW"].append((n, lo5))
@@ -94,7 +95,7 @@ def daily_signals(O, H, L, C_):
             if p2 - p1 < 3 or n - p2 > PIV_AGE: continue
             if (res and not X[p2] < X[p1]) or ((not res) and not X[p2] > X[p1]): continue          # resistance falls, support rises
             sl = (X[p2] - X[p1]) / (p2 - p1); v = lambda t: X[p1] + sl * (t - p1)
-            if not above(v(n)): continue
+            if not above(v(n + 1)): continue                                                       # the close is above the line's value ON THE ENTRY DAY
             if res and C_[n - 1] > v(n - 1): continue                                              # the FIRST close above the resistance line
             out[name].append((n, v(n + 1)))
         for name, pv, X, hi in (("WRU_PIVOT_HIGH", ph, H, True), ("WRU_PIVOT_LOW", pl, L, False)):
@@ -131,8 +132,7 @@ def candidate_rows(stock, hourly, t0, t1, pre_tol=PRE_TOL):
         if len(bars) < 60: continue
         O, H, L, C_ = (bars[c].values.astype(float) for c in ("o", "h", "l", "c")); day = np.array(bars.index.strftime("%Y-%m-%d"))
         for n, lvl in rlow_signals(O, H, L, C_):
-            same = day == day[n]; same[:n + 1] = False
-            if same.any() and L[same].min() <= lvl: continue                    # the line was already crossed later on the signal day
+            if n + 1 < len(day) and day[n + 1] == day[n]: continue                  # the WRU candle must be the PREVIOUS candle = the last candle of the day before the entry day
             add(name, lvl, day[n], n, O, H, L, C_, nxt.get(day[n]))
     O, H, L, C_ = (dd[c].values.astype(float) for c in ("o", "h", "l", "c"))
     for name, sigs in daily_signals(O, H, L, C_).items():

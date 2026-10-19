@@ -18,20 +18,22 @@ assert W.pivots(H, 2, True) == [2, 6, 10] and W.pivots(L, 2, False) == [0 + 4, 8
 assert W.pivots(H, 2, True) == [2, 6, 10], W.pivots(H, 2, True)
 
 # ---- 2 rolling-low signal vs brute force
-def brute_rlow(O, H, L, C, lb, win):
+def brute_rlow(O, H, L, C, lb, win, day):
     out = []
     for n in range(lb + 1, len(C) - 1):
         for i in range(n - 1, max(lb, n - win) - 1, -1):
             ref = L[i - lb:i].min()
             if C[i] < ref and C[n] > ref:
-                if C[n] < O[n] and (H[n] - max(O[n], C[n])) > (min(O[n], C[n]) - L[n]): out.append((n, ref))
+                if day[n + 1] != day[n] and C[n] < O[n] and (H[n] - max(O[n], C[n])) > (min(O[n], C[n]) - L[n]): out.append((n, ref))
                 break
     return out
 rng = np.random.default_rng(7); tot = 0
 for trial in range(40):
     N = 300; c = 100 * np.exp(np.cumsum(rng.normal(0, .01, N))); o = c * np.exp(rng.normal(0, .004, N))
     h = np.maximum(o, c) * (1 + np.abs(rng.normal(0, .004, N))); l = np.minimum(o, c) * (1 - np.abs(rng.normal(0, .004, N)))
-    got, exp = W.rlow_signals(o, h, l, c), brute_rlow(o, h, l, c, W.W_LOOKBACK, W.W_WINDOW)
+    day = np.arange(N) // 7
+    got = [(n, v) for n, v in W.rlow_signals(o, h, l, c) if n + 1 >= N or day[n + 1] != day[n]]
+    exp = brute_rlow(o, h, l, c, W.W_LOOKBACK, W.W_WINDOW, day)
     assert [(n, round(v, 6)) for n, v in got] == [(n, round(v, 6)) for n, v in exp], (trial, got[:3], exp[:3]); tot += len(got)
 assert tot > 20, tot
 
