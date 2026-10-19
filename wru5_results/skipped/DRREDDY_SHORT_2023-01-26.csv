@@ -1,5 +1,4 @@
 ekey,reason
-DRREDDY|SHORT|2023-01-03|09:16,Dhan returned no option candles for this period
-DRREDDY|SHORT|2023-01-04|09:15,Dhan returned no option candles for this period
-DRREDDY|SHORT|2023-01-23|09:17,Dhan returned no option candles for this period
-DRREDDY|SHORT|2023-01-25|09:16,Dhan returned no option candles for this period
+DRREDDY|SHORT|2023-01-03|09:16,no ATM candle at the entry minute
+DRREDDY|SHORT|2023-01-23|09:17,no ATM candle at the entry minute
+DRREDDY|SHORT|2023-01-25|09:16,no ATM candle at the entry minute
