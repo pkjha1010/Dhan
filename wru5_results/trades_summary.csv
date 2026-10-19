@@ -1,0 +1,9 @@
+strategy,entry_type,signals_with_entry,entries_with_option_data,dropped_low_coverage,skipped_no_option_data,skip_reasons,trades_one_lot_affordable,long_trades,short_trades,first_entry,last_entry,avg_option_price
+RLOW_1H_WRU,ALL,3007,573,412,1275,Dhan returned no option candles for this period = 1104; no ATM candle at the entry minute = 164; no option candles up to the expiry = 6; no option candles after the entry = 1,160,0,161,2023-01-10,2026-09-28,29.1
+RLOW_4H_WRU,ALL,1761,283,191,817,Dhan returned no option candles for this period = 717; no ATM candle at the entry minute = 93; no option candles up to the expiry = 6; no option candles after the entry = 1,91,0,92,2023-01-25,2026-09-29,24.51
+WRU_RES_LINE,ALL,324,52,37,164,Dhan returned no option candles for this period = 143; no ATM candle at the entry minute = 17; no option candles up to the expiry = 4,15,0,15,2023-02-22,2026-05-22,19.23
+WRU_ROLL5_HIGH,ALL,218,35,24,98,Dhan returned no option candles for this period = 89; no ATM candle at the entry minute = 9,11,0,11,2023-02-17,2026-06-30,9.39
+WRU_SUP_LINE,ALL,1158,231,157,499,Dhan returned no option candles for this period = 438; no ATM candle at the entry minute = 58; no option candles up to the expiry = 3,73,0,74,2023-01-13,2026-08-25,19.73
+WRU_ROLL5_LOW,ALL,4298,807,562,1847,Dhan returned no option candles for this period = 1629; no ATM candle at the entry minute = 196; no option candles up to the expiry = 21; no option candles after the entry = 1,241,0,245,2023-01-05,2026-09-28,28.04
+WRU_PIVOT_HIGH,ALL,69,12,8,28,Dhan returned no option candles for this period = 24; no ATM candle at the entry minute = 3; no option candles up to the expiry = 1,4,0,4,2023-04-12,2024-11-26,8.91
+WRU_PIVOT_LOW,ALL,2562,458,308,1148,Dhan returned no option candles for this period = 1024; no ATM candle at the entry minute = 110; no option candles up to the expiry = 14,147,0,150,2023-01-13,2026-09-29,26.38
