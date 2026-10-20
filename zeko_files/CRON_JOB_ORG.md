@@ -1,35 +1,34 @@
-# cron-job.org setup for SHAPELIVE (three jobs, Monday - Friday, timezone Asia/Kolkata)
+# cron-job.org setup for SHAPELIVE (Monday - Friday, timezone Asia/Kolkata)
 
-All three jobs call the GitHub API the same way:
+All jobs call the GitHub API the same way:
 
 * URL     `https://api.github.com/repos/pkjha1010/zeko/actions/workflows/<FILE>/dispatches`
 * Method  `POST`
 * Headers `Authorization: Bearer <your GitHub token>`  |  `Accept: application/vnd.github+json`  |  `X-GitHub-Api-Version: 2022-11-28`  |  `Content-Type: application/json`
-* Token   a fine-grained personal access token for the repo `pkjha1010/zeko` with **Actions: Read and write** (nothing else needed).  Success = HTTP 204.
+* Token   a fine-grained personal access token for the repo `pkjha1010/zeko` with **Actions: Read and write**.  Success = HTTP 204.
 
-| # | Time (IST) | Workflow file | Request body |
-|---|-----------|---------------|--------------|
-| 1 | **06:00** Mon-Fri | `shape_live_plan.yml`    | `{"ref":"main"}` |
-| 2 | **08:55** Mon-Fri | `shape_live_manager.yml` | `{"ref":"main"}`  (morning job: started before 12:30 it hands over quietly at 12:58) |
-| 3 | **12:55** Mon-Fri | `shape_live_manager.yml` | `{"ref":"main"}`  (afternoon job: runs to 15:45 and must end clean; it waits in the queue until the morning job has handed over at 12:58) |
+| # | Time (IST) | Workflow file | Request body | What it does |
+|---|-----------|---------------|--------------|--------------|
+| 1 | **20:00** Sun-Thu (optional, you can also run it by hand) | `shape_live_plan.yml`    | `{"ref":"main"}` | EVENING preview of the next trading day (no alerts) |
+| 2 | **08:30** Mon-Fri | `shape_live_plan.yml`    | `{"ref":"main"}` | MORNING plan: creates the alerts, writes `live_plan/plan.json` |
+| 3 | **08:55** Mon-Fri | `shape_live_manager.yml` | `{"ref":"main"}` | the manager, ONE call per day |
 
-Why two manager jobs: one GitHub job may run at most 6 hours; 08:55 -> 15:45 is 6 h 50 min.  The manager keeps no memory of its own - the afternoon job rebuilds everything
-from Kite (today's orders, positions, alerts) and the plan file, so it can also be started at any other time (e.g. after a crash) with the same call.  The two jobs share a
-queue (`concurrency`), job 3 waits until job 2 has finished at 12:58; the gap of a few seconds is harmless: ENTRY and the target / stop-loss GTT are carried by Zerodha itself.
+The manager workflow contains two chained jobs, so cron job 3 is the ONLY call it needs (the old second call at 12:55 is DELETED):
+* job `morning` runs 08:55 -> 12:58:00 and ends quietly (hand-over),
+* job `afternoon` starts as soon as `morning` has finished and runs to 15:45:00; it must end clean, otherwise the run fails and GitHub mails you.
+If the run is started late (e.g. 13:30 after a problem) the `morning` job does nothing and the `afternoon` job takes over at once.  The manager keeps no memory of its own: the afternoon job
+rebuilds everything from Kite (today's orders, positions, alerts) and the plan file.  The few seconds between the two jobs are harmless: entry and the stop-loss / target GTT are carried by Zerodha.
 
-Other useful calls (run by hand from the GitHub "Actions" tab, or a cron job of your own):
+The plan decides what to do from the clock (input `when` = auto):  before 09:15 on a trading day = MORNING (real plan);  after 15:45 or on a weekend = EVENING (preview, next trading day);
+between 09:15 and 15:45 it refuses.  Make sure the MORNING plan has finished (green) before 08:55 - the manager reads `live_plan/plan.json` when it starts.
+
+Other useful calls (GitHub "Actions" tab or a cron job of your own):
 * `shape_live_manager.yml`, `{"ref":"main","inputs":{"mode":"cleanup"}}`  - delete every waiting SHP| alert now.
 * `shape_live_manager.yml`, `{"ref":"main","inputs":{"dry_run":"1"}}`    - print what the manager would do, send nothing.
-* `shape_live_plan.yml`,    `{"ref":"main","inputs":{"mode":"probe"}}`   - print your existing ATO alerts (check the GTT target / stop-loss layout, see below).
+* `shape_live_plan.yml`,    `{"ref":"main","inputs":{"mode":"probe"}}`   - print your existing ATO alerts (check the GTT layout, see below).
+* `shape_live_plan.yml`,    `{"ref":"main","inputs":{"when":"morning","dry_run":"1"}}` - rehearse the morning plan without creating alerts.
 
-Set the cron-job.org "failure notifications" on, and keep GitHub's "workflow run failed" e-mail on: the afternoon job ends with an ERROR when anything of the strategies is still open
-at 15:45 (open position, waiting order, GTT or alert).
-
-## One thing to check once before the first live day (GTT layout)
-The plan asks Zerodha for a built-in GTT with a **target +60 %** for WRL and BPB, a **target +400 % and stop-loss -20 %** for WRU
-(`"gtt": {"target": 60, "stoploss": 0}` and `{"target": 400, "stoploss": -20}`; `stoploss: 0` = no stop-loss).  Your old plan used `{"target": 0, "stoploss": -10}`, so the
-field names are the same, but I could not test the NEW target leg against Zerodha.  Do this once:
-1. In the Kite app create ONE ATO alert by hand with a 60 % target and a 20 % stop-loss, validity Day, and another with only the 60 % target.
-2. Run `shape_live_plan.yml` with `mode = probe` and look at how the two alerts are printed.
-3. If the layout differs, set the repository variables `GTT_TP_SL` / `GTT_TP_ONLY` (JSON text, `{tp}` and `{sl}` are replaced by the percentages) as env of the plan step.
-Until this is confirmed, run the plan with `dry_run = 1` and trade with one lot.
+## GTT layout
+WRU uses a stop-loss without a target: `{"target": 0, "stoploss": -20}` (the same layout your old plan used with -10).  BPB uses `{"target": 60, "stoploss": 0}`.
+To check how Zerodha stores them, create two ATO alerts by hand (20 % stop-loss only, 60 % target only), run the plan with `mode = probe` and compare.  If it differs set the env values
+`GTT_SL_ONLY` / `GTT_TP_ONLY` / `GTT_TP_SL` on the plan step (`{tp}` and `{sl}` are replaced by the percentages).

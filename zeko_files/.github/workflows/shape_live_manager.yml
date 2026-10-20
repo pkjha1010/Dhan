@@ -1,26 +1,30 @@
-name: SHAPELIVE manager (09:00-15:45 IST - entries, targets, stop-loss, per-strategy square-off, 30 % fund limit)
+name: 'SHAPELIVE manager (08:55-15:45 IST - WRU + BPB: entries, stop-loss, target, square-off, BPB max 3 open)'
 
+# Start it ONCE per day (cron-job.org 08:55).  Two chained jobs because GitHub stops one job after 6 hours:
+#   morning    runs until 12:58:00 and ends quietly (hand-over)
+#   afternoon  starts the moment the morning job has finished (needs: morning) and runs to 15:45:00; it must end CLEAN or the run fails and you get the mail.
+# If the run is started late (e.g. 13:30 after a crash) the morning job does nothing and the afternoon job takes over at once.
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'run = normal day job | cleanup = delete all waiting SHP| alerts right now | iptest = check the static IP (places nothing)'
+        description: 'run = normal day | cleanup = delete all waiting SHP| alerts right now | iptest = check the static IP (places nothing)'
         required: false
         default: 'run'
       job_end:
-        description: 'BLANK = automatic (started before 12:30 -> hands over at 12:58:00, started later -> runs to 15:45:00). Or give a time, e.g. 12:58:00 or 15:45:00'
+        description: 'End time of the MORNING job (hand-over to the afternoon job). Leave as 12:58:00'
         required: false
-        default: ''
+        default: '12:58:00'
       dry_run:
         description: '1 = print the orders, send nothing'
         required: false
         default: '0'
       fund_limit_pct:
-        description: 'No new orders while the account uses more than this percent of the total funds'
+        description: '0 = no fund limit (default).  30 = no new orders while the account uses more than 30 percent of the total funds'
         required: false
-        default: '30'
+        default: '0'
       total_funds:
-        description: 'OPTIONAL total funds in rupees for the limit (blank = Kite net balance + used funds)'
+        description: 'OPTIONAL total funds in rupees for the fund limit (blank = Kite net balance + used funds)'
         required: false
         default: ''
       sweep_all:
@@ -36,9 +40,10 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  manager:
+  morning:
+    name: 'morning job (to 12:58, hand-over)'
     runs-on: ubuntu-latest
-    timeout-minutes: 330
+    timeout-minutes: 270
     steps:
       - uses: actions/checkout@v4
 
@@ -49,7 +54,7 @@ jobs:
       - name: Install dependencies
         run: pip install requests kiteconnect pyotp
 
-      - name: Manage entries, targets, stop-loss, exits and the fund limit
+      - name: Manage entries, targets, stop-loss, exits and the open-trade limit
         env:
           KITE_API_KEY: ${{ secrets.KITE_API_KEY }}
           KITE_API_SECRET: ${{ secrets.KITE_API_SECRET }}
@@ -58,8 +63,39 @@ jobs:
           ZERODHA_TOTP_KEY: ${{ secrets.ZERODHA_TOTP_KEY }}
           ORDER_PROXY: ${{ secrets.ORDER_PROXY }}
           DRY_RUN: ${{ github.event.inputs.dry_run }}
-          JOB_END: ${{ github.event.inputs.job_end }}
           FUND_LIMIT_PCT: ${{ github.event.inputs.fund_limit_pct }}
           TOTAL_FUNDS: ${{ github.event.inputs.total_funds }}
           SWEEP_ALL: ${{ github.event.inputs.sweep_all }}
+          JOB_END: ${{ github.event.inputs.job_end || '12:58:00' }}
+        run: python -u shape_live_manager.py ${{ github.event.inputs.mode || 'run' }}
+
+  afternoon:
+    name: 'afternoon job (from the hand-over to 15:45)'
+    runs-on: ubuntu-latest
+    timeout-minutes: 200
+    needs: morning
+    if: ${{ !cancelled() && (github.event.inputs.mode == '' || github.event.inputs.mode == 'run') }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests kiteconnect pyotp
+
+      - name: Manage entries, targets, stop-loss, exits and the open-trade limit
+        env:
+          KITE_API_KEY: ${{ secrets.KITE_API_KEY }}
+          KITE_API_SECRET: ${{ secrets.KITE_API_SECRET }}
+          ZERODHA_USER_ID: ${{ secrets.ZERODHA_USER_ID }}
+          ZERODHA_PASSWORD: ${{ secrets.ZERODHA_PASSWORD }}
+          ZERODHA_TOTP_KEY: ${{ secrets.ZERODHA_TOTP_KEY }}
+          ORDER_PROXY: ${{ secrets.ORDER_PROXY }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
+          FUND_LIMIT_PCT: ${{ github.event.inputs.fund_limit_pct }}
+          TOTAL_FUNDS: ${{ github.event.inputs.total_funds }}
+          SWEEP_ALL: ${{ github.event.inputs.sweep_all }}
+          JOB_END: '15:45:00'
         run: python -u shape_live_manager.py ${{ github.event.inputs.mode || 'run' }}

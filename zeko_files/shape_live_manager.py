@@ -1,28 +1,27 @@
 """
-SHAPELIVE MANAGER  -  runs on every trading day, from about 08:55 IST until the last strategy is squared off (about 15:30).  It is started by cron-job.org
-(see CRON_JOB_ORG.md); because one GitHub job may not run more than 6 hours it is started TWICE (08:55 -> 12:58 and 12:55 -> 15:45).  It keeps no state
-of its own: the second run rebuilds everything from Kite (today's orders, positions, alerts) and the plan file.
+SHAPELIVE MANAGER  -  one run per trading day (workflow shape_live_manager.yml, started ONCE at 08:55 IST by cron-job.org).  The workflow has TWO chained jobs because
+GitHub stops a job after 6 hours: job "morning" runs 08:55 -> 12:58 and ends quietly (hand-over), job "afternoon" starts right after it (needs: morning) and runs to 15:45.
+The manager keeps no state of its own: the afternoon job rebuilds everything from Kite (today's orders, positions, alerts) and the plan file.
 
-Three strategies (shape_live_plan.py makes one ATO alert per setup; Zerodha does the ENTRY on its servers: BUY option NRML, validity DAY, with the built-in
-GTT: target +60 % for WRL and BPB, +400 % for WRU, stop-loss -20 % for WRU only):
-    WRU WICK_RED_UPPER  SHORT  entries to 09:30:00, square off 09:30:00        WRL WICK_RED_LOWER  LONG   entries to 10:00:00, square off 10:00:00
-    BPB BREAKOUT_BPB    SHORT  entries to 15:29:00, square off 15:30:00        (the times come from the plan file; env EXIT_AT / ENTRY_END do not exist any more)
+Two strategies (shape_live_plan.py makes one ATO alert per setup; Zerodha does the ENTRY on its servers: BUY option NRML, validity DAY, with the built-in GTT):
+    WRU WICK_RED_UPPER  SHORT  stop-loss -20 %, no target     entries to 09:30:00, square off 09:30:00      (no limit on the number of trades: it has a stop-loss)
+    BPB BREAKOUT_BPB    SHORT  no stop-loss, target +60 %      entries to 15:29:00, square off 15:30:00      (at most 3 trades open at the same time: it has no stop-loss)
+(WRL is still in the code but is not planned unless STRATEGIES contains it.  The times / percentages / caps come from the plan file.)
 
 SAFETY RULES (all checked every POLL_S = 0.3 s)
   1. A BUY order that is still unfilled ENTRY_WAIT_S (0.5 s) after we see it is CANCELLED at once (price ran away / market order turned into a waiting limit order).
      A partly filled BUY: the rest is cancelled and the filled quantity is managed as a trade.
   2. A stop-loss SELL (the GTT sells with a LIMIT order; price below the entry price) that is still waiting STOP_WAIT_S (0.5 s) after we see it is CANCELLED and the
      position is SQUARED OFF at once (MARKET, then more and more aggressive LIMIT orders until flat).
-     A target SELL (price above the entry price) that is still waiting TP_WAIT_S (3 s; -1 = never) is treated the same: cancelled and the position sold at market,
-     so that a 60 % winner is not lost again.
-  3. FUND LIMIT: if the account uses MORE than FUND_LIMIT_PCT (30) % of the total funds, every waiting SHP| alert is deleted and every waiting BUY order is cancelled
-     (no new order can be placed).  When the used funds fall back under the limit the alerts are RE-CREATED from the plan (only strategies still inside their entry time,
-     only setups that have not traded yet, and only while used funds + that trade's cost stay within the limit).
-     used = Kite utilised.debits (EVERYTHING in the account, also your swing positions);  total = TOTAL_FUNDS env, else Kite net + utilised.debits.
+     A target SELL (price above the entry price) that is still waiting TP_WAIT_S (3 s; -1 = never) is treated the same: cancelled and the position sold at market.
+  3. MAX OPEN TRADES (max_open of a strategy in the plan, BPB = 3): while that many positions of the strategy are open its waiting alerts are deleted and its waiting BUY orders
+     cancelled; when a position closes (target / square off) the alerts are re-created (only setups that have not traded yet and where price has NOT already crossed the entry
+     level).  If more than max_open fill together (two alerts firing in the same moment) the LATEST fill is sold at once (tag SHPCAP).
+     The old 30 % fund limit is OFF (FUND_LIMIT_PCT=0).  Set FUND_LIMIT_PCT=30 to switch it on again.
   4. ENTRY END of a strategy: its waiting alerts are deleted, its waiting BUY orders cancelled.  A BUY placed after that second which still fills is sold at once.
   5. EXIT of a strategy (its exit time, to the second): its GTTs are deleted, its waiting orders cancelled, every position of its options squared off.  Then a sweep repeats
      every second until two passes in a row find nothing left (alerts, waiting orders, GTTs, positions of that strategy's options).
-  6. At the end (FINAL_END 15:45) anything left makes the job FAIL, so you get the GitHub failure mail.  Handover jobs (JOB_END before FINAL_END) end quietly.
+  6. At the end (FINAL_END 15:45) anything left makes the job FAIL, so you get the GitHub failure mail.  The hand-over job (JOB_END before FINAL_END) ends quietly.
 Scope: only the options of today's plan and orders tagged SHP* are touched (SWG alerts, swing positions and other orders are left alone).  SWEEP_ALL=1 additionally
 clears EVERY open NFO position and waiting NFO order of the account after the last strategy has finished (default 0 - you run a swing strategy in the same account).
 DRY_RUN=1 prints every action and sends nothing.
@@ -45,9 +44,9 @@ def hhmmss(s):
 
 
 DEFAULT_STRATS = {   # used only when an old plan file has no "strategies" block
-    "WRU": dict(name="WICK_RED_UPPER", entry_end="09:30:00", exit_at="09:30:00", sl_pct=20.0, tp_pct=400.0),
-    "WRL": dict(name="WICK_RED_LOWER", entry_end="10:00:00", exit_at="10:00:00", sl_pct=0.0, tp_pct=60.0),
-    "BPB": dict(name="BREAKOUT_BPB", entry_end="15:29:00", exit_at="15:30:00", sl_pct=0.0, tp_pct=60.0)}
+    "WRU": dict(name="WICK_RED_UPPER", entry_end="09:30:00", exit_at="09:30:00", sl_pct=20.0, tp_pct=0.0, max_open=0),
+    "WRL": dict(name="WICK_RED_LOWER", entry_end="10:00:00", exit_at="10:00:00", sl_pct=0.0, tp_pct=60.0, max_open=0),
+    "BPB": dict(name="BREAKOUT_BPB", entry_end="15:29:00", exit_at="15:30:00", sl_pct=0.0, tp_pct=60.0, max_open=3)}
 FINAL_END = hhmmss(os.environ.get("FINAL_END") or "15:45:00")       # all strategies must be clean by now, otherwise the job fails
 JOB_END = hhmmss(os.environ.get("JOB_END") or str(FINAL_END))       # this job stops here; if before FINAL_END it is a quiet hand-over to the next job
 JOB_START = hhmmss(os.environ.get("JOB_START") or "08:00:00")        # the manager does nothing before this
@@ -59,7 +58,7 @@ SWEEP_ALL = (os.environ.get("SWEEP_ALL") or "0") == "1"             # 1 = after 
 STOP_WAIT_S = float(os.environ.get("STOP_WAIT_S") or 0.5)           # a stop-loss SELL still unfilled after this many seconds is cancelled and sold at market
 TP_WAIT_S = float(os.environ.get("TP_WAIT_S") or 3)                 # a target SELL still unfilled after this many seconds is cancelled and sold at market (-1 = leave it)
 ENTRY_WAIT_S = float(os.environ.get("ENTRY_WAIT_S") or 0.5)         # a BUY order still unfilled after this many seconds is cancelled
-FUND_LIMIT_PCT = float(os.environ.get("FUND_LIMIT_PCT") or 30)      # stop new orders while the account uses more than this % of the total funds
+FUND_LIMIT_PCT = float(os.environ.get("FUND_LIMIT_PCT") or 0)       # 0 = OFF.  e.g. 30 = stop new orders while the account uses more than 30 % of the total funds
 TOTAL_FUNDS = float(os.environ.get("TOTAL_FUNDS") or 0)             # total funds in Rs (0 = Kite net + utilised debits)
 REARM = (os.environ.get("REARM") or "1") == "1"                     # re-create the waiting alerts when the funds are back under the limit
 ORDER_PROXY = (os.environ.get("ORDER_PROXY") or "").strip()         # static-IP proxy, e.g. http://user:pass@host:port  (orders only)
@@ -170,6 +169,9 @@ class Manager:
         self.busy = set()
         self.blocked, self.used, self.total, self.limit, self.last_funds = False, 0.0, 0.0, 0.0, 0.0
         self.final = False                              # True after the last strategy is finished (only then SWEEP_ALL applies)
+        self.caps = {c: int(r.get("max_open") or 0) for c, r in self.strats.items() if int(r.get("max_open") or 0) > 0}     # strategy -> max positions open at the same time
+        self.kept = {c: set() for c in self.caps}       # options that hold one of the allowed slots
+        self.slot_block, self.missed = {}, set()        # strategy -> True while its slots are full; options whose entry level was already crossed when we wanted to re-arm
 
     # ------------------------------------------------------------ small helpers
     def cfg(self, sym): return self.strats.get((self.items.get(sym) or {}).get("strategy") or "", {})
@@ -232,8 +234,33 @@ class Manager:
         if late:
             log(f"{sym}: [{tr['strat']}] entry placed {ft:%H:%M:%S} is after {c.get('entry_end')} -> selling at once")
             self.close_now(tr, "SHPLATE"); return
-        log(f"{sym}: [{tr['strat']}] ENTRY {qty} @ {px} placed {ft:%H:%M:%S} -> target {px * (1 + c.get('tp_pct', 60) / 100):.2f}"
+        if not self.take_slot(tr["strat"], sym):
+            log(f"{sym}: [{tr['strat']}] more than {self.caps.get(tr['strat'])} trades open at the same time -> this later fill is sold at once")
+            self.close_now(tr, "SHPCAP"); return
+        log(f"{sym}: [{tr['strat']}] ENTRY {qty} @ {px} placed {ft:%H:%M:%S} -> "
+            + (f"target {px * (1 + c.get('tp_pct', 60) / 100):.2f}" if c.get("tp_pct") else "no target")
             + (f", stop-loss {px * (1 - c.get('sl_pct', 0) / 100):.2f}" if c.get("sl_pct") else ", no stop-loss") + f", square off {tr['exit_at']}")
+
+    def take_slot(self, code, sym):
+        """True when this option may be a trade of `code` (max_open not exceeded).  Slots are counted from the REAL positions (a target hit by the GTT frees its slot)."""
+        cap = self.caps.get(code)
+        if not cap: return True
+        with self.lock:
+            kept = self.kept[code]
+            pos = self.positions()
+            if pos is not None: kept &= {s for s, legs in pos.items() if sum(l["qty"] for l in legs) != 0 and s != sym}
+            if len(kept) >= cap: return False
+            kept.add(sym)
+            full = len(kept) >= cap
+        if full and not DRY_RUN: threading.Thread(target=self.block_slots, args=(code,), daemon=True).start()     # the slots are full: stop the other alerts at once
+        return True
+
+    def block_slots(self, code):
+        with self.lock:
+            if self.slot_block.get(code): return
+            self.slot_block[code] = True
+        log(f"[{code}] {self.caps[code]} trades open (the maximum) -> waiting alerts deleted, waiting BUY orders cancelled until a position closes")
+        self.delete_alerts(code); self.cancel_waiting(side="BUY", syms=self.strategy_syms(code))
 
     # ------------------------------------------------------------ positions, GTT, waiting orders
     def positions(self):
@@ -394,6 +421,7 @@ class Manager:
 
     def check_funds(self):
         """Fund limit: above FUND_LIMIT_PCT % of the total funds no new order may be placed - waiting alerts are deleted, waiting BUYs cancelled; re-armed when funds are free again."""
+        if FUND_LIMIT_PCT <= 0: return                                          # fund limit switched off
         r = self.read_funds()
         if r is None: log("funds could not be read - keeping the last state"); return
         used, total = r; limit = total * FUND_LIMIT_PCT / 100
@@ -411,6 +439,36 @@ class Manager:
                 if sym in self.bought or sym in self.armed or it["strategy"] in self.entry_done or t >= self.entry_end(sym) or not it.get("alert_data"): continue
                 if used + it["cost"] <= limit: self.arm(sym)          # this trade, if it fired now, would still keep the account within the limit
 
+    # ------------------------------------------------------------ max open trades (strategies without a stop-loss)
+    def crossed(self, it):
+        """True when the stock already crossed the entry level (a re-created alert would fire at once and enter late)."""
+        ok, d = self.k.call("GET", "/quote", tries=2, params=[("i", f"NSE:{it['stock']}")])
+        px = float(((d or {}).get(f"NSE:{it['stock']}") or {}).get("last_price") or 0) if ok else 0
+        if px <= 0: return True                                                  # no price: do not risk a late entry
+        return px <= it["ref"] if it["direction"] == "SHORT" else px >= it["ref"]
+
+    def check_slots(self):
+        """Every FUNDS_POLL_S: count the open positions of each capped strategy; slots full -> block its alerts, a slot free -> re-create the waiting alerts."""
+        if not self.caps: return
+        pos = self.positions()
+        if pos is None: log("slots: positions could not be read - keeping the last state"); return
+        t = now_ist().time()
+        for code, cap in self.caps.items():
+            held = {s for s in self.strategy_syms(code) if sum(l["qty"] for l in pos.get(s, [])) != 0}
+            with self.lock: self.kept[code] = (self.kept[code] & held) | held
+            if code in self.entry_done or t < dtime(9, 14, 30): continue
+            if len(held) >= cap:
+                self.block_slots(code); continue
+            if self.slot_block.get(code):
+                self.slot_block[code] = False
+                log(f"[{code}] only {len(held)} of {cap} slots used -> new entries allowed again")
+            if not REARM or self.blocked: continue                               # (while the optional fund limit blocks, the fund check owns the alerts)
+            for sym in sorted(self.strategy_syms(code)):
+                it = self.items[sym]
+                if sym in self.bought or sym in self.armed or sym in self.missed or not it.get("alert_data") or t >= self.entry_end(sym): continue
+                if self.crossed(it): self.missed.add(sym); log(f"{sym}: [{code}] entry level {it['ref']} already crossed while the slots were full -> setup skipped"); continue
+                self.arm(sym)
+
     # ------------------------------------------------------------ market checks
     def market_open_today(self):
         ok, d = self.k.call("GET", "/quote", tries=3, params=[("i", "NSE:NIFTY 50")])
@@ -423,7 +481,7 @@ class Manager:
         if o.get("transaction_type") != "BUY" or str(o.get("status", "")).upper() not in self.OPEN_STATES or not self.in_scope(o): return
         oid = str(o.get("order_id")); sym = o.get("tradingsymbol")
         first = self.open_seen.setdefault(oid, time.time())
-        urgent = now_ist().time() >= self.entry_end(sym) or self.blocked
+        urgent = now_ist().time() >= self.entry_end(sym) or self.blocked or bool(self.slot_block.get(self.strategy_of(sym)))
         if (not urgent and time.time() - first < ENTRY_WAIT_S) or self.cancel_tries.get(oid, 0) >= 8: return
         self.cancel_tries[oid] = self.cancel_tries.get(oid, 0) + 1
         if DRY_RUN: log(f"DRY cancel unfilled BUY {sym} {oid}"); self.cancel_tries[oid] = 99; return
@@ -511,7 +569,7 @@ class Manager:
 
     def run(self):
         """Returns True when the job ended clean (or handed over)."""
-        self.bootstrap(); self.check_funds()
+        self.bootstrap(); self.check_funds(); self.check_slots()
         last_poll = last_funds = last_sweep = 0.0
         while not self.stop:
             now = now_ist(); t = now.time()
@@ -527,7 +585,7 @@ class Manager:
             if time.time() - last_poll >= POLL_S and t >= dtime(9, 14, 30):
                 last_poll = time.time(); self.poll()
             if time.time() - last_funds >= FUNDS_POLL_S and dtime(8, 55) <= t < FINAL_END:
-                last_funds = time.time(); self.check_funds()
+                last_funds = time.time(); self.check_funds(); self.check_slots()
             if time.time() - last_sweep >= SWEEP_GAP_S:                         # sweep each strategy after its own exit time
                 last_sweep = time.time()
                 for c, r in self.strats.items():

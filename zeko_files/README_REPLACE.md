@@ -6,30 +6,35 @@
 | `shape_live_manager.py`       | repo root |
 | `shape_live_offline_test.py`  | repo root |
 | `.github/workflows/shape_live_plan.yml`          | `.github/workflows/` |
-| `.github/workflows/shape_live_manager.yml`       | `.github/workflows/` |
+| `.github/workflows/shape_live_manager.yml`       | `.github/workflows/` (two chained jobs - REPLACE the whole file) |
 | `.github/workflows/shape_live_offline_test.yml`  | `.github/workflows/` |
-| `CRON_JOB_ORG.md`  | repo root (the cron-job.org setup) |
+| `CRON_JOB_ORG.md`  | repo root (the cron-job.org setup: the 12:55 manager call is no longer needed) |
 
-No new secrets are needed (same KITE_*, ZERODHA_*, ANGEL_*, ORDER_PROXY).  Run `shape_live_offline_test.yml` first - it must print `ALL OFFLINE TESTS PASSED`.
+No new secrets (KITE_*, ZERODHA_*, ANGEL_*, ORDER_PROXY as before).  Run `shape_live_offline_test.yml` first - it must print `ALL OFFLINE TESTS PASSED`.
 
-## What the three strategies are (+60 % target for WRL and BPB, +400 % for WRU; backtest = no gap-fill trades)
-| code | strategy | direction | stop-loss | entries | square off |
-|---|---|---|---|---|---|
-| WRL | WICK_RED_LOWER  (red signal candle, lower wick longer) | LONG (buy call)  | none | 09:15 - 09:59 | 10:00:00 |
-| WRU | WICK_RED_UPPER  (red signal candle, upper wick longer), target +400 % | SHORT (buy put)  | -20 % | 09:15 - 09:29 | 09:30:00 |
-| BPB | BREAKOUT_BPB (breakout -> pullback -> re-cross of the 10-day low) | SHORT (buy put) | none | 09:15 - 15:28 | 15:30:00 |
-Change a percentage or time with an environment value on the plan step, e.g. `WRU_TP=60`, `WRU_SL=20`, `BPB_EXIT_AT=15:30:00`.  Per trade capital: 10 % of the funds available in your Kite account (`capital_pct`, as in your old plan; optional `total_funds` or a fixed `max_cost`).
+## The two live strategies (backtest, target-gap trades removed)
+| code | strategy | direction | stop-loss | target | entries | square off | trades at the same time |
+|---|---|---|---|---|---|---|---|
+| WRU | WICK_RED_UPPER (red signal candle, upper wick longer) | SHORT (buy put) | -20 % | none | 09:15 - 09:29 | 09:30:00 | no limit (it has a stop-loss) |
+| BPB | BREAKOUT_BPB (breakout -> pullback -> re-cross of the 10-day low) | SHORT (buy put) | none | +60 % | 09:15 - 15:28 | 15:30:00 | **at most 3** (it has no stop-loss) |
+WRL is still in the code (`STRATEGIES=WRU,WRL,BPB`) but is not planned any more.  Each trade may use 10 % of the funds available in Kite when the MORNING plan runs.
+The old 30 % portfolio limit is OFF (`fund_limit_pct` default 0; give 30 to switch it on again).
+
+## Daily routine
+1. EVENING (after 15:45): run `shape_live_plan` - preview table of tomorrow (Summary tab of the run).  No alerts, `plan.json` untouched.
+2. MORNING (before 09:15, best 08:30): run `shape_live_plan` again - sized on the funds after the night update, creates the alerts, saves `plan.json`.  The run must be green.
+3. 08:55: the manager starts once (cron-job.org) and hands over from the morning job to the afternoon job at 12:58 by itself.
 
 ## Safety rules in the manager
 1. an unfilled BUY order is cancelled after 0.5 s;
-2. an unfilled stop-loss SELL is cancelled after 0.5 s and the position is squared off at once (MARKET, then ever more aggressive LIMIT orders until flat);
-   an unfilled target SELL is treated the same after 3 s (`TP_WAIT_S`, -1 = leave it);
-3. more than 30 % of the total funds in use -> all waiting SHP| alerts deleted, waiting BUYs cancelled; when the used funds are back under 30 % the alerts are re-created
-   (only strategies still inside their entry time, only setups that have not traded yet, only if the trade still fits the limit);
+2. an unfilled stop-loss SELL is cancelled after 0.5 s and the position is squared off at once (MARKET, then ever more aggressive LIMIT orders until flat); an unfilled target SELL the same after 3 s;
+3. BPB: while 3 BPB positions are open its waiting alerts are deleted and waiting BUYs cancelled; when one closes (target / 15:30) the alerts of setups that have not traded AND whose entry
+   level has not been crossed yet are re-created; a 4th fill that slips through (two alerts firing together) is sold at once (tag SHPCAP);
 4. each strategy has its own entry end and square-off; a BUY that is filled after the entry end is sold at once;
-5. only plan options / SHP* orders are touched; SWG alerts, swing positions and other orders are never touched (`SWEEP_ALL=0`);
-6. `DRY_RUN=1` sends nothing.  The manager can be started again at any time: it rebuilds its state from Kite.
+5. at the exit time the strategy's GTTs are deleted, waiting orders cancelled and positions squared off, then a sweep repeats until two passes find nothing;
+6. only plan options / SHP* orders are touched; SWG alerts, swing positions and other orders are never touched (`SWEEP_ALL=0`);
+7. `DRY_RUN=1` sends nothing.  The manager can be started again at any time: it rebuilds its state from Kite.  At 15:45 anything left makes the run FAIL (mail).
 
-## What the backtest says (Jan 2023 - Aug 2026, partial data, gap-target trades removed)
-WRL (10:00 exit) ROI about 6 %, BPB short (15:30) ROI about 9 %, WRU (09:30, SL20, target 400 %) ROI about 15 % on only 58 trades, most of it from a few trades - all three are small samples and were chosen
-from over 1,600 variants, so treat them as a paper-trading candidate first.  The strategies were NOT tested with the 30 % fund rule.
+## Still to verify live
+* The stop-loss GTT (WRU) has never run live: on the first WRU trade look at Kite that a GTT with a -20 % stop-loss exists, and in the manager log the line "stop-loss ... still waiting" if it ever triggers.
+* The 3-trade cap for BPB cannot stop two alerts that fire in the same second; the 4th fill is then sold at once (small spread cost).

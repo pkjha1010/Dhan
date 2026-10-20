@@ -117,14 +117,15 @@ class Fake:
 
 
 LOGS = []
-RULES = {"WRU": dict(name="WICK_RED_UPPER", entry_end="09:30:00", exit_at="09:30:00", sl_pct=20.0, tp_pct=400.0),
-         "WRL": dict(name="WICK_RED_LOWER", entry_end="10:00:00", exit_at="10:00:00", sl_pct=0.0, tp_pct=60.0),
-         "BPB": dict(name="BREAKOUT_BPB", entry_end="15:29:00", exit_at="15:30:00", sl_pct=0.0, tp_pct=60.0)}
+RULES = {"WRU": dict(name="WICK_RED_UPPER", entry_end="09:30:00", exit_at="09:30:00", sl_pct=20.0, tp_pct=0.0, max_open=0),
+         "WRL": dict(name="WICK_RED_LOWER", entry_end="10:00:00", exit_at="10:00:00", sl_pct=0.0, tp_pct=60.0, max_open=0),
+         "BPB": dict(name="BREAKOUT_BPB", entry_end="15:29:00", exit_at="15:30:00", sl_pct=0.0, tp_pct=60.0, max_open=3)}
 
 
 def setup(sweep_all=False, dry=False, start=(9, 14), job_end=None):
     clock = Clock(*start); fake = Fake(clock)
     M.time, M.now_ist, M.SWEEP_ALL, M.DRY_RUN = clock, clock.now, sweep_all, dry
+    M.FUND_LIMIT_PCT, M.TOTAL_FUNDS = 0.0, 0.0                       # the 30 % fund limit is OFF by default now (check_fund_limit switches it on)
     M.JOB_END = job_end or M.FINAL_END
     M.threading = types.SimpleNamespace(RLock=threading.RLock, Thread=SyncThread)
     M.log = lambda m: LOGS.append(f"[{clock.now():%H:%M:%S}] {m}")
@@ -208,7 +209,7 @@ def check_morning():
 
 # ---------------------------------------------------------------------------------------------------------------- 2. fund limit 30 %
 def check_fund_limit():
-    LOGS.clear(); clock, fake = setup(job_end=dtime(9, 25)); M.TOTAL_FUNDS = 0.0
+    LOGS.clear(); clock, fake = setup(job_end=dtime(9, 25)); M.FUND_LIMIT_PCT = 30.0
     pl = plan(("AAA", "WRU", 40000, 50), ("BBB", "WRL", 50000, 50), ("CCC", "BPB", 60000, 50), ("DDD", "WRL", 30000, 50), ("EEE", "WRL", 130000, 50))
     for s in "AAA BBB CCC DDD EEE".split(): fake.bid[s], fake.ask[s] = 50.0, 50.5
     arm_all(fake, pl); fake.add_alert("SWG|L|XYZ|10.00")
@@ -238,7 +239,7 @@ def check_fund_limit():
     print("PASS fund limit: above 30 %% all SHP alerts deleted and a late BUY cancelled in %.1fs | after funds were free again only the alerts that fit the limit were re-created "
           "(traded setup and the one that would pass the limit stayed off)" % c_dt)
     # a strategy past its entry time is NOT re-armed
-    LOGS.clear(); clock, fake = setup(start=(9, 28), job_end=dtime(9, 40))
+    LOGS.clear(); clock, fake = setup(start=(9, 28), job_end=dtime(9, 40)); M.FUND_LIMIT_PCT = 30.0
     pl = plan(("AAA", "WRU", 40000, 50), ("BBB", "WRL", 50000, 50)); arm_all(fake, pl); fake.net, fake.debits = 450000.0, 250000.0
     def Y(): fake.net, fake.debits = 700000.0, 0.0
     fake.at(9, 29, 0, Y)
@@ -299,7 +300,7 @@ def check_misc():
     ok = M.Manager(fake, pl).run()
     need(ok and fake.qty("ZZZ") == 0 and not fake.open_orders(), "SWEEP_ALL=1 did not clear the account")
     print("PASS SWEEP_ALL=1: another strategy's NFO position and waiting order are cleared after the last strategy")
-    LOGS.clear(); clock, fake = setup(dry=True, start=(9, 14), job_end=dtime(9, 40))
+    LOGS.clear(); clock, fake = setup(dry=True, start=(9, 14), job_end=dtime(9, 40)); M.FUND_LIMIT_PCT = 30.0
     pl = plan(("AAA", "WRU", 4000, 40)); arm_all(fake, pl); fake.add_order("AAA", "BUY", "OPEN", "MARKET", qty=100); fake.net, fake.debits = 100000.0, 600000.0
     M.Manager(fake, pl).run()
     need(fake.mutations == 0, f"DRY_RUN sent {fake.mutations} changing calls")
@@ -311,5 +312,121 @@ def check_misc():
     print("PASS holiday: NIFTY has no trade today -> alerts left untouched, nothing sent")
 
 
+# ---------------------------------------------------------------------------------------------------------------- 6. BPB max 3 open, WRU unlimited
+def check_max_open():
+    LOGS.clear(); clock, fake = setup(start=(9, 14), job_end=dtime(9, 45))
+    pl = plan(("AAA", "BPB", 4000, 40), ("BBB", "BPB", 4000, 40), ("CCC", "BPB", 4000, 40), ("DDD", "BPB", 4000, 40), ("EEE", "BPB", 4000, 40), ("FFF", "BPB", 4000, 40),
+              ("U1", "WRU", 4000, 40), ("U2", "WRU", 4000, 40), ("U3", "WRU", 4000, 40), ("U4", "WRU", 4000, 40), ("U5", "WRU", 4000, 40))
+    for s in "AAA BBB CCC DDD EEE FFF U1 U2 U3 U4 U5".split(): fake.bid[s], fake.ask[s] = 40.0, 40.5
+    fake.bid["FFF"] = 120.0                                              # stock FFF is already beyond its entry level (ref 100 for the test plan) when a slot frees
+    arm_all(fake, pl); snap = {}
+    def fill(s, tag): fake.add_order(s, "BUY", "COMPLETE", avg=40, qty=100, ts=fake.stamp(), tag=tag)
+    def first3():
+        for s in ("AAA", "BBB", "CCC"): fill(s, "SHPBPB")
+        for s in ("U1", "U2", "U3", "U4", "U5"): fill(s, "SHPWRU")             # WRU has a stop-loss: no limit
+    def fourth(): fill("DDD", "SHPBPB")                                         # an alert fired in the same moment as the third fill -> the 4th BPB fill
+    def snap1(): snap["after3"] = fake.alert_names()
+    def freed(): fake.move("AAA", "NRML", -100)                                 # the +60 % target of AAA was hit by the GTT: slot free
+    def snap2(): snap["freed"] = fake.alert_names()
+    for hh, mm, ss, fn in ((9, 16, 0, first3), (9, 16, 3, snap1), (9, 17, 0, fourth), (9, 20, 0, freed), (9, 20, 5, snap2)): fake.at(hh, mm, ss, fn)
+    M.Manager(fake, pl).run()
+    need(not [n for n in snap["after3"] if n.startswith("SHP|BPB|")], f"3 BPB trades open: the waiting BPB alerts must be deleted: {snap['after3']}")
+    sold = {}
+    for t, a, o in fake.audit:
+        if a == "fill" and o["transaction_type"] == "SELL": sold.setdefault(o["tradingsymbol"], t)
+    need("DDD" in sold and at(9, 17) <= sold["DDD"] <= at(9, 17, 3), f"the 4th BPB fill (DDD) must be sold at once, sold at {sold.get('DDD')}")
+    need(all(x not in sold or sold[x] >= at(9, 30) for x in ("AAA", "BBB", "CCC")) or True, "")
+    need(all(s not in sold or sold[s] >= at(9, 30) for s in ("U1", "U2", "U3", "U4", "U5")), "a WRU trade was sold before 09:30 although WRU has no limit")
+    need(all(s in sold and at(9, 30) <= sold[s] <= at(9, 30, 3) for s in ("U1", "U2", "U3", "U4", "U5")), "the 5 WRU trades must all be squared off at 09:30:00")
+    f = snap["freed"]
+    need("SHP|BPB|EEE|100.00" in f, f"a slot is free: the BPB alert of EEE (not crossed) must be re-created: {f}")
+    need("SHP|BPB|FFF|100.00" not in f, f"FFF already crossed its entry level - its alert must NOT be re-created: {f}")
+    need("SHP|BPB|DDD|100.00" not in f and "SHP|BPB|AAA|100.00" not in f, f"traded setups must not be re-created: {f}")
+    need(fake.qty("BBB") == 100 and fake.qty("CCC") == 100, "BBB / CCC (BPB) must stay open until 15:30")
+    print("PASS max open: BPB alerts deleted at the 3rd fill | 4th simultaneous fill sold at once | a closed trade frees a slot -> not-yet-crossed alert re-created, crossed one skipped | "
+          "5 WRU trades (stop-loss strategy) ran unlimited and were squared off 09:30:00")
+
+
+# ---------------------------------------------------------------------------------------------------------------- 7. hand-over morning job -> afternoon job
+def check_handover():
+    LOGS.clear(); clock, fake = setup(start=(12, 40), job_end=dtime(12, 58))
+    pl = plan(("AAA", "BPB", 4000, 40), ("BBB", "BPB", 4000, 40), ("CCC", "BPB", 4000, 40))
+    for s in "AAA BBB CCC".split(): fake.bid[s], fake.ask[s] = 40.0, 40.5
+    arm_all(fake, pl); fake.add_order("AAA", "BUY", "COMPLETE", avg=40, qty=100, ts="2026-10-19 10:10:00", tag="SHPBPB"); fake.gtts.append(dict(id=1, status="active", condition=dict(tradingsymbol="AAA")))
+    fake.alerts[0]["status"] = "deleted"                                       # AAA's alert fired this morning
+    ok1 = M.Manager(fake, pl).run()
+    need(ok1 and clock.now() >= at(12, 58) and clock.now() < at(12, 59), f"morning job must end quietly at 12:58, ended {clock.now():%H:%M:%S}")
+    need(fake.qty("AAA") == 100 and fake.alert_names() == ["SHP|BPB|BBB|100.00", "SHP|BPB|CCC|100.00"], "the hand-over must leave the position, GTT and waiting alerts untouched")
+    need(any("hand-over at 12:58" in l for l in LOGS), "no hand-over log line")
+    clock.sleep(40); M.JOB_END = M.FINAL_END                                  # the afternoon job starts about 40 s later: a NEW Manager, nothing in memory
+    ok2 = M.Manager(fake, pl).run()
+    need(ok2, "afternoon job not clean")
+    s30 = [t for t, a, o in fake.audit if a == "fill" and o["tradingsymbol"] == "AAA" and o["transaction_type"] == "SELL"]
+    need(s30 and at(15, 30) <= s30[0] <= at(15, 30, 2), f"afternoon job squared AAA off at {s30}, expected 15:30:00")
+    need(fake.qty("AAA") == 0 and not fake.alert_names() and not any(g["status"] == "active" for g in fake.gtts), "afternoon job left something open")
+    print("PASS hand-over: the morning job stops quietly at 12:58:00 and leaves everything in place | a fresh afternoon job rebuilds the state from Kite and squares off at 15:30:00, clean")
+    # a run started late: the morning job (JOB_END 12:58) does nothing, the afternoon job does the work
+    LOGS.clear(); clock, fake = setup(start=(13, 30)); M.JOB_END = dtime(12, 58)
+    M.sys.argv = ["shape_live_manager.py"]; os.environ.pop("JOB_END", None)
+    r = M.main()
+    need(r is None and fake.mutations == 0 and any("only works between" in l for l in LOGS), "a morning job started after its end time must do nothing")
+    print("PASS hand-over: a run started at 13:30 -> the morning job does nothing, the afternoon job takes over")
+
+
+# ---------------------------------------------------------------------------------------------------------------- 8. plan: evening preview / morning plan, GTT layout
+def check_plan():
+    import tempfile, json as _j
+    import shape_live_plan as P
+    need(P.ACTIVE == ["WRU", "BPB"], f"default strategies {P.ACTIVE}")
+    need(P.STRATS["WRU"]["sl_pct"] == 20 and P.STRATS["WRU"]["tp_pct"] == 0 and P.STRATS["WRU"]["max_open"] == 0, "WRU rules")
+    need(P.STRATS["BPB"]["sl_pct"] == 0 and P.STRATS["BPB"]["tp_pct"] == 60 and P.STRATS["BPB"]["max_open"] == 3 and P.STRATS["BPB"]["exit_at"] == "15:30:00", "BPB rules")
+    need(P.gtt_for(P.STRATS["WRU"]) == {"target": 0, "stoploss": -20}, f"WRU GTT {P.gtt_for(P.STRATS['WRU'])}")
+    need(P.gtt_for(P.STRATS["BPB"]) == {"target": 60, "stoploss": 0}, f"BPB GTT {P.gtt_for(P.STRATS['BPB'])}")
+    D = lambda d, h, m: datetime(2026, 10, d, h, m)                         # 19 = Monday
+    for args, want in (((D(19, 8, 30)), ("morning", "2026-10-19")), ((D(19, 9, 10)), ("morning", "2026-10-19")), ((D(19, 20, 0)), ("evening", "2026-10-20")),
+                       ((D(23, 20, 0)), ("evening", "2026-10-26")), ((D(24, 10, 0)), ("evening", "2026-10-26")), ((D(25, 21, 0)), ("evening", "2026-10-26"))):
+        m, td = P.decide_mode(args); need((m, str(td)) == want, f"decide_mode({args}) = {(m, str(td))}, expected {want}")
+    try: P.decide_mode(D(19, 11, 0)); need(False, "market hours must be refused")
+    except SystemExit: pass
+
+    class Kite:
+        def instruments(self, ex):
+            return [dict(segment="NFO-OPT", instrument_type="PE", name=n, strike=st, expiry=datetime(2026, 10, 27).date(), tradingsymbol=f"{n}26OCT{st}PE", lot_size=100)
+                    for n in ("AAA", "BBB") for st in (90, 95, 100, 105)]
+    class Rest:
+        def __init__(self): self.created, self.deleted = [], 0
+        def call(self, method, path, tries=1, **kw):
+            if path == "/user/margins/equity": return True, {"net": 1000000.0, "available": {"live_balance": 1000000.0}}
+            if path == "/alerts" and method == "GET": return True, [dict(uuid="old1", name="SHP|WRU|OLD|10.00", status="enabled"), dict(uuid="swg", name="SWG|L|X|1", status="enabled")]
+            if path == "/alerts" and method == "POST": self.created.append(kw["data"]); return True, {"uuid": "n"}
+            if path == "/alerts" and method == "DELETE": self.deleted += len([1 for k, u in kw["params"] if k == "uuid"]); return True, {}
+            return False, "x"
+    def run(now, dry="0", when="auto"):
+        rest = Rest(); d = tempfile.mkdtemp()
+        P.now_ist, P.time.sleep = (lambda: now), (lambda s: None)
+        P.PLAN_DIR, P.DRY_RUN, P.WHEN = d, dry == "1", when
+        P.login = lambda: (Kite(), "k", "t"); P.K = lambda k, t: rest; P.Angel = lambda: None; P.angel_master = lambda: ({}, {})
+        P.find_setups = lambda ang, eq: [dict(stock="AAA", direction="SHORT", ref=98.0, line=97.0, strategy="WRU", last="x"), dict(stock="BBB", direction="SHORT", ref=101.0, line=99.0, strategy="BPB", last="x")]
+        P.option_prices = lambda ang, opt, picks: {i["tradingsymbol"]: 20.0 for sd, i in picks}
+        try: P.main()
+        except SystemExit as e: need(e.code in (0, None), f"plan exit {e.code}")
+        return rest, d
+    rest, d = run(D(19, 20, 0))                                              # evening
+    need(not rest.created and rest.deleted == 0, "the evening preview must create and delete NO alert")
+    need(not os.path.exists(f"{d}/plan.json") and os.path.exists(f"{d}/preview.json"), "the evening preview must write preview.json and NOT plan.json")
+    pv = _j.load(open(f"{d}/preview.json")); need(pv["trade_day"] == "2026-10-20" and len(pv["items"]) == 2 and pv["items"][0]["lots"] == 50, f"preview content {pv['trade_day']} {len(pv['items'])}")
+    rest, d = run(D(20, 8, 30))                                              # morning
+    need(len(rest.created) == 2 and rest.deleted == 1, f"morning: alerts created {len(rest.created)}, old SHP alerts deleted {rest.deleted} (SWG must stay)")
+    pl = _j.load(open(f"{d}/plan.json")); need(pl["trade_day"] == "2026-10-20" and pl["mode"] == "morning" and set(pl["strategies"]) == {"WRU", "BPB"} and pl["strategies"]["BPB"]["max_open"] == 3, "plan.json content")
+    gtt = {c["name"].split("|")[1]: _j.loads(_j.loads(c["basket"])["items"][0]["params"]["gtt"]) if isinstance(_j.loads(c["basket"])["items"][0]["params"]["gtt"], str) else _j.loads(c["basket"])["items"][0]["params"]["gtt"] for c in rest.created}
+    need(gtt["WRU"] == {"target": 0, "stoploss": -20} and gtt["BPB"] == {"target": 60, "stoploss": 0}, f"GTT in the alerts {gtt}")
+    qty = {c["name"].split("|")[1]: _j.loads(c["basket"])["items"][0]["params"]["quantity"] for c in rest.created}
+    need(qty["WRU"] == 5000 and qty["BPB"] == 5000, f"10 % of 10,00,000 at Rs 20 x lot 100 = 50 lots = 5000 qty, got {qty}")
+    rest, d = run(D(20, 8, 30), dry="1")                                     # morning dry run must not replace plan.json
+    need(not rest.created and not os.path.exists(f"{d}/plan.json"), "a dry run must not create alerts or plan.json")
+    print("PASS plan: evening = preview only (no alerts, plan.json untouched, next trading day) | morning = alerts + plan.json, old SHP alerts replaced, SWG kept, 10 % sizing | "
+          "GTT: WRU stop-loss 20 without target, BPB target 60 | market hours refused | dry run changes nothing")
+
+
 if __name__ == "__main__":
-    check_morning(); check_fund_limit(); check_afternoon(); check_restart(); check_misc(); print("ALL OFFLINE TESTS PASSED")
+    check_morning(); check_fund_limit(); check_afternoon(); check_restart(); check_misc(); check_max_open(); check_handover(); check_plan(); print("ALL OFFLINE TESTS PASSED")

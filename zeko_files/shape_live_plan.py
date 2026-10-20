@@ -1,54 +1,52 @@
 """
-SHAPELIVE PLAN  -  run every trading morning at 06:00 IST (before the market opens).
+SHAPELIVE PLAN  -  run it TWICE per trading day:
+  EVENING (after 15:45, any evening incl. Friday / weekend)  -> PREVIEW of the next trading day: finds the setups, picks the options, prices them, sizes them and prints the table.
+        It creates NO alerts and does not touch plan.json (it writes live_plan/preview.json only).  The funds seen now may still change in the night.
+  MORNING (before 09:15 of a trading day, best 08:30)       -> the REAL plan: the same scan, sized on the funds in your Kite account NOW (after the night update), creates the
+        Kite ATO alerts and writes live_plan/plan.json, which the manager reads at 08:55.
+  The mode is chosen from the clock (input `when` = auto).  Between 09:15 and 15:45 of a trading day it refuses (use when=morning only to force it).
 
-THREE strategies are planned (backtest: all8_backtest.py, no-gap results; target +60 % for WRL and BPB, +400 % for WRU):
-  WRL  WICK_RED_LOWER   LONG  (buy CALL)  SHAPECMP signal whose previous (signal) candle is RED with the LOWER wick longer than the upper wick.
-                                          No stop-loss.  Target +60 %.  Entries 09:15-09:59, time exit 10:00.
-  WRU  WICK_RED_UPPER   SHORT (buy PUT)   SHAPECMP signal whose previous candle is RED with the UPPER wick longer.
-                                          Stop-loss -20 %.  Target +400 % (practically none: the best tested setting; WRL and BPB use +60 %).  Entries 09:15-09:29, time exit 09:30.
+TWO strategies are planned (backtest: all8_backtest.py / shapetrend results, target-gap trades removed):
+  WRU  WICK_RED_UPPER   SHORT (buy PUT)   SHAPECMP signal whose previous (signal) candle is RED with the UPPER wick longer than the lower wick.
+                                          Stop-loss -20 %, NO target.  Entries 09:15-09:29, time exit 09:30.   No limit on the number of trades (it has a stop-loss).
   BPB  BREAKOUT_BPB     SHORT (buy PUT)   breakout -> pullback -> re-cross of the 10-day low (bpb_fno_backtest.py state machine).
-                                          No stop-loss.  Target +60 %.  Entries 09:15-15:20, time exit 15:30.
+                                          No stop-loss, target +60 %.  Entries 09:15-15:28, time exit 15:30.   At most 3 trades open at the same time (the manager enforces it).
+  (WRL  WICK_RED_LOWER LONG is still in the code - STRATEGIES=WRU,WRL,BPB adds it - but it is not planned by default.)
   (SHAPECMP signal = a daily close beyond the 10-day high/low, a later close back across it = the reference line; entry when the stock crosses that line again.)
-  STRATEGIES env = "WRL,WRU,BPB" (default) - any subset.  The percentages / times are in STRATS below (or env WRL_TP, WRU_SL ... see STRATS).
 
 What it does
   1. Gets daily candles of the F&O stocks from ANGEL ONE (SmartAPI) and finds the setups that can trigger on the coming trading day.
-  2. For each setup picks the option next to the entry price (SHAPECMP: the reference line, BPB: the entry level):
-        LONG  -> CALL (CE) at the first strike AT OR ABOVE the price   (474 -> strike 480)
-        SHORT -> PUT  (PE) at the first strike AT OR BELOW the price   (474 -> strike 470)
-        nearest MONTHLY expiry that is still open.
-     If two strategies pick the SAME option, only the first one (order WRU, WRL, BPB) is kept - the manager squares off option by option.
-  3. Reads that option's last price from Angel One (before the open = yesterday's close) and works out
-        lots = cap // (price x lot size), cap = CAPITAL_PCT % (default 10 %) of the funds available in your Kite account (or of TOTAL_FUNDS when given); MAX_COST = optional fixed rupee cap instead.
-        Fewer than 1 lot -> SKIPPED.  Option price below MIN_PRICE -> SKIPPED.
-  4. Creates one Kite ATO alert per setup: when the STOCK price crosses the entry price (>= for LONG, <= for SHORT) Zerodha sends the BUY MARKET order
-     for the option (NRML, validity DAY) with the built-in GTT:  target +60 % (WRU: +400 %)  and (WRU only) stop-loss -20 %.
-     Alert names: SHP|WRL|STOCK|price, SHP|WRU|..., SHP|BPB|...   Orders carry the tag SHPWRL / SHPWRU / SHPBPB.
-  5. Saves live_plan/plan.json (items + the strategy rules + the alert definitions).  The manager reads it: it deletes a strategy's waiting alerts when its
-     entry time ends, squares the strategy off at its exit time, cancels unfilled BUY / stop-loss orders at once and stops new entries while the account
-     uses more than 30 % of the funds (it re-creates the alerts from this plan when the funds are back under the limit).
+  2. For each setup picks the option next to the entry price:   SHORT -> PUT (PE) at the first strike AT OR BELOW the price (474 -> 470), LONG -> CALL at the first strike AT OR ABOVE;
+     nearest MONTHLY expiry that is still open.  If two strategies pick the SAME option, only the first one (order WRU, WRL, BPB) is kept.
+  3. Reads that option's last price from Angel One and works out  lots = cap // (price x lot size),  cap = CAPITAL_PCT % (default 10 %) of the funds available in your Kite account
+     (or of TOTAL_FUNDS when given); MAX_COST = optional fixed rupee cap.  Fewer than 1 lot -> SKIPPED.  Option price below MIN_PRICE -> SKIPPED.
+  4. MORNING only: one Kite ATO alert per setup: when the STOCK price crosses the entry price (<= for SHORT) Zerodha sends the BUY MARKET order for the option (NRML, validity DAY)
+     with the built-in GTT:  WRU stop-loss -20 % (no target) / BPB target +60 %.   Alert names: SHP|WRU|STOCK|price, SHP|BPB|...   Orders carry the tag SHPWRU / SHPBPB.
+  5. Saves live_plan/plan.json (morning) or live_plan/preview.json (evening).  The manager reads plan.json: it deletes a strategy's waiting alerts when its entry time ends,
+     squares the strategy off at its exit time, cancels unfilled BUY / stop-loss orders at once and holds BPB to 3 open trades.
 
 Only alerts whose name starts with "SHP|" are touched. Your other alerts (SWG|...) are not.
 """
 import os, io, sys, json, time, requests, pyotp, numpy as np, pandas as pd
-from datetime import datetime, date, timedelta
+from datetime import datetime, date, timedelta, time as dtime
 from urllib.parse import urljoin, urlparse, parse_qs
 from zoneinfo import ZoneInfo
 from kiteconnect import KiteConnect
 
 PFX = "SHP|"
 STRATS = {   # code: rules.  entry_end = the alert is deleted / waiting BUYs are cancelled from this second on; exit_at = square-off second.
-    "WRU": dict(name="WICK_RED_UPPER", direction="SHORT", kind="SHAPE", red=True, lower_longer=False, entry_end="09:30:00", exit_at="09:30:00", sl_pct=20.0, tp_pct=400.0),
-    "WRL": dict(name="WICK_RED_LOWER", direction="LONG", kind="SHAPE", red=True, lower_longer=True, entry_end="10:00:00", exit_at="10:00:00", sl_pct=0.0, tp_pct=60.0),
-    "BPB": dict(name="BREAKOUT_BPB", direction="SHORT", kind="BPB", entry_end="15:29:00", exit_at="15:30:00", sl_pct=0.0, tp_pct=60.0),
+    "WRU": dict(name="WICK_RED_UPPER", direction="SHORT", kind="SHAPE", red=True, lower_longer=False, entry_end="09:30:00", exit_at="09:30:00", sl_pct=20.0, tp_pct=0.0, max_open=0),
+    "WRL": dict(name="WICK_RED_LOWER", direction="LONG", kind="SHAPE", red=True, lower_longer=True, entry_end="10:00:00", exit_at="10:00:00", sl_pct=0.0, tp_pct=60.0, max_open=0),
+    "BPB": dict(name="BREAKOUT_BPB", direction="SHORT", kind="BPB", entry_end="15:29:00", exit_at="15:30:00", sl_pct=0.0, tp_pct=60.0, max_open=3),   # max_open = positions open at the same time (0 = no limit)
 }
 for _c, _r in STRATS.items():                                   # env overrides, e.g. WRU_TP=60  WRU_SL=20  BPB_EXIT_AT=15:30:00  WRL_ENTRY_END=10:00:00
     for _k, _t in (("tp_pct", "TP"), ("sl_pct", "SL")):
         if os.environ.get(f"{_c}_{_t}"): _r[_k] = float(os.environ[f"{_c}_{_t}"])
+    if os.environ.get(f"{_c}_MAX_OPEN"): _r["max_open"] = int(os.environ[f"{_c}_MAX_OPEN"])
     for _k in ("entry_end", "exit_at"):
         if os.environ.get(f"{_c}_{_k.upper()}"): _r[_k] = os.environ[f"{_c}_{_k.upper()}"]
 ORDER = ["WRU", "WRL", "BPB"]                                  # priority when two strategies pick the same option
-ACTIVE = [c for c in ORDER if c in {x.strip().upper() for x in (os.environ.get("STRATEGIES") or "WRL,WRU,BPB").replace(" ", "").split(",") if x.strip()}]
+ACTIVE = [c for c in ORDER if c in {x.strip().upper() for x in (os.environ.get("STRATEGIES") or "WRU,BPB").replace(" ", "").split(",") if x.strip()}]
 BPB_LOOKBACK = int(os.environ.get("BPB_LOOKBACK") or 10)       # rolling-high window of the breakout strategy (days), same as the backtest
 CAPITAL_PCT = float(os.environ.get("CAPITAL_PCT") or 10)       # each trade may use this % of the funds available in the Kite account (10 % = the old rule)
 MIN_PRICE = float(os.environ.get("MIN_PRICE") or 5)            # options priced below this (Rs, per unit) are not traded
@@ -58,12 +56,15 @@ PRODUCT = os.environ.get("PRODUCT") or "NRML"                  # overnight produ
 # basket params["gtt"] layout.  {tp} / {sl} are replaced by the percentages.  If probe mode shows your account stores GTT differently, set these two env values.
 GTT_TP_ONLY = os.environ.get("GTT_TP_ONLY") or '{"target": {tp}, "stoploss": 0}'
 GTT_TP_SL = os.environ.get("GTT_TP_SL") or '{"target": {tp}, "stoploss": -{sl}}'
-DRY_RUN = (os.environ.get("DRY_RUN") or "0") == "1"           # 1 = show everything, create no alerts
+GTT_SL_ONLY = os.environ.get("GTT_SL_ONLY") or '{"target": 0, "stoploss": -{sl}}'      # stop-loss without a target (your old plan used {"target": 0, "stoploss": -10})
+DRY_RUN = (os.environ.get("DRY_RUN") or "0") == "1"           # 1 = show everything, create no alerts (always the case in the evening preview)
+WHEN = (os.environ.get("WHEN") or "auto").strip().lower()      # auto | evening | morning
 PLAN_DIR = os.environ.get("PLAN_DIR") or "live_plan"
 
 
 def gtt_for(r):
-    t = GTT_TP_SL if r["sl_pct"] > 0 else GTT_TP_ONLY
+    sl, tp = r["sl_pct"] > 0, r["tp_pct"] > 0
+    t = GTT_TP_SL if (sl and tp) else GTT_SL_ONLY if sl else GTT_TP_ONLY
     return json.loads(t.replace("{tp}", f"{r['tp_pct']:g}").replace("{sl}", f"{r['sl_pct']:g}"))
 
 
@@ -436,10 +437,25 @@ def funds_available(k):
     return float(v) if v is not None else None
 
 
+def decide_mode(n):
+    """('morning' | 'evening', trade day).  morning = real plan with alerts (before 09:15 of a weekday); evening = preview (after 15:45 or on a weekend)."""
+    today, t = n.date(), n.time()
+    weekday = today.weekday() < 5
+    if WHEN == "morning": return "morning", (today if weekday else next_trade_day(today))
+    if WHEN == "evening": return "evening", next_trade_day(today) if (not weekday or t >= dtime(9, 15)) else today
+    if weekday and t < dtime(9, 15): return "morning", today
+    if (not weekday) or t >= dtime(15, 45): return "evening", next_trade_day(today)
+    sys.exit(f"It is {t:%H:%M} on a trading day: the market is open, so no plan is made (morning plan = before 09:15, evening preview = after 15:45). Use when=morning or when=evening to force it.")
+
+
 def main():
-    kite, key, tok = login(); k = K(key, tok)
+    global DRY_RUN
     n = now_ist(); today = n.date()
-    td = today if (today.weekday() < 5 and n.hour < 9) else next_trade_day(today)
+    mode, td = decide_mode(n)
+    if mode == "evening" and not DRY_RUN:
+        DRY_RUN = True
+    log(f"MODE {mode.upper()}: planning trade day {td}" + ("  (preview only - no alerts are created, plan.json is not changed)" if mode == "evening" else "  (real plan - alerts are created)" + ("  [dry run: none created]" if DRY_RUN else "")))
+    kite, key, tok = login(); k = K(key, tok)
     ang = Angel(); eq, opt = angel_master()
     setups = find_setups(ang, eq)
     inst = kite.instruments("NFO")
@@ -491,11 +507,29 @@ def main():
         time.sleep(0.2)
 
     os.makedirs(PLAN_DIR, exist_ok=True)
-    plan = dict(created=str(now_ist()), trade_day=str(td), max_cost=cap, product=PRODUCT, strategies={c: STRATS[c] for c in ACTIVE}, items=made)
-    json.dump(plan, open(f"{PLAN_DIR}/plan.json", "w"), indent=1)
-    json.dump(plan, open(f"{PLAN_DIR}/plan_{td}.json", "w"), indent=1)
-    log(f"plan saved: {len(made)} alerts for {td}, failed={fail}")
+    plan = dict(created=str(now_ist()), mode=mode, trade_day=str(td), funds=funds, max_cost=cap, product=PRODUCT, strategies={c: STRATS[c] for c in ACTIVE}, items=made)
+    if mode == "evening" or DRY_RUN:          # a preview / dry run must never replace the real plan the manager will read
+        json.dump(plan, open(f"{PLAN_DIR}/preview.json", "w"), indent=1)
+        json.dump(plan, open(f"{PLAN_DIR}/preview_{td}.json", "w"), indent=1)
+        log(f"PREVIEW saved ({len(made)} orders for {td}) - plan.json untouched." + ("  Run the plan again on the morning of that day, before 09:15, to create the alerts." if mode == "evening" else "  (dry run)"))
+    else:
+        json.dump(plan, open(f"{PLAN_DIR}/plan.json", "w"), indent=1)
+        json.dump(plan, open(f"{PLAN_DIR}/plan_{td}.json", "w"), indent=1)
+        log(f"plan saved: {len(made)} alerts for {td}, failed={fail}")
+    summary(mode, td, funds, cap, made, skipped)
     sys.exit(1 if fail else 0)
+
+
+def summary(mode, td, funds, cap, made, skipped):
+    """A short table on the GitHub run page (Summary tab)."""
+    path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not path: return
+    L = [f"### SHAPELIVE {mode.upper()} plan for {td}", f"funds Rs {funds:,.0f} -> Rs {cap:,.0f} per trade" if funds else f"Rs {cap:,.0f} per trade", "",
+         "| strategy | stock | option | lots | qty | price | cost |", "|---|---|---|---|---|---|---|"]
+    L += [f"| {i['strategy']} | {i['stock']} | {i['option']} | {i['lots']} | {i['qty']} | {i['close_price']} | {i['cost']:,.0f} |" for i in made]
+    L += ["", f"{len(made)} orders, {len(skipped)} skipped." + (" Preview only - no alerts created." if mode == "evening" else "")]
+    try: open(path, "a").write("\n".join(L) + "\n")
+    except Exception: pass
 
 
 def probe():

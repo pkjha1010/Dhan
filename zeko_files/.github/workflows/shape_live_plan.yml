@@ -1,4 +1,4 @@
-name: SHAPELIVE plan (06:00 IST - creates ATO alerts for WICK_RED_LOWER, WICK_RED_UPPER and BREAKOUT_BPB)
+name: 'SHAPELIVE plan (run in the EVENING = preview of tomorrow, in the MORNING before 09:15 = creates the ATO alerts)'
 
 on:
   workflow_dispatch:
@@ -7,14 +7,18 @@ on:
         description: 'plan = create the alerts | probe = print your existing ATO alerts (to check the GTT target / stop-loss layout)'
         required: false
         default: 'plan'
+      when:
+        description: 'auto (default) = before 09:15 on a trading day: MORNING real plan with alerts | after 15:45 or weekend: EVENING preview (no alerts).  Or force: morning | evening'
+        required: false
+        default: 'auto'
       dry_run:
-        description: '1 = show the plan only, create no alerts'
+        description: '1 = show the plan only, create no alerts (the evening preview is always like this)'
         required: false
         default: '0'
       strategies:
-        description: 'WRL,WRU,BPB = all three (default) | any subset, e.g. WRU,BPB.  WRL = WICK_RED_LOWER long (exit 10:00) | WRU = WICK_RED_UPPER short (SL 20, exit 09:30) | BPB = breakout short (exit 15:30)'
+        description: 'WRU,BPB (default) | WRU = WICK_RED_UPPER short (SL 20, no target, exit 09:30) | BPB = breakout short (target 60, exit 15:30, max 3 open) | WRL also possible'
         required: false
-        default: 'WRL,WRU,BPB'
+        default: 'WRU,BPB'
       min_price:
         description: 'Options priced below this many rupees are not traded'
         required: false
@@ -31,6 +35,10 @@ on:
         description: 'OPTIONAL fixed rupee cap per trade. Leave empty to use the percentage above'
         required: false
         default: ''
+      bpb_max_open:
+        description: 'BPB (no stop-loss): the most trades open at the same time'
+        required: false
+        default: '3'
 
 permissions:
   contents: write
@@ -70,6 +78,8 @@ jobs:
           TOTAL_FUNDS: ${{ github.event.inputs.total_funds }}
           STRATEGIES: ${{ github.event.inputs.strategies }}
           MIN_PRICE: ${{ github.event.inputs.min_price }}
+          WHEN: ${{ github.event.inputs.when }}
+          BPB_MAX_OPEN: ${{ github.event.inputs.bpb_max_open }}
         run: python -u shape_live_plan.py ${{ github.event.inputs.mode || 'plan' }}
 
       - name: Save plan
@@ -78,6 +88,10 @@ jobs:
           git config user.name "shapelive-bot"
           git config user.email "shapelive-bot@users.noreply.github.com"
           if [ -d live_plan ]; then git add live_plan; fi
-          git diff --cached --quiet || git commit -m "shapelive plan"
-          git pull --no-rebase -X ours --no-edit || true
-          git push || true
+          if git diff --cached --quiet; then echo "nothing to save"; exit 0; fi
+          git commit -m "shapelive plan"
+          for i in 1 2 3 4 5; do
+            git pull --no-rebase -X ours --no-edit && git push && echo "plan pushed" && exit 0
+            echo "push attempt $i failed - retrying"; sleep 5
+          done
+          echo "!!! THE PLAN FILE COULD NOT BE PUSHED - the manager would not see it"; exit 1
