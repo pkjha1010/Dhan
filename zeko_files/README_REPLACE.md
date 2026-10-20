@@ -21,9 +21,10 @@ WRL is still in the code (`STRATEGIES=WRU,WRL,BPB`) but is not planned any more.
 The old 30 % portfolio limit is OFF (`fund_limit_pct` default 0; give 30 to switch it on again).
 
 ## Daily routine
-1. EVENING (after 15:45): run `shape_live_plan` - preview table of tomorrow (Summary tab of the run).  No alerts, `plan.json` untouched.
-2. MORNING (before 09:15, best 08:30): run `shape_live_plan` again - sized on the funds after the night update, creates the alerts, saves `plan.json`.  The run must be green.
-3. 08:55: the manager starts once (cron-job.org) and hands over from the morning job to the afternoon job at 12:58 by itself.
+1. ONCE in the evening (18:00, after the market has closed): run `shape_live_plan`.  It plans the NEXT trading day, sizes each trade on the funds in Kite at that moment (10 %), replaces the old SHP| alerts,
+   creates the new alerts and saves `plan.json` (table on the run's Summary tab).  The run must be green.  If your funds change a lot in the night, give `total_funds` instead.
+2. 08:55 next morning: the manager starts once (cron-job.org) and hands over from the morning job to the afternoon job at 12:58 by itself.
+3. Missed the evening run?  Run the plan before 09:15 - it plans that same day.
 
 ## Safety rules in the manager
 1. an unfilled BUY order is cancelled after 0.5 s;

@@ -383,10 +383,9 @@ def check_plan():
     need(P.gtt_for(P.STRATS["WRU"]) == {"target": 0, "stoploss": -20}, f"WRU GTT {P.gtt_for(P.STRATS['WRU'])}")
     need(P.gtt_for(P.STRATS["BPB"]) == {"target": 60, "stoploss": 0}, f"BPB GTT {P.gtt_for(P.STRATS['BPB'])}")
     D = lambda d, h, m: datetime(2026, 10, d, h, m)                         # 19 = Monday
-    for args, want in (((D(19, 8, 30)), ("morning", "2026-10-19")), ((D(19, 9, 10)), ("morning", "2026-10-19")), ((D(19, 20, 0)), ("evening", "2026-10-20")),
-                       ((D(23, 20, 0)), ("evening", "2026-10-26")), ((D(24, 10, 0)), ("evening", "2026-10-26")), ((D(25, 21, 0)), ("evening", "2026-10-26"))):
-        m, td = P.decide_mode(args); need((m, str(td)) == want, f"decide_mode({args}) = {(m, str(td))}, expected {want}")
-    try: P.decide_mode(D(19, 11, 0)); need(False, "market hours must be refused")
+    for now, want in ((D(19, 18, 0), "2026-10-20"), (D(23, 18, 0), "2026-10-26"), (D(24, 10, 0), "2026-10-26"), (D(25, 21, 0), "2026-10-26"), (D(19, 8, 30), "2026-10-19"), (D(19, 15, 45), "2026-10-20")):
+        need(str(P.plan_day(now)) == want, f"plan_day({now}) = {P.plan_day(now)}, expected {want}")
+    try: P.plan_day(D(19, 11, 0)); need(False, "market hours must be refused")
     except SystemExit: pass
 
     class Kite:
@@ -401,30 +400,26 @@ def check_plan():
             if path == "/alerts" and method == "POST": self.created.append(kw["data"]); return True, {"uuid": "n"}
             if path == "/alerts" and method == "DELETE": self.deleted += len([1 for k, u in kw["params"] if k == "uuid"]); return True, {}
             return False, "x"
-    def run(now, dry="0", when="auto"):
+    def run(now, dry="0"):
         rest = Rest(); d = tempfile.mkdtemp()
         P.now_ist, P.time.sleep = (lambda: now), (lambda s: None)
-        P.PLAN_DIR, P.DRY_RUN, P.WHEN = d, dry == "1", when
+        P.PLAN_DIR, P.DRY_RUN = d, dry == "1"
         P.login = lambda: (Kite(), "k", "t"); P.K = lambda k, t: rest; P.Angel = lambda: None; P.angel_master = lambda: ({}, {})
         P.find_setups = lambda ang, eq: [dict(stock="AAA", direction="SHORT", ref=98.0, line=97.0, strategy="WRU", last="x"), dict(stock="BBB", direction="SHORT", ref=101.0, line=99.0, strategy="BPB", last="x")]
         P.option_prices = lambda ang, opt, picks: {i["tradingsymbol"]: 20.0 for sd, i in picks}
         try: P.main()
         except SystemExit as e: need(e.code in (0, None), f"plan exit {e.code}")
         return rest, d
-    rest, d = run(D(19, 20, 0))                                              # evening
-    need(not rest.created and rest.deleted == 0, "the evening preview must create and delete NO alert")
-    need(not os.path.exists(f"{d}/plan.json") and os.path.exists(f"{d}/preview.json"), "the evening preview must write preview.json and NOT plan.json")
-    pv = _j.load(open(f"{d}/preview.json")); need(pv["trade_day"] == "2026-10-20" and len(pv["items"]) == 2 and pv["items"][0]["lots"] == 50, f"preview content {pv['trade_day']} {len(pv['items'])}")
-    rest, d = run(D(20, 8, 30))                                              # morning
-    need(len(rest.created) == 2 and rest.deleted == 1, f"morning: alerts created {len(rest.created)}, old SHP alerts deleted {rest.deleted} (SWG must stay)")
-    pl = _j.load(open(f"{d}/plan.json")); need(pl["trade_day"] == "2026-10-20" and pl["mode"] == "morning" and set(pl["strategies"]) == {"WRU", "BPB"} and pl["strategies"]["BPB"]["max_open"] == 3, "plan.json content")
-    gtt = {c["name"].split("|")[1]: _j.loads(_j.loads(c["basket"])["items"][0]["params"]["gtt"]) if isinstance(_j.loads(c["basket"])["items"][0]["params"]["gtt"], str) else _j.loads(c["basket"])["items"][0]["params"]["gtt"] for c in rest.created}
+    rest, d = run(D(19, 18, 0))                                              # the one daily run, 18:00 Monday -> Tuesday
+    need(len(rest.created) == 2 and rest.deleted == 1, f"18:00 run: alerts created {len(rest.created)}, old SHP alerts deleted {rest.deleted} (SWG must stay)")
+    pl = _j.load(open(f"{d}/plan.json")); need(pl["trade_day"] == "2026-10-20" and set(pl["strategies"]) == {"WRU", "BPB"} and pl["strategies"]["BPB"]["max_open"] == 3 and len(pl["items"]) == 2, "plan.json content")
+    gtt = {c["name"].split("|")[1]: _j.loads(c["basket"])["items"][0]["params"]["gtt"] for c in rest.created}
     need(gtt["WRU"] == {"target": 0, "stoploss": -20} and gtt["BPB"] == {"target": 60, "stoploss": 0}, f"GTT in the alerts {gtt}")
     qty = {c["name"].split("|")[1]: _j.loads(c["basket"])["items"][0]["params"]["quantity"] for c in rest.created}
     need(qty["WRU"] == 5000 and qty["BPB"] == 5000, f"10 % of 10,00,000 at Rs 20 x lot 100 = 50 lots = 5000 qty, got {qty}")
-    rest, d = run(D(20, 8, 30), dry="1")                                     # morning dry run must not replace plan.json
+    rest, d = run(D(19, 18, 0), dry="1")                                     # a dry run must not replace plan.json
     need(not rest.created and not os.path.exists(f"{d}/plan.json"), "a dry run must not create alerts or plan.json")
-    print("PASS plan: evening = preview only (no alerts, plan.json untouched, next trading day) | morning = alerts + plan.json, old SHP alerts replaced, SWG kept, 10 % sizing | "
+    print("PASS plan: one run at 18:00 plans the NEXT trading day (Friday / weekend -> Monday), creates the alerts + plan.json, old SHP alerts replaced, SWG kept, 10 % sizing | "
           "GTT: WRU stop-loss 20 without target, BPB target 60 | market hours refused | dry run changes nothing")
 
 

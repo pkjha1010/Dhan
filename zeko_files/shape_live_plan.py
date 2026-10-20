@@ -1,10 +1,8 @@
 """
-SHAPELIVE PLAN  -  run it TWICE per trading day:
-  EVENING (after 15:45, any evening incl. Friday / weekend)  -> PREVIEW of the next trading day: finds the setups, picks the options, prices them, sizes them and prints the table.
-        It creates NO alerts and does not touch plan.json (it writes live_plan/preview.json only).  The funds seen now may still change in the night.
-  MORNING (before 09:15 of a trading day, best 08:30)       -> the REAL plan: the same scan, sized on the funds in your Kite account NOW (after the night update), creates the
-        Kite ATO alerts and writes live_plan/plan.json, which the manager reads at 08:55.
-  The mode is chosen from the clock (input `when` = auto).  Between 09:15 and 15:45 of a trading day it refuses (use when=morning only to force it).
+SHAPELIVE PLAN  -  run it ONCE per trading day, in the evening after the market has closed (e.g. 18:00 IST).
+  It plans the NEXT trading day (Friday evening / weekend -> Monday): finds the setups, picks and prices the options, sizes each trade on the funds available in your Kite account
+  at that moment, deletes the old SHP| alerts, creates the Kite ATO alerts and writes live_plan/plan.json, which the manager reads at 08:55 the next morning.
+  Run before 09:15 on a trading day (recovery when the evening run was missed) it plans that same day.  Between 09:15 and 15:45 of a trading day it refuses (the manager is working).
 
 TWO strategies are planned (backtest: all8_backtest.py / shapetrend results, target-gap trades removed):
   WRU  WICK_RED_UPPER   SHORT (buy PUT)   SHAPECMP signal whose previous (signal) candle is RED with the UPPER wick longer than the lower wick.
@@ -20,9 +18,9 @@ What it does
      nearest MONTHLY expiry that is still open.  If two strategies pick the SAME option, only the first one (order WRU, WRL, BPB) is kept.
   3. Reads that option's last price from Angel One and works out  lots = cap // (price x lot size),  cap = CAPITAL_PCT % (default 10 %) of the funds available in your Kite account
      (or of TOTAL_FUNDS when given); MAX_COST = optional fixed rupee cap.  Fewer than 1 lot -> SKIPPED.  Option price below MIN_PRICE -> SKIPPED.
-  4. MORNING only: one Kite ATO alert per setup: when the STOCK price crosses the entry price (<= for SHORT) Zerodha sends the BUY MARKET order for the option (NRML, validity DAY)
+  4. One Kite ATO alert per setup: when the STOCK price crosses the entry price (<= for SHORT) Zerodha sends the BUY MARKET order for the option (NRML, validity DAY)
      with the built-in GTT:  WRU stop-loss -20 % (no target) / BPB target +60 %.   Alert names: SHP|WRU|STOCK|price, SHP|BPB|...   Orders carry the tag SHPWRU / SHPBPB.
-  5. Saves live_plan/plan.json (morning) or live_plan/preview.json (evening).  The manager reads plan.json: it deletes a strategy's waiting alerts when its entry time ends,
+  5. Saves live_plan/plan.json (a dry run saves live_plan/preview.json instead and never replaces plan.json).  The manager reads plan.json: it deletes a strategy's waiting alerts when its entry time ends,
      squares the strategy off at its exit time, cancels unfilled BUY / stop-loss orders at once and holds BPB to 3 open trades.
 
 Only alerts whose name starts with "SHP|" are touched. Your other alerts (SWG|...) are not.
@@ -57,8 +55,8 @@ PRODUCT = os.environ.get("PRODUCT") or "NRML"                  # overnight produ
 GTT_TP_ONLY = os.environ.get("GTT_TP_ONLY") or '{"target": {tp}, "stoploss": 0}'
 GTT_TP_SL = os.environ.get("GTT_TP_SL") or '{"target": {tp}, "stoploss": -{sl}}'
 GTT_SL_ONLY = os.environ.get("GTT_SL_ONLY") or '{"target": 0, "stoploss": -{sl}}'      # stop-loss without a target (your old plan used {"target": 0, "stoploss": -10})
-DRY_RUN = (os.environ.get("DRY_RUN") or "0") == "1"           # 1 = show everything, create no alerts (always the case in the evening preview)
-WHEN = (os.environ.get("WHEN") or "auto").strip().lower()      # auto | evening | morning
+DRY_RUN = (os.environ.get("DRY_RUN") or "0") == "1"           # 1 = show everything, create no alerts 
+FORCE = (os.environ.get("FORCE") or "0") == "1"                 # 1 = allow a run during market hours (it then plans the next trading day)
 PLAN_DIR = os.environ.get("PLAN_DIR") or "live_plan"
 
 
@@ -437,24 +435,20 @@ def funds_available(k):
     return float(v) if v is not None else None
 
 
-def decide_mode(n):
-    """('morning' | 'evening', trade day).  morning = real plan with alerts (before 09:15 of a weekday); evening = preview (after 15:45 or on a weekend)."""
+def plan_day(n):
+    """The trading day to plan.  After 15:45 / weekend: the next trading day.  Before 09:15 of a weekday: today (recovery).  09:15-15:45 of a trading day: refused unless FORCE."""
     today, t = n.date(), n.time()
     weekday = today.weekday() < 5
-    if WHEN == "morning": return "morning", (today if weekday else next_trade_day(today))
-    if WHEN == "evening": return "evening", next_trade_day(today) if (not weekday or t >= dtime(9, 15)) else today
-    if weekday and t < dtime(9, 15): return "morning", today
-    if (not weekday) or t >= dtime(15, 45): return "evening", next_trade_day(today)
-    sys.exit(f"It is {t:%H:%M} on a trading day: the market is open, so no plan is made (morning plan = before 09:15, evening preview = after 15:45). Use when=morning or when=evening to force it.")
+    if weekday and t < dtime(9, 15): return today
+    if (not weekday) or t >= dtime(15, 45) or FORCE: return next_trade_day(today)
+    sys.exit(f"It is {t:%H:%M} on a trading day: the market is open and the manager is working, so no plan is made.  Run the plan after 15:45 (e.g. 18:00), or set force=1.")
 
 
 def main():
     global DRY_RUN
     n = now_ist(); today = n.date()
-    mode, td = decide_mode(n)
-    if mode == "evening" and not DRY_RUN:
-        DRY_RUN = True
-    log(f"MODE {mode.upper()}: planning trade day {td}" + ("  (preview only - no alerts are created, plan.json is not changed)" if mode == "evening" else "  (real plan - alerts are created)" + ("  [dry run: none created]" if DRY_RUN else "")))
+    td = plan_day(n)
+    log(f"planning trade day {td}" + ("  [dry run: no alerts created, plan.json untouched]" if DRY_RUN else "  (alerts are created, plan.json is saved)"))
     kite, key, tok = login(); k = K(key, tok)
     ang = Angel(); eq, opt = angel_master()
     setups = find_setups(ang, eq)
@@ -507,27 +501,27 @@ def main():
         time.sleep(0.2)
 
     os.makedirs(PLAN_DIR, exist_ok=True)
-    plan = dict(created=str(now_ist()), mode=mode, trade_day=str(td), funds=funds, max_cost=cap, product=PRODUCT, strategies={c: STRATS[c] for c in ACTIVE}, items=made)
-    if mode == "evening" or DRY_RUN:          # a preview / dry run must never replace the real plan the manager will read
+    plan = dict(created=str(now_ist()), trade_day=str(td), funds=funds, max_cost=cap, product=PRODUCT, strategies={c: STRATS[c] for c in ACTIVE}, items=made)
+    if DRY_RUN:                               # a dry run must never replace the real plan the manager will read
         json.dump(plan, open(f"{PLAN_DIR}/preview.json", "w"), indent=1)
         json.dump(plan, open(f"{PLAN_DIR}/preview_{td}.json", "w"), indent=1)
-        log(f"PREVIEW saved ({len(made)} orders for {td}) - plan.json untouched." + ("  Run the plan again on the morning of that day, before 09:15, to create the alerts." if mode == "evening" else "  (dry run)"))
+        log(f"DRY RUN: preview saved ({len(made)} orders for {td}) - no alerts created, plan.json untouched")
     else:
         json.dump(plan, open(f"{PLAN_DIR}/plan.json", "w"), indent=1)
         json.dump(plan, open(f"{PLAN_DIR}/plan_{td}.json", "w"), indent=1)
         log(f"plan saved: {len(made)} alerts for {td}, failed={fail}")
-    summary(mode, td, funds, cap, made, skipped)
+    summary(td, funds, cap, made, skipped)
     sys.exit(1 if fail else 0)
 
 
-def summary(mode, td, funds, cap, made, skipped):
+def summary(td, funds, cap, made, skipped):
     """A short table on the GitHub run page (Summary tab)."""
     path = os.environ.get("GITHUB_STEP_SUMMARY")
     if not path: return
-    L = [f"### SHAPELIVE {mode.upper()} plan for {td}", f"funds Rs {funds:,.0f} -> Rs {cap:,.0f} per trade" if funds else f"Rs {cap:,.0f} per trade", "",
+    L = [f"### SHAPELIVE plan for {td}", f"funds Rs {funds:,.0f} -> Rs {cap:,.0f} per trade" if funds else f"Rs {cap:,.0f} per trade", "",
          "| strategy | stock | option | lots | qty | price | cost |", "|---|---|---|---|---|---|---|"]
     L += [f"| {i['strategy']} | {i['stock']} | {i['option']} | {i['lots']} | {i['qty']} | {i['close_price']} | {i['cost']:,.0f} |" for i in made]
-    L += ["", f"{len(made)} orders, {len(skipped)} skipped." + (" Preview only - no alerts created." if mode == "evening" else "")]
+    L += ["", f"{len(made)} orders, {len(skipped)} skipped." + (" Dry run - no alerts created." if DRY_RUN else "")]
     try: open(path, "a").write("\n".join(L) + "\n")
     except Exception: pass
 

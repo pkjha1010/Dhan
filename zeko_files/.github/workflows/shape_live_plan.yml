@@ -1,4 +1,4 @@
-name: 'SHAPELIVE plan (run in the EVENING = preview of tomorrow, in the MORNING before 09:15 = creates the ATO alerts)'
+name: 'SHAPELIVE plan (run once, after market close e.g. 18:00 - plans the NEXT trading day and creates the ATO alerts)'
 
 on:
   workflow_dispatch:
@@ -7,12 +7,8 @@ on:
         description: 'plan = create the alerts | probe = print your existing ATO alerts (to check the GTT target / stop-loss layout)'
         required: false
         default: 'plan'
-      when:
-        description: 'auto (default) = before 09:15 on a trading day: MORNING real plan with alerts | after 15:45 or weekend: EVENING preview (no alerts).  Or force: morning | evening'
-        required: false
-        default: 'auto'
       dry_run:
-        description: '1 = show the plan only, create no alerts (the evening preview is always like this)'
+        description: '1 = show the plan only, create no alerts, do not change plan.json'
         required: false
         default: '0'
       strategies:
@@ -35,6 +31,10 @@ on:
         description: 'OPTIONAL fixed rupee cap per trade. Leave empty to use the percentage above'
         required: false
         default: ''
+      force:
+        description: '0 (default). 1 = allow a run during market hours (it plans the next trading day)'
+        required: false
+        default: '0'
       bpb_max_open:
         description: 'BPB (no stop-loss): the most trades open at the same time'
         required: false
@@ -78,7 +78,7 @@ jobs:
           TOTAL_FUNDS: ${{ github.event.inputs.total_funds }}
           STRATEGIES: ${{ github.event.inputs.strategies }}
           MIN_PRICE: ${{ github.event.inputs.min_price }}
-          WHEN: ${{ github.event.inputs.when }}
+          FORCE: ${{ github.event.inputs.force }}
           BPB_MAX_OPEN: ${{ github.event.inputs.bpb_max_open }}
         run: python -u shape_live_plan.py ${{ github.event.inputs.mode || 'plan' }}
 
