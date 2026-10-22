@@ -1,0 +1,4 @@
+strategy,entry_type,signals_with_entry,entries_with_option_data,dropped_low_coverage,skipped_no_option_data,skip_reasons,trades_one_lot_affordable,long_trades,short_trades,first_entry,last_entry,avg_option_price
+BPB_SHORT_T1_FIRST_TOUCH,T1 first touch of the day at/after 12:00,213,77,35,136,Dhan returned no option candles for this period = 122; no ATM candle at the entry minute = 12; no option candles up to the expiry = 2,42,0,42,2026-01-19,2026-10-21,9.16
+BPB_SHORT_T2_RECROSS,"T2 first touch before 12:00, re-cross after 5 closes above, from 12:00",254,81,40,173,Dhan returned no option candles for this period = 163; no ATM candle at the entry minute = 10,41,0,41,2026-01-19,2026-10-21,25.69
+BPB_SHORT_T1_T2_COMBINED,T1 or T2 (one trade per signal day),467,158,75,309,Dhan returned no option candles for this period = 285; no ATM candle at the entry minute = 22; no option candles up to the expiry = 2,83,0,83,2026-01-19,2026-10-21,17.32
