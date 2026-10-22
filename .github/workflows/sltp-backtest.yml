@@ -1,0 +1,133 @@
+name: SLTP backtest (BPB / WRU SHORT, stop-loss x target grid, 5-close re-cross entry, all F&O stocks, Dhan)
+
+on:
+  workflow_dispatch:
+    inputs:
+      study:
+        description: "pm = afternoon study (BPB SHORT, entries from 12:00, exits 15:00 / 15:30) | am = morning study (BPB SHORT + WRU SHORT, entries 09:20-09:59, exit 10:00). Run each one separately."
+        type: choice
+        options: [pm, am]
+        default: pm
+      mode:
+        description: "check = test Dhan access + print the rule | run = full backtest (resumable - run again until PROGRESS.txt says COMPLETE) | summary = rebuild result files from saved data (no API calls)"
+        type: choice
+        options: [check, run, summary]
+        default: run
+      start:
+        description: "Start date YYYY-MM-DD (entry dates)"
+        required: false
+        default: "2024-01-01"
+      end:
+        description: "End date YYYY-MM-DD (entry dates)"
+        required: false
+        default: "2026-10-21"
+      symbols:
+        description: "Stocks (space or comma separated). Blank = all F&O stocks (use a few for a quick test)"
+        required: false
+        default: ""
+      sls:
+        description: "Stop-loss % of premium list (0 = no stop-loss)"
+        required: false
+        default: "0,20,40,60"
+      tps:
+        description: "Target % of premium list (0 = no target)"
+        required: false
+        default: "60,80,100,120,0"
+      above:
+        description: "Re-cross rule: consecutive 1-minute closes above the level before the entry candle"
+        required: false
+        default: "5"
+      split:
+        description: "pm study: first touch at/after this time = type 1 (first touch); before it = type 2 (re-cross)"
+        required: false
+        default: "12:00"
+      entry_last:
+        description: "pm study: last minute an entry is accepted"
+        required: false
+        default: "15:20"
+      am_from:
+        description: "am study: first entry minute"
+        required: false
+        default: "09:20"
+      am_to:
+        description: "am study: last entry minute (must be before the 10:00 exit)"
+        required: false
+        default: "09:59"
+      min_trades:
+        description: "Minimum trades for a variant to appear in the top / best tables"
+        required: false
+        default: "30"
+      out_dir:
+        description: "Result folder (blank = sltp_pm_results / sltp_am_results). Use another name if you change any setting - the saved data belongs to one setting"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sltp-backtest-${{ inputs.study }}
+  cancel-in-progress: false
+
+jobs:
+  sltp:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install packages
+        run: pip install -r requirements.txt
+
+      - name: Offline logic test (this study)
+        run: SLTP_STUDY="${{ inputs.study }}" python test_sltp.py
+
+      - name: Run
+        env:
+          DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
+          DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
+          SLTP_STUDY: ${{ inputs.study }}
+          SLTP_START: ${{ inputs.start }}
+          SLTP_END: ${{ inputs.end }}
+          SLTP_SYMBOLS: ${{ inputs.symbols }}
+          SLTP_SLS: ${{ inputs.sls }}
+          SLTP_TPS: ${{ inputs.tps }}
+          SLTP_ABOVE: ${{ inputs.above }}
+          SLTP_SPLIT: ${{ inputs.split }}
+          SLTP_ENTRY_LAST: ${{ inputs.entry_last }}
+          SLTP_AM_FROM: ${{ inputs.am_from }}
+          SLTP_AM_TO: ${{ inputs.am_to }}
+          SLTP_MIN_TRADES: ${{ inputs.min_trades }}
+          SLTP_OUT: ${{ inputs.out_dir }}
+          BUDGET_MIN: "320"
+        run: python sltp_backtest.py "${{ inputs.mode }}"
+
+      - name: Show the summary
+        if: always() && inputs.mode != 'check'
+        run: |
+          OUT="${{ inputs.out_dir || format('sltp_{0}_results', inputs.study) }}"
+          if [ -f "$OUT/SUMMARY.md" ]; then cat "$OUT/SUMMARY.md" >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - name: Save results to the repo
+        if: always() && inputs.mode != 'check'
+        run: |
+          OUT="${{ inputs.out_dir || format('sltp_{0}_results', inputs.study) }}"
+          git config user.name "sltp-bot"
+          git config user.email "sltp-bot@users.noreply.github.com"
+          git add "$OUT" || true
+          git commit -m "sltp ${{ inputs.study }} results" || echo "nothing new to commit"
+          git pull --no-rebase -X ours --no-edit || true
+          git push || true
+
+      - name: Upload results
+        if: always() && inputs.mode != 'check'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sltp-${{ inputs.study }}-results-${{ github.run_number }}
+          path: ${{ inputs.out_dir || format('sltp_{0}_results', inputs.study) }}/
+          if-no-files-found: ignore

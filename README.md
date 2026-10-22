@@ -92,3 +92,13 @@ Actions -> "TRENDLINE backtest" -> Run workflow (use `check` first). Offline tes
 * **Files**: `SUMMARY.md`, `summary.csv`, `trade_files/<STRATEGY>_best_trades.csv` (10 plain CSV files, every trade of the strategy's best variant), `all_trades/<STRATEGY>.csv.gz` (every trade of all 80 variants), `top_by_*.csv`, `best_per_strategy.csv`, `trades_summary.csv`, `summary_by_year_top.csv`.
 * **Resumable**: run the workflow again until `PROGRESS.txt` says COMPLETE.  `mode = check` first, `mode = summary` rebuilds the files with no API calls.  Changing `band_pct` / `base` / `hold` / the dates needs another `out_dir` (the saved data belongs to one setting; the script refuses to mix them).
 * Offline test (no login): `python test_recross10.py` - the rule on hand-made paths and against an independent state machine on 4,000 random paths, the 80-variant grid against a brute-force walk, and the whole pipeline on a simulated exchange.
+
+## SLTP backtest (stop-loss x target grid for BPB / WRU SHORT, 5-close re-cross entry)
+
+`sltp_backtest.py` (+ `sltp_rules.py` entry rules, `test_sltp.py` offline test, workflow **SLTP backtest**) compares stop-loss / target settings on the SHORT put trades of two studies. Run each study separately: Actions -> "SLTP backtest" -> study `pm` or `am` (use `check` first).
+
+* **pm (afternoon)** - BPB SHORT, entries 12:00-15:20, time exits 15:00 and 15:30. Type 1: the day's first touch of the level is at/after 12:00, enter on it. Type 2: the first touch was before 12:00, enter from 12:00 on the first candle that touches the level after at least 5 consecutive 1-minute closes above it. Also reported combined (T1 or T2, one trade per signal day). Results in `sltp_pm_results/`.
+* **am (morning)** - BPB SHORT and WRU SHORT (WICK_RED_UPPER_SHORT), entries 09:20-09:59 on the same 5-close re-cross rule, time exit 10:00. Results in `sltp_am_results/`.
+* **Grid** (% of option premium): stop-loss none / 20 / 40 / 60 x target 60 / 80 / 100 / 120 / none x the study's time exits. Max Rs 60,000 per trade (whole lots), no charges / slippage.
+* **Files**: `SUMMARY.md` (start here, SL x TP tables), `summary.csv`, `matrix_*.csv`, `trade_files/<STRATEGY>_all_variants_trades.csv` (every trade of every variant), `_best_trades.csv`, `_entries.csv`.
+* Offline logic test (no login): `SLTP_STUDY=pm python test_sltp.py` and `SLTP_STUDY=am python test_sltp.py`.
