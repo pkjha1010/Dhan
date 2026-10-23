@@ -1,11 +1,7 @@
 strategy,entry_type,signals_with_entry,entries_with_option_data,dropped_low_coverage,skipped_no_option_data,skip_reasons,trades_one_lot_affordable,long_trades,short_trades,first_entry,last_entry,avg_option_price
-BPB_ALL,ALL,493,282,196,211,Dhan returned no option candles for this period = 169; no ATM / ITM-1 / ITM-2 candle at the entry minute = 42,86,0,86,2026-01-09,2026-10-19,22.21
-BPB_LHU_MU,ALL,49,24,19,25,Dhan returned no option candles for this period = 18; no ATM / ITM-1 / ITM-2 candle at the entry minute = 7,5,0,5,2026-02-24,2026-07-23,4.59
-BPB_LHU_MD,ALL,82,51,43,31,Dhan returned no option candles for this period = 25; no ATM / ITM-1 / ITM-2 candle at the entry minute = 6,8,0,8,2026-01-27,2026-07-13,20.99
-BPB_LHD_MU,ALL,64,37,26,27,Dhan returned no option candles for this period = 25; no ATM / ITM-1 / ITM-2 candle at the entry minute = 2,11,0,11,2026-01-20,2026-07-28,12.32
-BPB_LHD_MD,ALL,123,66,50,57,Dhan returned no option candles for this period = 50; no ATM / ITM-1 / ITM-2 candle at the entry minute = 7,16,0,16,2026-01-09,2026-07-28,24.17
-WRU_ALL,ALL,537,304,210,233,Dhan returned no option candles for this period = 168; no ATM / ITM-1 / ITM-2 candle at the entry minute = 65,93,0,94,2026-01-21,2026-10-21,26.69
-WRU_LHU_MU,ALL,13,11,10,2,Dhan returned no option candles for this period = 1; no ATM / ITM-1 / ITM-2 candle at the entry minute = 1,1,0,1,2026-03-30,2026-03-30,35.0
-WRU_LHU_MD,ALL,82,45,36,37,Dhan returned no option candles for this period = 26; no ATM / ITM-1 / ITM-2 candle at the entry minute = 11,9,0,9,2026-01-27,2026-07-23,17.91
-WRU_LHD_MU,ALL,73,37,26,36,Dhan returned no option candles for this period = 24; no ATM / ITM-1 / ITM-2 candle at the entry minute = 12,10,0,11,2026-01-21,2026-07-24,37.62
-WRU_LHD_MD,ALL,187,95,67,92,Dhan returned no option candles for this period = 73; no ATM / ITM-1 / ITM-2 candle at the entry minute = 19,28,0,28,2026-01-27,2026-07-28,42.96
+BPB_ALL,ALL,715,426,235,289,Dhan returned no option candles for this period = 235; no ATM / ITM-1 / ITM-2 candle at the entry minute = 54,191,0,191,2023-01-02,2026-10-19,27.01
+BPB_LHU_MD,ALL,133,88,54,45,Dhan returned no option candles for this period = 36; no ATM / ITM-1 / ITM-2 candle at the entry minute = 9,34,0,34,2023-01-20,2026-07-13,19.66
+BPB_LHD_MD,ALL,200,116,63,84,Dhan returned no option candles for this period = 73; no ATM / ITM-1 / ITM-2 candle at the entry minute = 11,53,0,53,2023-01-05,2026-07-28,24.69
+WRU_ALL,ALL,896,535,265,361,Dhan returned no option candles for this period = 263; no ATM / ITM-1 / ITM-2 candle at the entry minute = 98,268,0,270,2023-01-02,2026-10-21,30.03
+WRU_LHU_MD,ALL,156,93,47,63,Dhan returned no option candles for this period = 43; no ATM / ITM-1 / ITM-2 candle at the entry minute = 20,45,0,46,2023-01-10,2026-07-23,29.45
+WRU_LHD_MD,ALL,365,208,94,157,Dhan returned no option candles for this period = 124; no ATM / ITM-1 / ITM-2 candle at the entry minute = 33,114,0,114,2023-01-02,2026-07-28,39.86
