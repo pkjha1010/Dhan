@@ -1,0 +1,51 @@
+Stocks tested: 210; entry dates 2026-01-01 .. 2026-10-21; entry checked 09:15 .. 10:00
+Variants: 5 stop-loss x 6 targets x 3 exits = 90 per strategy, 10 strategies; 900 variant rows with trades.
+
+Entries by strategy:
+  strategy  signals_with_entry  entries_with_option_data  dropped_low_coverage  skipped_no_option_data
+   BPB_ALL                 493                       282                   196                     211
+BPB_LHU_MU                  49                        24                    19                      25
+BPB_LHU_MD                  82                        51                    43                      31
+BPB_LHD_MU                  64                        37                    26                      27
+BPB_LHD_MD                 123                        66                    50                      57
+   WRU_ALL                 537                       304                   210                     233
+WRU_LHU_MU                  13                        11                    10                       2
+WRU_LHU_MD                  82                        45                    36                      37
+WRU_LHD_MU                  73                        37                    26                      36
+WRU_LHD_MD                 187                        95                    67                      92
+
+TOP 15 BY TOTAL PnL (min 30 trades):
+                       variant  trades  win_pct  total_pnl  roi_pct  profit_factor  avg_days_held  max_days_held
+WRU_ALL | 10:00 | SL40 | TP120      93    43.01     583249    11.39           1.86            0.0              0
+ WRU_ALL | 10:00 | SL0 | TP120      93    43.01     540121    10.55           1.75            0.0              0
+ BPB_ALL | 10:00 | SL40 | TP80      86    50.00     490516    10.46           2.01            0.0              0
+  BPB_ALL | 10:00 | SL0 | TP80      86    50.00     470131    10.03           1.93            0.0              0
+WRU_ALL | 10:00 | SL60 | TP120      93    43.01     456992     8.93           1.57            0.0              0
+BPB_ALL | 09:30 | SL40 | TP120      65    52.31     453600    12.70           2.37            0.0              0
+ BPB_ALL | 10:00 | SL60 | TP80      86    50.00     437109     9.32           1.81            0.0              0
+ BPB_ALL | 09:30 | SL0 | TP120      65    52.31     434148    12.15           2.24            0.0              0
+BPB_ALL | 09:30 | SL60 | TP120      65    52.31     430338    12.05           2.22            0.0              0
+ WRU_ALL | 10:00 | SL40 | TP80      93    43.01     428658     8.37           1.63            0.0              0
+ BPB_ALL | 10:00 | SL40 | TP60      86    52.33     411603     8.78           1.89            0.0              0
+  BPB_ALL | 09:30 | SL40 | TP0      65    52.31     411569    11.52           2.25            0.0              0
+  BPB_ALL | 10:00 | SL0 | TP60      86    52.33     408837     8.72           1.88            0.0              0
+BPB_ALL | 09:30 | SL20 | TP120      65    50.77     401421    11.24           2.29            0.0              0
+   BPB_ALL | 09:30 | SL0 | TP0      65    52.31     392117    10.98           2.12            0.0              0
+
+TOP 15 BY ROI (min 30 trades):
+                       variant  trades  win_pct  total_pnl  roi_pct  profit_factor  avg_days_held  max_days_held
+BPB_ALL | 09:30 | SL40 | TP120      65    52.31     453600    12.70           2.37            0.0              0
+ BPB_ALL | 09:30 | SL0 | TP120      65    52.31     434148    12.15           2.24            0.0              0
+BPB_ALL | 09:30 | SL60 | TP120      65    52.31     430338    12.05           2.22            0.0              0
+  BPB_ALL | 09:30 | SL40 | TP0      65    52.31     411569    11.52           2.25            0.0              0
+WRU_ALL | 10:00 | SL40 | TP120      93    43.01     583249    11.39           1.86            0.0              0
+BPB_ALL | 09:30 | SL20 | TP120      65    50.77     401421    11.24           2.29            0.0              0
+   BPB_ALL | 09:30 | SL0 | TP0      65    52.31     392117    10.98           2.12            0.0              0
+  BPB_ALL | 09:30 | SL60 | TP0      65    52.31     388307    10.87           2.10            0.0              0
+ WRU_ALL | 10:00 | SL0 | TP120      93    43.01     540121    10.55           1.75            0.0              0
+ BPB_ALL | 10:00 | SL40 | TP80      86    50.00     490516    10.46           2.01            0.0              0
+  BPB_ALL | 10:00 | SL0 | TP80      86    50.00     470131    10.03           1.93            0.0              0
+ BPB_ALL | 10:00 | SL60 | TP80      86    50.00     437109     9.32           1.81            0.0              0
+ BPB_ALL | 09:30 | SL40 | TP80      65    52.31     324474     9.08           1.98            0.0              0
+WRU_ALL | 10:00 | SL60 | TP120      93    43.01     456992     8.93           1.57            0.0              0
+   WRU_ALL | 09:20 | SL0 | TP0      62    38.71     298259     8.85           2.24            0.0              0

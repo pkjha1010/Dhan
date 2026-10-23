@@ -1,0 +1,7 @@
+variant,strategy,entry_type,exit_rule,sl,tp,trades,wins,win_pct,total_pnl,capital_used,roi_pct,profit_factor,avg_pnl,max_drawdown,avg_days_held,median_days_held,p90_days_held,max_days_held,avg_trading_days_held,stop_exits,target_exits,time_exits,expiry_exits,thin_exits,best_by
+WRU_ALL | 10:00 | SL40 | TP120,WRU_ALL,ALL,10:00,40,120,93,40,43.01,583249,5118881,11.39,1.86,6271,-185608,0.0,0.0,0.0,0,0.0,17,10,66,0,1,PNL
+WRU_ALL | 10:00 | SL40 | TP120,WRU_ALL,ALL,10:00,40,120,93,40,43.01,583249,5118881,11.39,1.86,6271,-185608,0.0,0.0,0.0,0,0.0,17,10,66,0,1,ROI
+WRU_ALL | 10:00 | SL40 | TP20,WRU_ALL,ALL,10:00,40,20,93,54,58.06,361402,5118881,7.06,1.74,3886,-140100,0.0,0.0,0.0,0,0.0,12,41,40,0,1,WIN_RATE
+BPB_ALL | 10:00 | SL40 | TP80,BPB_ALL,ALL,10:00,40,80,86,43,50.0,490516,4687596,10.46,2.01,5704,-87219,0.0,0.0,0.0,0,0.0,11,12,63,0,1,PNL
+BPB_ALL | 09:30 | SL40 | TP120,BPB_ALL,ALL,09:30,40,120,65,34,52.31,453600,3572221,12.7,2.37,6978,-74431,0.0,0.0,0.0,0,0.0,7,5,53,0,1,ROI
+BPB_ALL | 10:00 | SL0 | TP20,BPB_ALL,ALL,10:00,0,20,86,53,61.63,347758,4687596,7.42,1.98,4044,-105599,0.0,0.0,0.0,0,0.0,0,44,42,0,1,WIN_RATE
