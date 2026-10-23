@@ -1,0 +1,4 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,TATAELXSI,SHORT,7455.0,2023-07-17,2023-07-18,7350.0,2023-07-17,7455.0,0,1,1,0
+BPB,TATAELXSI,SHORT,7450.1,2023-07-10,2023-07-11,7410.0,2023-07-10,7450.1,0,1,0,1
+BPB,TATAELXSI,SHORT,7075.0,2023-08-11,2023-08-14,7113.0,2023-08-11,7075.0,0,1,1,0

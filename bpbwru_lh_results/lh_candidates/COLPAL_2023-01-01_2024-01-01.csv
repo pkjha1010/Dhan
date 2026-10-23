@@ -1,0 +1,4 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,COLPAL,SHORT,1947.0,2023-08-25,2023-08-28,1979.35,2023-08-25,1947.0,0,1,1,0
+BPB,COLPAL,SHORT,1509.4,2023-01-09,2023-01-10,1537.95,2023-01-09,1509.4,0,1,0,1
+BPB,COLPAL,SHORT,1477.6,2023-01-23,2023-01-24,1492.25,2023-01-23,1477.6,0,1,0,1

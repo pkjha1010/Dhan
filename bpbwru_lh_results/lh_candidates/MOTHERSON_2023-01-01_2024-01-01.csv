@@ -1,0 +1,2 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,MOTHERSON,SHORT,61.4,2023-10-20,2023-10-23,62.65,2023-10-20,61.4,0,1,1,0

@@ -1,0 +1,3 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,MARUTI,SHORT,9344.0,2023-08-17,2023-08-18,9350.0,2023-08-17,9344.0,0,1,1,0
+BPB,MARUTI,SHORT,10260.05,2023-12-14,2023-12-15,10439.5,2023-12-14,10260.05,0,1,0,1

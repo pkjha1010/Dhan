@@ -1,0 +1,3 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+BPB,NESTLEIND,SHORT,957.5,2023-01-25,2023-01-27,964.5,2023-01-25,957.5,0,1,0,1
+BPB,NESTLEIND,SHORT,1086.65,2023-08-16,2023-08-17,1095.0,2023-08-16,1086.65,0,1,0,1

@@ -1,0 +1,4 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,MANKIND,SHORT,1752.1,2023-09-15,2023-09-18,1770.0,2023-09-15,1752.1,0,1,1,0
+BPB,MANKIND,SHORT,1763.25,2023-08-30,2023-08-31,1780.0,2023-08-30,1763.25,0,1,0,1
+BPB,MANKIND,SHORT,1690.0,2023-10-31,2023-11-01,1725.0,2023-10-31,1690.0,0,1,0,1

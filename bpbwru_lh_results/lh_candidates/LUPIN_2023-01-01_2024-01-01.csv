@@ -1,0 +1,4 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,LUPIN,SHORT,724.15,2022-12-30,2023-01-02,734.9,2022-12-30,724.15,0,1,1,0
+WRU,LUPIN,SHORT,738.3,2023-02-03,2023-02-06,738.95,2023-02-03,738.3,0,1,1,0
+BPB,LUPIN,SHORT,656.85,2023-02-23,2023-02-24,662.05,2023-02-23,656.85,0,1,0,1

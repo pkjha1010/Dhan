@@ -1,0 +1,4 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,RADICO,SHORT,1105.25,2023-05-11,2023-05-12,1116.1,2023-05-11,1105.25,0,1,1,0
+WRU,RADICO,SHORT,1245.85,2023-08-30,2023-08-31,1265.0,2023-08-30,1245.85,0,1,1,0
+BPB,RADICO,SHORT,1171.0,2023-10-25,2023-10-26,1190.0,2023-10-25,1171.0,0,1,1,0

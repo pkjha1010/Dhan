@@ -1,0 +1,3 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,LICHSGFIN,SHORT,357.15,2023-03-06,2023-03-08,358.1,2023-03-06,357.15,0,1,1,0
+BPB,LICHSGFIN,SHORT,344.0,2023-03-10,2023-03-13,352.05,2023-03-10,344.0,0,1,0,1

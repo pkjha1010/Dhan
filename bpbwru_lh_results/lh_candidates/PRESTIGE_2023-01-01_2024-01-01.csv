@@ -1,0 +1,3 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+BPB,PRESTIGE,SHORT,435.1,2023-01-23,2023-01-24,440.05,2023-01-23,435.1,0,1,1,0
+BPB,PRESTIGE,SHORT,410.0,2023-01-31,2023-02-01,423.0,2023-01-31,410.0,0,1,1,0

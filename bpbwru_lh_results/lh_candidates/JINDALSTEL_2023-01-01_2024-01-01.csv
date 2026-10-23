@@ -1,0 +1,4 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,JINDALSTEL,SHORT,515.45,2023-05-30,2023-05-31,519.8,2023-05-30,515.45,0,1,1,0
+WRU,JINDALSTEL,SHORT,515.45,2023-05-31,2023-06-01,520.0,2023-05-31,515.45,0,1,1,0
+BPB,JINDALSTEL,SHORT,515.45,2023-05-23,2023-05-24,519.0,2023-05-23,515.45,0,1,1,0

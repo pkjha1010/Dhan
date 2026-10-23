@@ -1,0 +1,4 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,TATASTEEL,SHORT,124.55,2023-10-18,2023-10-19,125.65,2023-10-18,124.55,0,1,1,0
+BPB,TATASTEEL,SHORT,110.1,2023-02-08,2023-02-09,112.15,2023-02-08,110.1,0,1,0,1
+BPB,TATASTEEL,SHORT,108.3,2023-02-13,2023-02-14,109.55,2023-02-13,108.3,0,1,1,0

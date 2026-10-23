@@ -1,0 +1,4 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,PERSISTENT,SHORT,2410.1,2023-07-07,2023-07-10,2414.8,2023-07-07,2410.1,0,1,1,0
+WRU,PERSISTENT,SHORT,2362.5,2023-07-21,2023-07-24,2384.95,2023-07-21,2362.5,0,1,1,0
+BPB,PERSISTENT,SHORT,2227.6,2023-03-20,2023-03-21,2285.0,2023-03-20,2227.6,0,1,0,1

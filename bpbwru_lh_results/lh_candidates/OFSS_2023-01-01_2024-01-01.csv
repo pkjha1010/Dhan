@@ -1,0 +1,3 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,OFSS,SHORT,4059.25,2023-10-18,2023-10-19,4060.05,2023-10-18,4059.25,0,1,1,0
+BPB,OFSS,SHORT,3897.0,2023-10-25,2023-10-26,3925.1,2023-10-25,3897.0,0,1,0,1

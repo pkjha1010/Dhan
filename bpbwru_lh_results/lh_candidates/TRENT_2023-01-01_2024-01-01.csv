@@ -1,0 +1,4 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+BPB,TRENT,SHORT,851.95,2023-01-04,2023-01-05,874.65,2023-01-04,851.95,0,1,1,0
+BPB,TRENT,SHORT,787.95,2023-01-19,2023-01-20,803.05,2023-01-19,787.95,0,1,0,1
+BPB,TRENT,SHORT,1112.65,2023-07-11,2023-07-12,1131.35,2023-07-11,1112.65,0,1,1,0

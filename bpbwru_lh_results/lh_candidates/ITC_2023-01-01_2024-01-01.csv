@@ -1,0 +1,5 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,ITC,SHORT,329.95,2022-12-30,2023-01-02,330.9,2022-12-30,329.95,0,1,1,0
+WRU,ITC,SHORT,329.95,2023-01-03,2023-01-04,331.85,2023-01-03,329.95,0,1,1,0
+WRU,ITC,SHORT,329.95,2023-01-19,2023-01-20,332.0,2023-01-19,329.95,0,1,1,0
+BPB,ITC,SHORT,427.1,2023-10-31,2023-11-01,429.9,2023-10-31,427.1,0,1,1,0

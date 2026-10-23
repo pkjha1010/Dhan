@@ -1,0 +1,2 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+BPB,LTF,SHORT,84.5,2023-03-15,2023-03-16,85.15,2023-03-15,84.5,0,1,1,0

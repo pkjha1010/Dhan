@@ -1,0 +1,4 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,TVSMOTOR,SHORT,1037.15,2023-03-17,2023-03-20,1005.0,2023-03-17,1037.15,0,1,1,0
+WRU,TVSMOTOR,SHORT,1037.15,2023-03-24,2023-03-27,1042.3,2023-03-24,1037.15,0,1,1,0
+BPB,TVSMOTOR,SHORT,977.8,2023-01-19,2023-01-20,1005.0,2023-01-19,977.8,0,1,1,0
