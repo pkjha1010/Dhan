@@ -1,0 +1,4 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,APLAPOLLO,SHORT,1908.5,2026-04-01,2026-04-02,1929.0,2026-04-01,1908.5,0,1,1,0
+BPB,APLAPOLLO,SHORT,2105.0,2026-03-06,2026-03-09,2093.5,2026-03-06,2105.0,0,1,1,0
+BPB,APLAPOLLO,SHORT,1872.1,2026-04-01,2026-04-02,1929.0,2026-04-01,1872.1,0,1,1,0

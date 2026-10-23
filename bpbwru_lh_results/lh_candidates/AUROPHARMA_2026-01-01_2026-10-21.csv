@@ -1,0 +1,4 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,AUROPHARMA,SHORT,1541.0,2026-08-03,2026-08-04,1555.0,2026-08-03,1541.0,0,1,1,0
+BPB,AUROPHARMA,SHORT,1116.5,2026-01-23,2026-01-27,1139.8,2026-01-23,1116.5,0,1,0,1
+BPB,AUROPHARMA,SHORT,1428.0,2026-05-27,2026-05-29,1435.9,2026-05-27,1428.0,0,1,1,0

@@ -1,0 +1,4 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,KALYANKJIL,SHORT,407.1,2026-04-29,2026-04-30,412.95,2026-04-29,407.1,0,1,1,0
+BPB,KALYANKJIL,SHORT,347.5,2026-05-12,2026-05-13,351.0,2026-05-12,347.5,0,1,0,1
+BPB,KALYANKJIL,SHORT,559.25,2026-09-29,2026-09-30,572.0,2026-09-29,559.25,0,1,1,0

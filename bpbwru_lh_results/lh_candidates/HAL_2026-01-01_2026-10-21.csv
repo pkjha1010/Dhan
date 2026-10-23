@@ -1,0 +1,3 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,HAL,SHORT,4327.0,2026-02-03,2026-02-04,4410.0,2026-02-03,4327.0,0,1,1,0
+WRU,HAL,SHORT,3937.1,2026-03-18,2026-03-19,3930.0,2026-03-18,3937.1,0,1,1,0

@@ -1,0 +1,4 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,SUPREMEIND,SHORT,3671.4,2026-04-27,2026-04-28,3700.4,2026-04-27,3671.4,0,1,1,0
+BPB,SUPREMEIND,SHORT,3491.1,2026-05-13,2026-05-14,3527.9,2026-05-13,3491.1,0,1,1,0
+BPB,SUPREMEIND,SHORT,3141.0,2026-07-07,2026-07-08,3176.1,2026-07-07,3141.0,0,1,1,0

@@ -1,0 +1,4 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+WRU,BEL,SHORT,405.55,2026-09-09,2026-09-10,407.0,2026-09-09,405.55,0,1,1,0
+BPB,BEL,SHORT,404.0,2026-03-25,2026-03-27,411.9,2026-03-25,404.0,0,1,1,0
+BPB,BEL,SHORT,382.1,2026-09-30,2026-10-01,385.2,2026-09-30,382.1,0,1,1,0
