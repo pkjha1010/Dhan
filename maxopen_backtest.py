@@ -74,7 +74,7 @@ def main():
     s = pd.DataFrame(rows); s.to_csv(f"{OUT}/summary.csv", index=False)
     pd.DataFrame(monthly).fillna(0).to_csv(f"{OUT}/monthly.csv")
     with open(f"{OUT}/SUMMARY.md", "w") as f:
-        f.write(f"# Max open trades - BPB SHORT, first touch after 12:00, SL{SL:g} / TP{TP:g}, exit {EXIT_RULE}, Rs 60,000 max per trade\n\n")
+        f.write(f"# Max open trades - {os.path.basename(SRC)}, SL{SL:g} / TP{TP:g}, exit {EXIT_RULE}, Rs 60,000 max per trade\n\n")
         for mp in sorted({MIN_PRICE, 0}, reverse=True):
             f.write(f"## Options priced above Rs {mp:g}\n\n" if mp else "## No minimum price (for comparison)\n\n"); f.write(s[s.min_price == mp].drop(columns="min_price").to_markdown(index=False) + "\n\n")
         f.write("Monthly pnl (min price applied):\n\n" + pd.DataFrame(monthly).fillna(0).to_markdown() + "\n")

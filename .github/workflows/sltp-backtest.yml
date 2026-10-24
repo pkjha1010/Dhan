@@ -53,6 +53,18 @@ on:
         description: "am study: last entry minute (must be before the 10:00 exit)"
         required: false
         default: "09:59"
+      exits:
+        description: "Time exits to test, comma separated (blank = pm: 15:00,15:30 | am: 10:00). For the live rule use 15:30"
+        required: false
+        default: ""
+      itm_max:
+        description: "Strike rule: 0 = ATM only (skip the entry if ATM has no candle) | n = ATM first, then ITM-1, ITM-2 ... up to ITM-n until a strike has a candle"
+        required: false
+        default: "0"
+      max_open:
+        description: "After the run: max trades open at the same time to compare (0 = no cap), e.g. 2,3,4,0 - results in <out>/maxopen (needs SL 0 / TP 60 / exit 15:30 in the run)"
+        required: false
+        default: "2,3,4,0"
       min_trades:
         description: "Minimum trades for a variant to appear in the top / best tables"
         required: false
@@ -85,7 +97,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Offline logic test (this study)
-        run: SLTP_STUDY="${{ inputs.study }}" python test_sltp.py
+        run: SLTP_STUDY="${{ inputs.study }}" python test_sltp.py && python test_itm_fallback.py && python test_maxopen.py
 
       - name: Run
         env:
@@ -102,10 +114,21 @@ jobs:
           SLTP_ENTRY_LAST: ${{ inputs.entry_last }}
           SLTP_AM_FROM: ${{ inputs.am_from }}
           SLTP_AM_TO: ${{ inputs.am_to }}
+          SLTP_EXITS: ${{ inputs.exits }}
+          SLTP_ITM_MAX: ${{ inputs.itm_max }}
           SLTP_MIN_TRADES: ${{ inputs.min_trades }}
           SLTP_OUT: ${{ inputs.out_dir }}
           BUDGET_MIN: "320"
         run: python sltp_backtest.py "${{ inputs.mode }}"
+
+      - name: Max open trades (offline, from the trades of this run)
+        if: always() && inputs.mode != 'check' && inputs.study == 'pm'
+        run: |
+          OUT="${{ inputs.out_dir || format('sltp_{0}_results', inputs.study) }}"
+          for S in BPB_SHORT_T1_T2_COMBINED BPB_SHORT_T1_FIRST_TOUCH; do
+            F="$OUT/trade_files/${S}_all_variants_trades.csv"
+            if [ -f "$F" ]; then SRC="$F" OUT="$OUT/maxopen_$S" CAPS="${{ inputs.max_open }}" EXIT=15:30 SL=0 TP=60 python maxopen_backtest.py || true; fi
+          done
 
       - name: Show the summary
         if: always() && inputs.mode != 'check'

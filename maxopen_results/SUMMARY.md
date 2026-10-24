@@ -1,4 +1,4 @@
-# Max open trades - BPB SHORT, first touch after 12:00, SL0 / TP60, exit 15:30, Rs 60,000 max per trade
+# Max open trades - BPB_SHORT_T1_FIRST_TOUCH_all_variants_trades.csv, SL0 / TP60, exit 15:30, Rs 60,000 max per trade
 
 ## Options priced above Rs 2
 

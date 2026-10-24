@@ -67,13 +67,15 @@ import sltp_rules as R
 C = A.C
 
 SPLIT, AM_FROM, AM_TO = R.hm_to_min(SPLIT_S), R.hm_to_min(AM_FROM_S), R.hm_to_min(AM_TO_S)
+_EX = [x.strip() for x in _env("SLTP_EXITS", "").replace(" ", ",").split(",") if len(x.strip()) == 5 and x.strip()[2] == ":"]   # optional: only these exit times
+ITM_MAX = int(_env("SLTP_ITM_MAX", "0"))                                      # 0 = ATM only (old behaviour); n = ATM first, then ITM-1 ... ITM-n until a candle exists
 if STUDY == "pm":
-    TEXITS = ["15:00", "15:30"]
+    TEXITS = _EX or ["15:00", "15:30"]
     STRAT_RULE = {"BPB_SHORT_T1_FIRST_TOUCH": f"T1 first touch of the day at/after {SPLIT_S}",
                   "BPB_SHORT_T2_RECROSS": f"T2 first touch before {SPLIT_S}, re-cross after {N_ABOVE} closes above, from {SPLIT_S}",
                   "BPB_SHORT_T1_T2_COMBINED": "T1 or T2 (one trade per signal day)"}
 else:
-    TEXITS = ["10:00"]
+    TEXITS = _EX or ["10:00"]
     STRAT_RULE = {"BPB_SHORT_AM_RECROSS": f"re-cross after {N_ABOVE} closes above, {AM_FROM_S}-{AM_TO_S}",
                   "WRU_SHORT_AM_RECROSS": f"re-cross after {N_ABOVE} closes above, {AM_FROM_S}-{AM_TO_S}"}
 STRATS = list(STRAT_RULE)
@@ -133,6 +135,9 @@ def install():
     A.TEXITS = list(TEXITS)
     A.EXITS = list(A.TEXITS)                                                  # time exits only, no UNTIL_HIT
     A.VARS = [(ex, sl, tp) for ex in A.EXITS for sl in A.SLS for tp in A.TPS]
+    if ITM_MAX > 0:
+        import itm_fallback as IF
+        A.work_group = IF.make_work_group(A, ITM_MAX)                         # ATM -> ITM-1 -> ... -> ITM-n
 
 
 install()
