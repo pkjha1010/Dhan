@@ -1,0 +1,132 @@
+name: ENGULF backtest (green engulfing breakout LONG, ATM call, SL x TP x time-exit grid, all F&O stocks, 3 years, Dhan)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "check = test Dhan access + print the rules | run = full backtest (resumable - run again until PROGRESS.txt says COMPLETE) | summary = rebuild result files from saved data (no API calls)"
+        type: choice
+        options: [check, run, summary]
+        default: run
+      start:
+        description: "Start date YYYY-MM-DD (entry dates)"
+        required: false
+        default: "2023-10-27"
+      end:
+        description: "End date YYYY-MM-DD (entry dates)"
+        required: false
+        default: "2026-10-23"
+      symbols:
+        description: "Stocks (space or comma separated). Blank = all F&O stocks (use a few for a quick test, e.g. RELIANCE,SBIN,INFY)"
+        required: false
+        default: ""
+      sls:
+        description: "Stop-loss % of premium list (0 = no stop-loss)"
+        required: false
+        default: "0,20,40,60"
+      tps:
+        description: "Target % of premium list"
+        required: false
+        default: "20,40,60,80,100,120,200"
+      exits:
+        description: "Time exits, comma separated (same day)"
+        required: false
+        default: "09:30,10:00,15:30"
+      roll:
+        description: "Rolling-high days for the engulfing candle"
+        required: false
+        default: "10"
+      pull:
+        description: "Pullback window in days after the engulfing candle"
+        required: false
+        default: "5"
+      wait:
+        description: "Max days to wait for the breakout after the pullback (0 = no limit)"
+        required: false
+        default: "0"
+      itm_max:
+        description: "Strike rule: ATM first, then ITM-1, ITM-2 ... up to ITM-n until a strike has a candle (0 = ATM only)"
+        required: false
+        default: "3"
+      entry_last:
+        description: "Last minute an entry is accepted"
+        required: false
+        default: "15:20"
+      min_trades:
+        description: "Minimum trades for a variant to appear in the top / best tables"
+        required: false
+        default: "30"
+      out_dir:
+        description: "Result folder (blank = engulf_results). Use another name if you change any setting - the saved data belongs to one setting"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: engulf-backtest
+  cancel-in-progress: false
+
+jobs:
+  engulf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install packages
+        run: pip install -r requirements.txt
+
+      - name: Offline logic test
+        run: python test_engulf.py && python test_itm_fallback.py
+
+      - name: Run
+        env:
+          DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
+          DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
+          EB_START: ${{ inputs.start }}
+          EB_END: ${{ inputs.end }}
+          EB_SYMBOLS: ${{ inputs.symbols }}
+          EB_SLS: ${{ inputs.sls }}
+          EB_TPS: ${{ inputs.tps }}
+          EB_EXITS: ${{ inputs.exits }}
+          EB_ROLL: ${{ inputs.roll }}
+          EB_PULL: ${{ inputs.pull }}
+          EB_WAIT: ${{ inputs.wait }}
+          EB_ITM_MAX: ${{ inputs.itm_max }}
+          EB_ENTRY_LAST: ${{ inputs.entry_last }}
+          EB_MIN_TRADES: ${{ inputs.min_trades }}
+          EB_OUT: ${{ inputs.out_dir }}
+          BUDGET_MIN: "320"
+        run: python engulf_backtest.py "${{ inputs.mode }}"
+
+      - name: Show the summary
+        if: always() && inputs.mode != 'check'
+        run: |
+          OUT="${{ inputs.out_dir || 'engulf_results' }}"
+          if [ -f "$OUT/SUMMARY.md" ]; then cat "$OUT/SUMMARY.md" >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - name: Save results to the repo
+        if: always() && inputs.mode != 'check'
+        run: |
+          OUT="${{ inputs.out_dir || 'engulf_results' }}"
+          git config user.name "engulf-bot"
+          git config user.email "engulf-bot@users.noreply.github.com"
+          git add "$OUT" || true
+          git commit -m "engulf results" || echo "nothing new to commit"
+          git pull --no-rebase -X ours --no-edit || true
+          git push || true
+
+      - name: Upload results
+        if: always() && inputs.mode != 'check'
+        uses: actions/upload-artifact@v4
+        with:
+          name: engulf-results-${{ github.run_number }}
+          path: ${{ inputs.out_dir || 'engulf_results' }}/
+          if-no-files-found: ignore

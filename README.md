@@ -102,3 +102,13 @@ Actions -> "TRENDLINE backtest" -> Run workflow (use `check` first). Offline tes
 * **Grid** (% of option premium): stop-loss none / 20 / 40 / 60 x target 60 / 80 / 100 / 120 / none x the study's time exits. Max Rs 60,000 per trade (whole lots), no charges / slippage.
 * **Files**: `SUMMARY.md` (start here, SL x TP tables), `summary.csv`, `matrix_*.csv`, `trade_files/<STRATEGY>_all_variants_trades.csv` (every trade of every variant), `_best_trades.csv`, `_entries.csv`.
 * Offline logic test (no login): `SLTP_STUDY=pm python test_sltp.py` and `SLTP_STUDY=am python test_sltp.py`.
+
+## ENGULF backtest (green engulfing breakout, LONG, ATM call, SL x TP x time-exit grid)
+
+`engulf_backtest.py` (+ `engulf_rules.py` rules, `test_engulf.py` offline test, workflow **ENGULF backtest**) on every F&O stock, entry dates 2023-10-27 to 2026-10-23. Actions -> "ENGULF backtest" -> `check` first, then `run` (resumable: run again until `PROGRESS.txt` says COMPLETE). Results in `engulf_results/` (start with `SUMMARY.md`).
+
+* **Setup (daily)**: a GREEN candle that engulfs the previous non-green candle and whose High is the 10-day rolling high. Pullback = next 5 days: no daily close below the engulfing candle's low, at least one close inside its body. Level = highest High from the engulfing candle to the end of the pullback. A close below the engulfing low while waiting cancels the setup.
+* **Entry**: the first 1-minute High >= level on the first later day that reaches it (09:15 to 15:20). Buy the ATM call (nearest monthly expiry); if the ATM series has no candle at the entry minute, ITM-1, ITM-2, ITM-3 (`itm_max`).
+* **Grid**: stop-loss none / 20 / 40 / 60 % x target 20 / 40 / 60 / 80 / 100 / 120 / 200 % x time exit 09:30 / 10:00 / 15:30 (same day) = 84 variants. Max Rs 60,000 per trade, no charges / slippage.
+* **Files**: `SUMMARY.md`, `summary.csv`, `matrix_*.csv`, `trade_files/GREEN_ENGULF_LONG_all_variants_trades.csv` (every trade of every variant), `_best_trades.csv`, `_entries.csv`.
+* Offline test (no login): `python test_engulf.py`.
