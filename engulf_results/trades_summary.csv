@@ -1,0 +1,2 @@
+strategy,entry_type,signals_with_entry,entries_with_option_data,dropped_low_coverage,skipped_no_option_data,skip_reasons,trades_one_lot_affordable,long_trades,short_trades,first_entry,last_entry,avg_option_price
+GREEN_ENGULF_LONG,"green engulfing at the 10-day high -> 5-day pullback (closes in the body, none below the low) -> cross above the highest point",235,200,90,35,Dhan returned no option candles for this period = 27; no ATM / ITM-1..ITM-3 candle at the entry minute = 8,107,110,0,2024-10-28,2026-09-21,53.32

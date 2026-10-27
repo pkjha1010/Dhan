@@ -1,0 +1,42 @@
+Stocks tested: 210; entry dates 2024-10-27 .. 2026-10-23; entry checked 09:15 .. 15:20
+Variants: 4 stop-loss x 7 targets x 3 exits = 84 per strategy, 1 strategies; 84 variant rows with trades.
+
+Entries by strategy:
+         strategy  signals_with_entry  entries_with_option_data  dropped_low_coverage  skipped_no_option_data
+GREEN_ENGULF_LONG                 235                       200                    90                      35
+
+TOP 15 BY TOTAL PnL (min 30 trades):
+                                variant  trades  win_pct  total_pnl  roi_pct  profit_factor  avg_days_held  max_days_held
+GREEN_ENGULF_LONG | 15:30 | SL0 | TP100     107    53.27     972107    17.00           2.21            0.0              0
+GREEN_ENGULF_LONG | 15:30 | SL0 | TP200     107    46.73     876861    15.34           1.77            0.0              0
+GREEN_ENGULF_LONG | 15:30 | SL0 | TP120     107    50.47     792364    13.86           1.86            0.0              0
+ GREEN_ENGULF_LONG | 15:30 | SL0 | TP80     107    54.21     744302    13.02           1.99            0.0              0
+ GREEN_ENGULF_LONG | 15:30 | SL0 | TP60     107    56.07     642773    11.24           1.93            0.0              0
+ GREEN_ENGULF_LONG | 15:30 | SL0 | TP40     107    60.75     544920     9.53           1.89            0.0              0
+ GREEN_ENGULF_LONG | 10:00 | SL0 | TP80      60    53.33     437868    13.84           3.92            0.0              0
+GREEN_ENGULF_LONG | 10:00 | SL0 | TP100      60    51.67     410167    12.97           3.55            0.0              0
+GREEN_ENGULF_LONG | 10:00 | SL0 | TP120      60    51.67     406039    12.84           3.53            0.0              0
+ GREEN_ENGULF_LONG | 10:00 | SL0 | TP60      60    53.33     400724    12.67           3.67            0.0              0
+GREEN_ENGULF_LONG | 10:00 | SL40 | TP80      60    51.67     390683    12.35           3.23            0.0              0
+GREEN_ENGULF_LONG | 15:30 | SL40 | TP80     107    48.60     383299     6.70           1.48            0.0              0
+GREEN_ENGULF_LONG | 10:00 | SL60 | TP80      60    51.67     368838    11.66           2.87            0.0              0
+ GREEN_ENGULF_LONG | 10:00 | SL0 | TP40      60    55.00     368565    11.65           3.46            0.0              0
+GREEN_ENGULF_LONG | 15:30 | SL20 | TP80     107    42.06     357700     6.26           1.51            0.0              0
+
+TOP 15 BY ROI (min 30 trades):
+                                variant  trades  win_pct  total_pnl  roi_pct  profit_factor  avg_days_held  max_days_held
+GREEN_ENGULF_LONG | 15:30 | SL0 | TP100     107    53.27     972107    17.00           2.21            0.0              0
+GREEN_ENGULF_LONG | 15:30 | SL0 | TP200     107    46.73     876861    15.34           1.77            0.0              0
+GREEN_ENGULF_LONG | 15:30 | SL0 | TP120     107    50.47     792364    13.86           1.86            0.0              0
+ GREEN_ENGULF_LONG | 10:00 | SL0 | TP80      60    53.33     437868    13.84           3.92            0.0              0
+ GREEN_ENGULF_LONG | 15:30 | SL0 | TP80     107    54.21     744302    13.02           1.99            0.0              0
+GREEN_ENGULF_LONG | 10:00 | SL0 | TP100      60    51.67     410167    12.97           3.55            0.0              0
+GREEN_ENGULF_LONG | 10:00 | SL0 | TP120      60    51.67     406039    12.84           3.53            0.0              0
+ GREEN_ENGULF_LONG | 10:00 | SL0 | TP60      60    53.33     400724    12.67           3.67            0.0              0
+GREEN_ENGULF_LONG | 09:30 | SL60 | TP80      40    57.50     265934    12.50           4.01            0.0              0
+ GREEN_ENGULF_LONG | 09:30 | SL0 | TP80      40    57.50     265934    12.50           4.01            0.0              0
+GREEN_ENGULF_LONG | 09:30 | SL40 | TP80      40    57.50     265934    12.50           4.01            0.0              0
+GREEN_ENGULF_LONG | 10:00 | SL40 | TP80      60    51.67     390683    12.35           3.23            0.0              0
+GREEN_ENGULF_LONG | 10:00 | SL60 | TP80      60    51.67     368838    11.66           2.87            0.0              0
+ GREEN_ENGULF_LONG | 10:00 | SL0 | TP40      60    55.00     368565    11.65           3.46            0.0              0
+ GREEN_ENGULF_LONG | 15:30 | SL0 | TP60     107    56.07     642773    11.24           1.93            0.0              0
