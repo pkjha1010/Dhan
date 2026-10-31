@@ -1,4 +1,0 @@
-source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
-BPB,PAYTM,SHORT,1118.1,2026-01-29,2026-01-30,1164.9,2026-01-29,1118.1,0,1,0,1
-BPB,PAYTM,SHORT,1023.0,2026-03-06,2026-03-09,1010.0,2026-03-06,1023.0,0,1,1,0
-BPB,PAYTM,SHORT,1036.2,2026-06-05,2026-06-08,1051.2,2026-06-05,1036.2,0,1,1,0

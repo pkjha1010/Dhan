@@ -1,3 +1,0 @@
-source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
-BPB,PGEL,SHORT,103.3,2023-02-01,2023-02-02,105.25,2023-02-01,103.3,0,1,1,0
-BPB,PGEL,SHORT,155.0,2023-06-30,2023-07-03,157.95,2023-06-30,155.0,0,1,0,1

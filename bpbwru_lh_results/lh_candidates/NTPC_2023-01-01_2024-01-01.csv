@@ -1,4 +1,0 @@
-source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
-BPB,NTPC,SHORT,173.8,2023-03-23,2023-03-24,175.2,2023-03-23,173.8,0,1,1,0
-BPB,NTPC,SHORT,169.0,2023-04-18,2023-04-19,168.75,2023-04-18,169.0,0,1,0,1
-BPB,NTPC,SHORT,231.6,2023-10-06,2023-10-09,233.85,2023-10-06,231.6,0,1,1,0

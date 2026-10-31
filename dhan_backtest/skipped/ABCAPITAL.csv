@@ -1,8 +1,0 @@
-date,stock,direction,entry,reason
-2025-01-23,ABCAPITAL,SHORT,E1_all,ITM1: first option candle 23-Jan 09:24 too late for signal 09:15
-2025-01-29,ABCAPITAL,SHORT,E1_all,ITM1: first option candle 29-Jan 09:33 too late for signal 09:15
-2025-07-24,ABCAPITAL,SHORT,E1_all,ITM1: ITM-1 strike is on the wrong side of ATM
-2025-07-24,ABCAPITAL,SHORT,E2_4candle_0920,ITM1: ITM-1 strike is on the wrong side of ATM
-2026-04-28,ABCAPITAL,LONG,,expiry day
-2026-05-26,ABCAPITAL,LONG,,expiry day
-2026-09-08,ABCAPITAL,SHORT,E1_all,ITM1: first option candle 08-Sep 09:41 too late for signal 09:15

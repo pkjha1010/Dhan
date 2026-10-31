@@ -1,7 +1,0 @@
-strategy,entry_type,signals_with_entry,entries_with_option_data,dropped_low_coverage,skipped_no_option_data,skip_reasons,trades_one_lot_affordable,long_trades,short_trades,first_entry,last_entry,avg_option_price
-BPB_ALL,ALL,715,426,235,289,Dhan returned no option candles for this period = 235; no ATM / ITM-1 / ITM-2 candle at the entry minute = 54,191,0,191,2023-01-02,2026-10-19,27.01
-BPB_LHU_MD,ALL,133,88,54,45,Dhan returned no option candles for this period = 36; no ATM / ITM-1 / ITM-2 candle at the entry minute = 9,34,0,34,2023-01-20,2026-07-13,19.66
-BPB_LHD_MD,ALL,200,116,63,84,Dhan returned no option candles for this period = 73; no ATM / ITM-1 / ITM-2 candle at the entry minute = 11,53,0,53,2023-01-05,2026-07-28,24.69
-WRU_ALL,ALL,896,535,265,361,Dhan returned no option candles for this period = 263; no ATM / ITM-1 / ITM-2 candle at the entry minute = 98,268,0,270,2023-01-02,2026-10-21,30.03
-WRU_LHU_MD,ALL,156,93,47,63,Dhan returned no option candles for this period = 43; no ATM / ITM-1 / ITM-2 candle at the entry minute = 20,45,0,46,2023-01-10,2026-07-23,29.45
-WRU_LHD_MD,ALL,365,208,94,157,Dhan returned no option candles for this period = 124; no ATM / ITM-1 / ITM-2 candle at the entry minute = 33,114,0,114,2023-01-02,2026-07-28,39.86

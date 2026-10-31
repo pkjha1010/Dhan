@@ -1,9 +1,0 @@
-strategy,direction,trades,median_roi_pct,pct_variants_profitable,best_sameday_exit_rule,best_sameday_sl,best_sameday_tp,best_sameday_win_pct,best_sameday_total_pnl,best_sameday_roi_pct,best_sameday_profit_factor,fixed_1530_SL20_TP60_roi_pct,fixed_1530_SL20_TP60_profit_factor,until_hit_best_sl,until_hit_best_tp,until_hit_best_trades,until_hit_best_roi_pct,until_hit_best_avg_days_held,better_direction_by_median_roi
-WICK_GREEN_LOWER,LONG,137.0,3.5,94,15:30,0,200,46.0,1131214.0,15.27,1.96,3.1,1.24,10,40,137.0,4.16,0.28,SHORT
-WICK_GREEN_LOWER,SHORT,134.0,3.8,100,15:30,0,300,46.3,1186219.0,15.97,1.88,3.4,1.23,0,300,134.0,47.67,9.21,SHORT
-WICK_GREEN_UPPER,LONG,140.0,2.2,71,15:30,0,400,35.0,1117443.0,14.92,1.77,8.72,1.67,0,20,140.0,15.35,2.42,LONG
-WICK_GREEN_UPPER,SHORT,146.0,-2.2,31,15:30,0,109,45.2,1423256.0,17.8,2.1,-1.37,0.91,0,109,146.0,28.15,8.67,LONG
-WICK_RED_LOWER,LONG,219.0,4.7,92,15:30,0,60,47.9,3612967.0,30.29,3.5,22.56,2.91,30,40,219.0,25.13,0.89,LONG
-WICK_RED_LOWER,SHORT,186.0,1.4,68,15:30,0,40,50.5,1732136.0,17.11,2.47,-2.67,0.84,0,40,186.0,19.65,5.21,LONG
-WICK_RED_UPPER,LONG,167.0,1.0,68,15:30,0,120,44.3,1331712.0,14.63,1.85,-2.22,0.85,0,60,167.0,9.92,6.1,SHORT
-WICK_RED_UPPER,SHORT,118.0,5.5,88,09:30,20,400,60.3,473583.0,15.12,4.06,-0.53,0.97,0,400,118.0,44.89,10.34,SHORT

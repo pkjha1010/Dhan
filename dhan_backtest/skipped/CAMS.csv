@@ -1,7 +1,0 @@
-date,stock,direction,entry,reason
-2025-06-26,CAMS,LONG,,expiry day
-2025-10-14,CAMS,SHORT,E1_all,ITM1: no option data
-2025-10-14,CAMS,SHORT,E2_4candle_0920,ITM1: no option data
-2026-03-30,CAMS,SHORT,,expiry day
-2026-04-28,CAMS,LONG,,expiry day
-2026-05-26,CAMS,SHORT,,expiry day

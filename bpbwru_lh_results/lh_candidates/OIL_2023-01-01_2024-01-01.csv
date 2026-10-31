@@ -1,3 +1,0 @@
-source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
-WRU,OIL,SHORT,200.15,2023-11-08,2023-11-09,203.65,2023-11-08,200.15,0,1,1,0
-WRU,OIL,SHORT,200.15,2023-11-22,2023-11-23,202.35,2023-11-22,200.15,0,1,1,0

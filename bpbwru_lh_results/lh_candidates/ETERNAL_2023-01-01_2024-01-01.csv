@@ -1,4 +1,0 @@
-source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
-WRU,ETERNAL,SHORT,51.65,2023-04-05,2023-04-06,51.75,2023-04-05,51.65,0,1,1,0
-BPB,ETERNAL,SHORT,53.25,2023-01-11,2023-01-12,54.7,2023-01-11,53.25,0,1,1,0
-BPB,ETERNAL,SHORT,48.85,2023-01-24,2023-01-25,52.0,2023-01-24,48.85,0,1,0,1

@@ -1,3 +1,0 @@
-rule,type,exit_rule,sl,trades,wins,win_pct,stops,gap_stops,time_exits,total_pnl,capital,roi_pct,avg_pnl,avg_ret_pct,profit_factor,thin_data,variant
-WITH_SHAPE_RULE,ALL,09:30,10,63.0,30.0,47.6,22.0,8.0,41.0,907982.0,12238443.0,7.42,14412.0,7.27,2.73,2.0,WITH_SHAPE_RULE | ALL | exit 09:30 | SL10
-NO_SHAPE_RULE,ALL,09:30,10,206.0,90.0,43.7,80.0,31.0,126.0,880033.0,39949035.0,2.2,4272.0,2.18,1.41,2.0,NO_SHAPE_RULE | ALL | exit 09:30 | SL10

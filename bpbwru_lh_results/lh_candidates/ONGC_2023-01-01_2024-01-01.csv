@@ -1,3 +1,0 @@
-source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
-BPB,ONGC,SHORT,140.65,2023-02-02,2023-02-03,143.5,2023-02-02,140.65,0,1,0,1
-BPB,ONGC,SHORT,181.05,2023-10-05,2023-10-06,183.5,2023-10-05,181.05,0,1,1,0

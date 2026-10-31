@@ -1,4 +1,0 @@
-source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
-WRU,NAM-INDIA,SHORT,239.2,2023-02-01,2023-02-02,239.7,2023-02-01,239.2,0,1,1,0
-BPB,NAM-INDIA,SHORT,243.45,2023-01-23,2023-01-24,245.75,2023-01-23,243.45,0,1,0,1
-BPB,NAM-INDIA,SHORT,219.6,2023-02-17,2023-02-20,222.95,2023-02-17,219.6,0,1,0,1

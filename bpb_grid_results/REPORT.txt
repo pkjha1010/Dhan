@@ -1,5 +1,0 @@
-Top stocks tested: RELIANCE HDFCBANK ICICIBANK INFY TCS SBIN BHARTIARTL ITC LT AXISBANK
-1. Daily setups (breakout + confirmed pullback + entry level reachable that day): 315
-2. Entries (1-minute stock price reached the level between 09:15 and 09:59): 168
-3. Trade rows with option results (3 SL x 9 TP x 3 exit times per entry): 8073
-4. Entries with NO option trade: 60 - reasons: Dhan returned no option candles for this period = 57; no ATM candle at the entry minute = 2; no option candles between entry and exit (or one lot costs more than the capital) = 1

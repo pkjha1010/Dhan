@@ -1,3 +1,0 @@
-Range 2023-10-18 .. 2026-10-17; universe 210 stocks; entry 09:15-09:25; exit 09:30; trade SL [10]; capital per trade Rs 60000; day SL [0] (0 = none)
-Entry events: SHAPE/ALL = 14390; SHAPE/FROM_0920_4C = 2143; SHAPE/OPEN_0915 = 9823; SHAPE/RECROSS_0920_4C = 258
-Entries with NO option path: 10901 - Dhan returned no option candles for this period = 9371; no ATM candle at the entry minute = 1418; no option candles between entry and exit = 112

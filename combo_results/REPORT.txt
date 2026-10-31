@@ -1,3 +1,0 @@
-Range 2026-08-01 .. 2026-08-30; universe 210 stocks; entry 09:15-09:25; exit 09:30; trade SL [10, 20, 30]; capital per trade Rs 60000; day SL [0, 5000, 6000, 12000, 18000, 24000, 30000] (0 = none)
-Entry events: BPB/ALL = 56; SHAPE/ALL = 376; SHAPE/FROM_0920_4C = 47; SHAPE/OPEN_0915 = 234; SHAPE/RECROSS_0920_4C = 7
-Entries with NO option path: 286 - Dhan returned no option candles for this period = 269; no ATM candle at the entry minute = 13; no option candles between entry and exit = 4

@@ -1,2 +1,0 @@
-stock,direction,date,reason
-MCX,SHORT,2024-03-15,no option candles between entry and exit (or one lot costs more than the capital)

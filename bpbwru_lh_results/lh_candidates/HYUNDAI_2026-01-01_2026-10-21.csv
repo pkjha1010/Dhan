@@ -1,4 +1,0 @@
-source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
-BPB,HYUNDAI,SHORT,1826.0,2026-03-25,2026-03-27,1862.0,2026-03-25,1826.0,0,1,1,0
-BPB,HYUNDAI,SHORT,1765.1,2026-05-19,2026-05-20,1792.7,2026-05-19,1765.1,0,1,1,0
-BPB,HYUNDAI,SHORT,2052.5,2026-09-25,2026-09-28,2105.0,2026-09-25,2052.5,0,1,1,0

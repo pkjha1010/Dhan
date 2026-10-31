@@ -1,5 +1,0 @@
-source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
-BPB,SBIN,SHORT,1064.3,2026-03-12,2026-03-13,1077.5,2026-03-12,1064.3,0,1,1,0
-BPB,SBIN,SHORT,961.2,2026-05-14,2026-05-15,971.2,2026-05-14,961.2,0,1,0,1
-BPB,SBIN,SHORT,992.4,2026-09-11,2026-09-15,994.0,2026-09-11,992.4,0,1,0,1
-BPB,SBIN,SHORT,953.0,2026-09-30,2026-10-01,953.1,2026-09-30,953.0,0,1,1,0
