@@ -1,0 +1,3 @@
+strategy,entry_type,signals_with_entry,entries_with_option_data,dropped_low_coverage,skipped_no_option_data,skip_reasons,trades_one_lot_affordable,long_trades,short_trades,first_entry,last_entry,avg_option_price
+ACC5_LONG,close below the 5-day low (breakdown) -> within 3 days price crosses back above the 5-day high -> buy CALL,2194,18,2,1171,Dhan returned no option candles for this period = 1163; no ATM / ITM-1..ITM-3 candle at the entry minute = 8,16,16,0,2023-11-30,2026-10-27,13.7
+ACC5_SHORT,close above the 5-day high (breakout) -> within 3 days price crosses back below the 5-day low -> buy PUT,1799,37,5,897,Dhan returned no option candles for this period = 894; no ATM / ITM-1..ITM-3 candle at the entry minute = 3,32,0,32,2024-02-29,2026-08-25,12.98

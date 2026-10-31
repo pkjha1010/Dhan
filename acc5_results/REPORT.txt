@@ -1,0 +1,43 @@
+Stocks tested: 210; entry dates 2023-10-30 .. 2026-10-30; entry checked 09:15 .. 15:20
+Variants: 4 stop-loss x 6 targets x 4 exits = 96 per strategy, 2 strategies; 192 variant rows with trades.
+
+Entries by strategy:
+  strategy  signals_with_entry  entries_with_option_data  dropped_low_coverage  skipped_no_option_data
+ ACC5_LONG                2194                        18                     2                    1171
+ACC5_SHORT                1799                        37                     5                     897
+
+TOP 15 BY TOTAL PnL (min 30 trades):
+                          variant  trades  win_pct  total_pnl  roi_pct  profit_factor  avg_days_held  max_days_held
+   ACC5_SHORT | 15:30 | SL0 | TP0      32    40.62    4668862   251.65           6.04            0.0              0
+  ACC5_SHORT | 15:30 | SL20 | TP0      32    12.50    3974370   214.22           8.16            0.0              0
+  ACC5_SHORT | 15:30 | SL40 | TP0      32    12.50    3766458   203.01           5.94            0.0              0
+  ACC5_SHORT | 15:30 | SL60 | TP0      32    15.62    3667099   197.66           4.63            0.0              0
+ ACC5_SHORT | 15:30 | SL0 | TP120      32    62.50    1579248    85.12           3.59            0.0              0
+  ACC5_SHORT | 15:30 | SL0 | TP80      32    71.88    1388693    74.85           4.06            0.0              0
+  ACC5_SHORT | 15:30 | SL0 | TP40      32    78.12    1286924    69.37           4.80            0.0              0
+  ACC5_SHORT | 15:30 | SL0 | TP60      32    71.88    1248218    67.28           3.75            0.0              0
+  ACC5_SHORT | 15:30 | SL0 | TP20      32    87.50     734406    39.58           4.76            0.0              0
+ ACC5_SHORT | 15:30 | SL60 | TP20      32    75.00     565289    30.47           2.96            0.0              0
+ ACC5_SHORT | 15:30 | SL60 | TP40      32    62.50     545625    29.41           2.23            0.0              0
+ACC5_SHORT | 15:30 | SL20 | TP120      32    28.12     526136    28.36           2.15            0.0              0
+ ACC5_SHORT | 15:30 | SL20 | TP20      32    56.25     494353    26.65           3.02            0.0              0
+ ACC5_SHORT | 15:30 | SL40 | TP20      32    62.50     458909    24.74           2.43            0.0              0
+ ACC5_SHORT | 15:30 | SL20 | TP40      32    40.62     382965    20.64           2.11            0.0              0
+
+TOP 15 BY ROI (min 30 trades):
+                          variant  trades  win_pct  total_pnl  roi_pct  profit_factor  avg_days_held  max_days_held
+   ACC5_SHORT | 15:30 | SL0 | TP0      32    40.62    4668862   251.65           6.04            0.0              0
+  ACC5_SHORT | 15:30 | SL20 | TP0      32    12.50    3974370   214.22           8.16            0.0              0
+  ACC5_SHORT | 15:30 | SL40 | TP0      32    12.50    3766458   203.01           5.94            0.0              0
+  ACC5_SHORT | 15:30 | SL60 | TP0      32    15.62    3667099   197.66           4.63            0.0              0
+ ACC5_SHORT | 15:30 | SL0 | TP120      32    62.50    1579248    85.12           3.59            0.0              0
+  ACC5_SHORT | 15:30 | SL0 | TP80      32    71.88    1388693    74.85           4.06            0.0              0
+  ACC5_SHORT | 15:30 | SL0 | TP40      32    78.12    1286924    69.37           4.80            0.0              0
+  ACC5_SHORT | 15:30 | SL0 | TP60      32    71.88    1248218    67.28           3.75            0.0              0
+  ACC5_SHORT | 15:30 | SL0 | TP20      32    87.50     734406    39.58           4.76            0.0              0
+ ACC5_SHORT | 15:30 | SL60 | TP20      32    75.00     565289    30.47           2.96            0.0              0
+ ACC5_SHORT | 15:30 | SL60 | TP40      32    62.50     545625    29.41           2.23            0.0              0
+ACC5_SHORT | 15:30 | SL20 | TP120      32    28.12     526136    28.36           2.15            0.0              0
+ ACC5_SHORT | 15:30 | SL20 | TP20      32    56.25     494353    26.65           3.02            0.0              0
+ ACC5_SHORT | 15:30 | SL40 | TP20      32    62.50     458909    24.74           2.43            0.0              0
+ ACC5_SHORT | 15:30 | SL20 | TP40      32    40.62     382965    20.64           2.11            0.0              0
