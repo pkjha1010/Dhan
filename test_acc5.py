@@ -185,7 +185,7 @@ sc = 2000 * np.exp(np.cumsum(r_.normal(0, 0.0006, len(W_idx))))
 so = np.r_[sc[0], sc[:-1]]; sh_ = np.maximum(so, sc) * (1 + np.abs(r_.normal(0, .0003, len(W_idx)))); sl_ = np.minimum(so, sc) * (1 - np.abs(r_.normal(0, .0003, len(W_idx))))
 WORLD = pd.DataFrame({"o": so, "h": sh_, "l": sl_, "c": sc}, index=W_idx)
 W_day = np.array([t.date() for t in W_idx])
-NOATM = set()                                                                     # days on which the ATM series has no candles (forces the ITM-1 fallback)
+NOATM = {}                                                                        # (side, date) -> (first, last minute of the day) with no ATM candle
 
 
 def exp_for(d): return next(e for e in EXP if e >= d)
@@ -194,8 +194,12 @@ def tv(d):
 def epoch(idx): return [int(t.tz_localize("Asia/Kolkata").timestamp()) for t in idx]
 
 
+FAIL = False
+
+
 class Fake:
     n = 0
+    errs = 0
     def post(self, path, body):
         self.n += 1
         if path == "/charts/intraday":
@@ -203,11 +207,15 @@ class Fake:
             w = WORLD[(W_day >= date.fromisoformat(a)) & (W_day <= date.fromisoformat(b_))]
             return {"timestamp": epoch(w.index), "open": list(w.o), "high": list(w.h), "low": list(w.l), "close": list(w.c)}
         a, b_ = date.fromisoformat(body["fromDate"]), date.fromisoformat(body["toDate"])
-        assert (b_ - a).days <= 30
+        assert (b_ - a).days <= 1, f'Dhan only accepts 1-day windows now: {a}..{b_}'
+        if FAIL: return None
         off = 0 if body["strike"] == "ATM" else int(body["strike"][3:])
         side = "LONG" if body["drvOptionType"] == "CALL" else "SHORT"
         w = WORLD[(W_day >= a) & (W_day < b_)]
-        if off == 0 and NOATM: w = w[[d not in NOATM for d in W_day[(W_day >= a) & (W_day < b_)]]]
+        if off == 0 and NOATM:                                                       # the ATM series misses 5 minutes from the entry minute on (forces the ITM-1 fallback)
+            mm = w.index.hour.values * 60 + w.index.minute.values
+            bad = np.array([((side, d) in NOATM) and NOATM[(side, d)][0] <= m_ <= NOATM[(side, d)][1] for d, m_ in zip(W_day[(W_day >= a) & (W_day < b_)], mm)])
+            w = w[~bad]
         if w.empty: return {"data": {}}
         atm = np.round(w.c.values / STEP) * STEP; K = atm + off * STEP
         dts = [t.date() for t in w.index]; tvs = np.array([tv(d) for d in dts])
@@ -234,8 +242,10 @@ for i, d in enumerate(dates):
                          green=-1, red=-1, upper_longer=-1, lower_longer=-1, acc_high=lvl, acc_low=lvl))
     rows.append(dict(source="BPB", stock="AAA", direction="LONG", ref=lvl, signal_date=str(d), date=str(d), yahoo_open=float(day.o.iloc[0]), green=-1, red=-1, upper_longer=-1, lower_longer=-1))   # noise
 cand = pd.DataFrame(rows)
-NOATM.add(date.fromisoformat(cand[(cand.source == "ACC5") & (cand.direction == "LONG")].date.iloc[7]))
-NOATM.add(date.fromisoformat(cand[(cand.source == "ACC5") & (cand.direction == "SHORT")].date.iloc[9]))
+for dr_, ix_ in (("LONG", 7), ("SHORT", 9)):
+    ds_ = cand[(cand.source == "ACC5") & (cand.direction == dr_)].date.iloc[ix_]
+    m0_ = int(want_entry[(dr_, ds_)][:2]) * 60 + int(want_entry[(dr_, ds_)][3:])
+    NOATM[(dr_, date.fromisoformat(ds_))] = (m0_, m0_ + 4)
 st = A.load_state()
 ev = A.step_events(dh, cand, mst, st)
 assert len(ev) and set(ev.strategy) == {S.STRAT_L, S.STRAT_S} and set(ev.type) == {"ACCL", "ACCS"} and (ev.source == "ACC5").all()
@@ -244,7 +254,22 @@ for r in ev.itertuples():
     assert r.entry_minute == want_entry[(r.direction, r.date)], (r.direction, r.date, r.entry_minute)
     assert "09:15" <= r.entry_minute <= "15:20"
 ev = ev[(ev.date >= A.START) & (ev.date <= A.END)]
-A.step_options(dh, ev, mst, st)
+# a refused option request must NOT be stored as 'no option candles' and must NOT mark the group done (the real run had stored ~1,100 refused requests that way)
+_orig_post = A.Dhan.post
+A.Dhan.post = lambda self, path, body: dh.post(path, body)                        # StrictDhan -> its real post() -> the fake exchange
+sdh = S.StrictDhan.__new__(S.StrictDhan); sdh.n = 0
+FAIL = True
+n_done0 = len(st["done"])
+try:
+    S.options_step(sdh, ev, mst, st); raise SystemExit("a refused option request was swallowed")
+except A.Stop as e:
+    assert "refused an option request" in str(e), e
+assert len(st["done"]) == n_done0, "a group whose request was refused was marked done"
+assert not os.path.exists(f"{A.OUT}/skipped") or not os.listdir(f"{A.OUT}/skipped"), "refused requests were written to skipped/"
+FAIL = False
+S.options_step(sdh, ev, mst, st)
+A.Dhan.post = _orig_post
+print("refused option request -> polite stop, nothing stored, retried and completed on the next run")
 recs = A.load_records(); assert len(recs) > 0 and "strike_offset" in recs.columns and set(recs.direction) == {"LONG", "SHORT"}
 print(f"{len(cand)} candidate rows -> {len(ev)} entries -> {len(recs)} option records; Dhan calls {dh.n}")
 
@@ -265,7 +290,7 @@ for r in recs.itertuples():
     intr = max(WORLD.c[te] - K, 0) if side == "LONG" else max(K - WORLD.c[te], 0)
     entry = float(np.round((intr + tv(d)) / .05) * .05)
     assert abs(r.strike - K) < 1e-9 and abs(r.entry_price - entry) < 1e-9 and r.cov >= 0.9, (r.ekey, r.strike, K, r.entry_price, entry, r.cov, off)
-    if d in NOATM:
+    if (side, d) in NOATM:
         assert off == (-1 if side == "LONG" else 1), (r.ekey, off); cnt[side][1] += 1; continue      # ITM-1: a call goes to the lower strike, a put to the higher strike
     assert off == 0 and r.cov >= 0.999; cnt[side][0] += 1
     Sx, e = contract(side, K, d, te)

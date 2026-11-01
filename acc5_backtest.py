@@ -10,7 +10,7 @@ SETUP (daily chart, rules in acc5_rules.py)   Acc_High / Acc_Low = highest High 
   SHORT  1. a daily CLOSE above Acc_High = breakout.   2. within the next 3 days price crosses BELOW Acc_Low  (Acc_Low of that day)   ->  buy the ATM PUT.
   ENTRY  = the first 1-minute candle (09:15 .. 15:20) whose High >= level (LONG) / Low <= level (SHORT); the option price = close of that entry minute.
            (Your original script used the daily close and assumed a fill at the level; here the exact minute and the option price at that minute are used.)
-OPTION     the ATM option of the nearest monthly expiry (strike locked at entry).  If the ATM series has no candle at the entry minute: ITM-1, ITM-2 ... ITM-AC_ITM_MAX
+OPTION     candles are fetched per entry day (1-day window).  The ATM option of the nearest monthly expiry (strike locked at entry).  If the ATM series has no candle at the entry minute: ITM-1, ITM-2 ... ITM-AC_ITM_MAX
            (a call's ITM = lower strike, a put's ITM = higher strike).  The strike used is stored per trade (strike_offset: 0 = ATM, +-n = ITM-n).
 EXIT GRID  stop-loss none / 20 / 40 % x target 20 / 40 / 60 / 80 / 120 % / none x time exit 09:30 / 10:00 / 12:00 / 15:30 the same day = 72 variants per direction (percent of the premium).
            Fills: stop / target = first 1-minute low / high touching the level; a gap through it fills at that candle's open; stop and target in the same minute = STOP.
@@ -82,6 +82,26 @@ def install():
     if ITM_MAX > 0:
         import itm_fallback as IF
         A.work_group = IF.make_work_group(A, ITM_MAX)                            # ATM -> ITM-1 -> ... -> ITM-n
+
+
+EXPIRY_OF = A.expiry_calc                                                        # the real monthly expiry of a date (kept for the entries file)
+
+
+class StrictDhan(A.Dhan):
+    """A FAILED option request (HTTP 400 / DH-905 ...) must never be stored as 'no option candles': it stops the run politely and the group stays NOT done, so the next run retries it."""
+    def post(self, path, body):
+        j = super().post(path, body)
+        if j is None and "rollingoption" in path:
+            raise A.Stop(f"Dhan refused an option request ({body.get('fromDate')} .. {body.get('toDate')}, {body.get('strike')}) - see the 'Dhan says' line above; nothing was stored for it")
+        return j
+
+
+def options_step(dh, ev, mst, st):
+    """Option candles are fetched PER ENTRY DAY (a 1-day window, 1-3 calls per entry).  Every trade of this study closes on the entry day, so the candles of the entry day are all that is
+    needed.  The old 'entry day .. expiry' window (up to 34 days) was refused by Dhan with HTTP 400 DH-905 (only 1-day windows worked: 55 of 55 successes were entries on expiry day)."""
+    A.expiry_calc = lambda d: d                                                  # step_options groups by (stock, direction, "expiry") -> now (stock, direction, entry day)
+    try: return A.step_options(dh, ev, mst, st)
+    finally: A.expiry_calc = EXPIRY_OF
 
 
 install()
@@ -158,7 +178,7 @@ def run():
                      "\nUse the same settings, or give AC_OUT / the 'out_dir' box another folder name.")
     json.dump(rule, open(rp, "w"), indent=1)
     print_rules()
-    st = A.load_state(); dh = A.Dhan(); mst = A.load_master()
+    st = A.load_state(); dh = StrictDhan(); mst = A.load_master()
     try:
         cand = get_candidates()
         if cand.empty: print("No candidate days in this range."); return
@@ -166,7 +186,7 @@ def run():
         ev = A.step_events(dh, cand, mst, st)
         ev = ev[(ev["date"] >= A.START) & (ev["date"] <= A.END)] if len(ev) else ev
         print(f"Entries (09:15-{A.ENTRY_LAST}): {len(ev)}", flush=True)
-        if len(ev): A.step_options(dh, ev, mst, st)
+        if len(ev): options_step(dh, ev, mst, st)
         print("ALL STEPS FINISHED", flush=True)
     except A.Stop as e:
         print(f"\nSTOPPED POLITELY: {e}. Progress is saved - run again to continue.", flush=True)
@@ -203,6 +223,8 @@ def read_entries():
     if recs.empty or not os.path.exists(ep): return pd.DataFrame()
     ev = pd.read_csv(ep, dtype={"entry_minute": str}); ev["ekey"] = ev.stock + "|" + ev.direction + "|" + ev.date + "|" + ev.entry_minute
     E = ev.merge(recs[[c for c in ("ekey", "strike", "expiry", "entry_price", "lot", "cov", "strike_offset") if c in recs.columns]], on="ekey", how="left")
+    from datetime import date as _d
+    E["expiry"] = E.date.map(lambda x: str(EXPIRY_OF(_d.fromisoformat(x))))                   # the stored 'expiry' is the entry day (1-day window); show the real monthly expiry
     cps = sorted(glob.glob(f"{A.OUT}/candidates_*.csv"))
     if cps and "acc_high" in pd.read_csv(cps[-1], nrows=1).columns:
         cd = pd.read_csv(cps[-1])[["stock", "direction", "date", "acc_high", "acc_low"]].drop_duplicates(["stock", "direction", "date"])
