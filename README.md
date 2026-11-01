@@ -13,3 +13,7 @@ Setup: repo secrets `DHAN_ACCESS_TOKEN`, `DHAN_CLIENT_ID` (Settings -> Secrets a
 * **Grid**: stop-loss none / 20 / 40 % x target 20 / 40 / 60 / 80 / 120 % / none x time exit 09:30 / 10:00 / 12:00 / 15:30 (same day) = 72 variants per direction. Max Rs 60,000 per trade, no charges / slippage.
 * **Files** (in `long/` and `short/`): `SUMMARY.md`, `summary.csv`, `matrix_*.csv`, `trades_all_variants.csv.gz` (every trade of every variant), `trades_best_variant.csv`, `entries.csv`.
 * Offline test (no login): `python test_accum5.py` - includes a check that the state machine equals the original script's loop on 3,000 random paths.
+
+## ACCUM10 backtest (same as ACCUM5 but a 10-day accumulation)
+
+`accum10_backtest.py` (+ `accum10_rules.py`, `test_accum10.py`, workflow **ACC10 backtest**) - identical rules, option handling, exit grid and ₹60,000 cap as ACCUM5, but Acc_High / Acc_Low are the highest High / lowest Low of the prior **10** completed days. Its own result folder `accum10_results/` (with `long/` and `short/`) and its own strategy names `ACC10_LONG` / `ACC10_SHORT`, so nothing is mixed with the 5-day results. Actions -> "ACC10 backtest" -> `check`, then `run` (repeat until `PROGRESS.txt` says COMPLETE). Offline test: `python test_accum10.py`.
