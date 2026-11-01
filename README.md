@@ -17,3 +17,13 @@ Setup: repo secrets `DHAN_ACCESS_TOKEN`, `DHAN_CLIENT_ID` (Settings -> Secrets a
 ## ACCUM10 backtest (same as ACCUM5 but a 10-day accumulation)
 
 `accum10_backtest.py` (+ `accum10_rules.py`, `test_accum10.py`, workflow **ACC10 backtest**) - identical rules, option handling, exit grid and ₹60,000 cap as ACCUM5, but Acc_High / Acc_Low are the highest High / lowest Low of the prior **10** completed days. Its own result folder `accum10_results/` (with `long/` and `short/`) and its own strategy names `ACC10_LONG` / `ACC10_SHORT`, so nothing is mixed with the 5-day results. Actions -> "ACC10 backtest" -> `check`, then `run` (repeat until `PROGRESS.txt` says COMPLETE). Offline test: `python test_accum10.py`.
+
+## GAP backtest (gap-fade reversal, LONG call + SHORT put, SL x TP x time-exit grid)
+
+`gap_backtest.py` (+ `gap_rules.py`, `test_gap.py`, workflow **GAP backtest**) - your daily-candle gap script tested on the real ATM / ITM options with Dhan 1-minute candles, all F&O stocks, entry dates 2023-10-30 to 2026-10-30.
+
+* **Setup (same as the original script)**: LONG - day i opens > 1 % above the previous close and day i+1 closes below day i's close; level = High of day i. SHORT - day i opens > 1 % below the previous close and day i+1 closes above day i's close; level = Low of day i. Entry day = the first day among i+2 .. i+4 whose High (LONG) / Low (SHORT) reaches the level. `test_gap.py` proves the setups equal the original loop on 2,000 random paths.
+* **Entry**: the first 1-minute candle (09:15 to 15:20) of the entry day that reaches the level (a gap through the level = 09:15); the option price is the close of that minute. No open-price prefilter, so a stock that opens far from the level but crosses it later is not lost.
+* **Option**: LONG = call, SHORT = put. ATM first; if the ATM series has no candle at the entry minute, ITM-1, ITM-2, ITM-3. Candles are fetched for the **entry day only** (1-day window). On the monthly-expiry day itself the next month's series is used (nearest month if that has no data). The strike offset used is stored per trade (`strike_offset`: 0 = ATM, +-n = ITM-n); entries that still have no option candle are listed with the reason in the summary.
+* **Grid**: stop-loss none / 20 / 40 / 60 % x target 20 / 40 / 60 / 80 / 120 % / none x time exit 09:30 / 10:00 / 12:00 / 15:30 (same day) = 96 variants per direction. Max Rs 60,000 per trade, no charges / slippage.
+* **Files** in `gap_results/` (`long/` and `short/` separate): `SUMMARY.md`, `summary.csv`, `matrix_*.csv`, `trades_all_variants.csv.gz`, `trades_best_variant.csv`, `entries.csv`. Actions -> "GAP backtest" -> `check`, then `run` (repeat until `PROGRESS.txt` says COMPLETE).
