@@ -1,4 +1,4 @@
-"""Offline logic test for accum5_backtest.py / accum5_rules.py (no Dhan / Yahoo login):   python test_acc5.py
+"""Offline logic test for accum5_backtest.py / accum5_rules.py (no Dhan / Yahoo login):   python test_accum5.py
  1. the daily setup on hand-made candles (LONG and SHORT: breakdown, window of 3 days, level = that day's 5-day high / low, reset, entry-day close beyond the other side)
  2. the state machine in trigger='close' mode == a literal copy of YOUR ORIGINAL script loop on thousands of random paths (LONG), and SHORT == LONG on the mirrored prices
  3. the 1-minute entry (first High >= level for LONG, first Low <= level for SHORT, gap = 09:15, window end)

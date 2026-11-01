@@ -80,7 +80,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Offline logic test
-        run: python test_acc5.py && python test_itm_fallback.py
+        run: python test_accum5.py && python test_itm_fallback.py
 
       - name: Run
         env:

@@ -33,7 +33,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           find . -name "*.csv" -not -path "./.git/*" -not -path "*/parts/*" | while read -r c; do
-            [ -f "$c.gz" ] && git add -f "$c"
+            if [ -f "$c.gz" ]; then git add -f "$c"; fi
           done
           git commit -m "Automated conversion of csv.gz to csv" || { echo "nothing new to commit"; exit 0; }
           git pull --rebase --autostash

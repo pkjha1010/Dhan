@@ -1,4 +1,4 @@
-"""accum5_rules.py - the 5-DAY ACCUMULATION fake-break rules (LONG and SHORT), pure numpy (no Dhan, no Yahoo, no engine), so test_acc5.py can check them.
+"""accum5_rules.py - the 5-DAY ACCUMULATION fake-break rules (LONG and SHORT), pure numpy (no Dhan, no Yahoo, no engine), so test_accum5.py can check them.
 
 Your original script (daily candles, 5 years, Nifty 50) did this for the LONG side:
   Acc_High / Acc_Low = highest High / lowest Low of the PRIOR `acc` completed days (default 5).
