@@ -1,0 +1,43 @@
+Stocks tested: 210; entry dates 2023-10-30 .. 2026-10-30; entry checked 09:15 .. 15:20
+Variants: 3 stop-loss x 6 targets x 4 exits = 72 per strategy, 2 strategies; 144 variant rows with trades.
+
+Entries by strategy:
+   strategy  signals_with_entry  entries_with_option_data  dropped_low_coverage  skipped_no_option_data
+ ACC10_LONG                 421                       342                    32                      79
+ACC10_SHORT                 345                       298                    30                      47
+
+TOP 15 BY TOTAL PnL (min 30 trades):
+                           variant  trades  win_pct  total_pnl  roi_pct  profit_factor  avg_days_held  max_days_held
+ ACC10_SHORT | 15:30 | SL0 | TP120     264    43.94    1391283    10.20           1.79            0.0              0
+  ACC10_SHORT | 15:30 | SL0 | TP60     264    47.73    1292223     9.48           1.80            0.0              0
+  ACC10_SHORT | 15:30 | SL0 | TP40     264    53.41    1119257     8.21           1.81            0.0              0
+  ACC10_SHORT | 15:30 | SL0 | TP20     264    65.91    1117586     8.20           2.17            0.0              0
+  ACC10_SHORT | 15:30 | SL0 | TP80     264    44.70    1098545     8.06           1.63            0.0              0
+ACC10_SHORT | 15:30 | SL40 | TP120     264    40.91    1054603     7.73           1.55            0.0              0
+ ACC10_SHORT | 15:30 | SL40 | TP60     264    44.70     994935     7.30           1.56            0.0              0
+ ACC10_SHORT | 15:30 | SL40 | TP80     264    41.67     847245     6.21           1.45            0.0              0
+ ACC10_SHORT | 12:00 | SL0 | TP120     171    50.88     820587     9.29           1.93            0.0              0
+ ACC10_SHORT | 15:30 | SL40 | TP20     264    63.26     814668     5.97           1.70            0.0              0
+   ACC10_SHORT | 12:00 | SL0 | TP0     171    50.88     792205     8.97           1.89            0.0              0
+ ACC10_SHORT | 15:30 | SL40 | TP40     264    50.38     779163     5.71           1.49            0.0              0
+  ACC10_SHORT | 12:00 | SL0 | TP60     171    52.05     703892     7.97           1.84            0.0              0
+  ACC10_SHORT | 12:00 | SL0 | TP80     171    50.88     697938     7.90           1.79            0.0              0
+   ACC10_LONG | 15:30 | SL0 | TP20     305    64.59     635113     4.01           1.46            0.0              0
+
+TOP 15 BY ROI (min 30 trades):
+                           variant  trades  win_pct  total_pnl  roi_pct  profit_factor  avg_days_held  max_days_held
+ ACC10_SHORT | 15:30 | SL0 | TP120     264    43.94    1391283    10.20           1.79            0.0              0
+  ACC10_SHORT | 15:30 | SL0 | TP60     264    47.73    1292223     9.48           1.80            0.0              0
+ ACC10_SHORT | 12:00 | SL0 | TP120     171    50.88     820587     9.29           1.93            0.0              0
+   ACC10_SHORT | 12:00 | SL0 | TP0     171    50.88     792205     8.97           1.89            0.0              0
+  ACC10_SHORT | 15:30 | SL0 | TP40     264    53.41    1119257     8.21           1.81            0.0              0
+  ACC10_SHORT | 15:30 | SL0 | TP20     264    65.91    1117586     8.20           2.17            0.0              0
+  ACC10_SHORT | 15:30 | SL0 | TP80     264    44.70    1098545     8.06           1.63            0.0              0
+  ACC10_SHORT | 12:00 | SL0 | TP60     171    52.05     703892     7.97           1.84            0.0              0
+  ACC10_SHORT | 12:00 | SL0 | TP80     171    50.88     697938     7.90           1.79            0.0              0
+ACC10_SHORT | 15:30 | SL40 | TP120     264    40.91    1054603     7.73           1.55            0.0              0
+ ACC10_SHORT | 15:30 | SL40 | TP60     264    44.70     994935     7.30           1.56            0.0              0
+  ACC10_SHORT | 12:00 | SL0 | TP40     171    54.97     613360     6.94           1.76            0.0              0
+  ACC10_SHORT | 12:00 | SL0 | TP20     171    63.74     584021     6.61           1.89            0.0              0
+ACC10_SHORT | 12:00 | SL40 | TP120     171    48.54     583086     6.60           1.56            0.0              0
+  ACC10_SHORT | 12:00 | SL40 | TP0     171    48.54     565288     6.40           1.54            0.0              0
