@@ -53,7 +53,7 @@ on:
         required: false
         default: "30"
       out_dir:
-        description: "Result folder (blank = acc5_results). Use another name if you change any setting - the saved data belongs to one setting"
+        description: "Result folder (blank = accum5_results). Use another name if you change any setting - the saved data belongs to one setting"
         required: false
         default: ""
 
@@ -61,7 +61,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: acc5-backtest
+  group: accum5-backtest
   cancel-in-progress: false
 
 jobs:
@@ -99,20 +99,20 @@ jobs:
           AC_MIN_TRADES: ${{ inputs.min_trades }}
           AC_OUT: ${{ inputs.out_dir }}
           BUDGET_MIN: "320"
-        run: python acc5_backtest.py "${{ inputs.mode }}"
+        run: python accum5_backtest.py "${{ inputs.mode }}"
 
       - name: Show the summary
         if: always() && inputs.mode != 'check'
         run: |
-          OUT="${{ inputs.out_dir || 'acc5_results' }}"
+          OUT="${{ inputs.out_dir || 'accum5_results' }}"
           if [ -f "$OUT/SUMMARY.md" ]; then cat "$OUT/SUMMARY.md" >> "$GITHUB_STEP_SUMMARY"; fi
 
       - name: Save results to the repo
         if: always() && inputs.mode != 'check'
         run: |
-          OUT="${{ inputs.out_dir || 'acc5_results' }}"
-          git config user.name "acc5-bot"
-          git config user.email "acc5-bot@users.noreply.github.com"
+          OUT="${{ inputs.out_dir || 'accum5_results' }}"
+          git config user.name "accum5-bot"
+          git config user.email "accum5-bot@users.noreply.github.com"
           git add "$OUT" || true
           git commit -m "acc5 results" || echo "nothing new to commit"
           git pull --no-rebase -X ours --no-edit || true
@@ -122,6 +122,6 @@ jobs:
         if: always() && inputs.mode != 'check'
         uses: actions/upload-artifact@v4
         with:
-          name: acc5-results-${{ github.run_number }}
-          path: ${{ inputs.out_dir || 'acc5_results' }}/
+          name: accum5-results-${{ github.run_number }}
+          path: ${{ inputs.out_dir || 'accum5_results' }}/
           if-no-files-found: ignore

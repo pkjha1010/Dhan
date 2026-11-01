@@ -1,11 +1,11 @@
-"""acc5_backtest.py - 5-DAY ACCUMULATION fake-break, LONG (call) and SHORT (put) on ALL F&O stock options, 3 years, Dhan 1-minute data.  Same engine as engulf_backtest.py / all8_backtest.py.
+"""accum5_backtest.py - 5-DAY ACCUMULATION fake-break, LONG (call) and SHORT (put) on ALL F&O stock options, 3 years, Dhan 1-minute data.  Same engine as engulf_backtest.py / all8_backtest.py.
 
-  python acc5_backtest.py check     test Dhan access + print the rules
-  python acc5_backtest.py run       full backtest for AC_START .. AC_END (resumable - run again after a polite stop)
-  python acc5_backtest.py summary   rebuild every result file from the saved option data (no API calls)
-  python acc5_backtest.py rules     print the rules only
+  python accum5_backtest.py check     test Dhan access + print the rules
+  python accum5_backtest.py run       full backtest for AC_START .. AC_END (resumable - run again after a polite stop)
+  python accum5_backtest.py summary   rebuild every result file from the saved option data (no API calls)
+  python accum5_backtest.py rules     print the rules only
 
-SETUP (daily chart, rules in acc5_rules.py)   Acc_High / Acc_Low = highest High / lowest Low of the prior 5 completed days
+SETUP (daily chart, rules in accum5_rules.py)   Acc_High / Acc_Low = highest High / lowest Low of the prior 5 completed days
   LONG   1. a daily CLOSE below Acc_Low = breakdown.   2. within the next 3 days price crosses ABOVE Acc_High (Acc_High of that day)  ->  buy the ATM CALL.
   SHORT  1. a daily CLOSE above Acc_High = breakout.   2. within the next 3 days price crosses BELOW Acc_Low  (Acc_Low of that day)   ->  buy the ATM PUT.
   ENTRY  = the first 1-minute candle (09:15 .. 15:20) whose High >= level (LONG) / Low <= level (SHORT); the option price = close of that entry minute.
@@ -17,7 +17,7 @@ EXIT GRID  stop-loss none / 20 / 40 % x target 20 / 40 / 60 / 80 / 120 % / none 
            A trade entered at / after a time exit is skipped for that exit (so the 09:30 / 10:00 / 12:00 exits only have the earlier entries).
 CAPITAL    at most Rs AC_CAP (60,000) per trade, whole lots.  Charges, taxes and slippage are not included.  Lot sizes are today's values for all years.
 
-Results in acc5_results/ : SUMMARY.md (both directions), long/ and short/ (each with its own SUMMARY.md, summary.csv, matrix_*.csv, trades) ...
+Results in accum5_results/ : SUMMARY.md (both directions), long/ and short/ (each with its own SUMMARY.md, summary.csv, matrix_*.csv, trades) ...
 """
 import os, sys, json, glob
 
@@ -27,7 +27,7 @@ def _env(name, default):
 
 
 # ---------------------------------------------------------------- settings -> the A8_* names the engine reads (must be set BEFORE the engine is imported)
-OUT = _env("AC_OUT", "acc5_results")
+OUT = _env("AC_OUT", "accum5_results")
 os.environ["A8_OUT"] = OUT
 os.environ["A8_START"] = _env("AC_START", "2023-10-30")
 os.environ["A8_END"] = _env("AC_END", "2026-10-30")
@@ -46,7 +46,7 @@ TEXITS = [x.strip() for x in _env("AC_EXITS", "09:30,10:00,12:00,15:30").replace
 
 import numpy as np, pandas as pd
 import all8_backtest as A
-import acc5_rules as R
+import accum5_rules as R
 C = A.C
 
 STRAT_L, STRAT_S = "ACC5_LONG", "ACC5_SHORT"
@@ -334,6 +334,6 @@ if __name__ == "__main__":
         elif mode == "run": run()
         elif mode in ("summary", "range"): print_rules(); summary()
         elif mode == "rules": print_rules()
-        else: sys.exit("use: python acc5_backtest.py check | run | summary | rules")
+        else: sys.exit("use: python accum5_backtest.py check | run | summary | rules")
     except A.Fatal as e:
         sys.exit(f"STOP - needs your action: {e}")

@@ -5,7 +5,7 @@ Setup: repo secrets `DHAN_ACCESS_TOKEN`, `DHAN_CLIENT_ID` (Settings -> Secrets a
 
 ## What it does (5-day accumulation fake-break, LONG call + SHORT put, SL x TP x time-exit grid)
 
-`acc5_backtest.py` (+ `acc5_rules.py` rules, `test_acc5.py` offline test, workflow **ACC5 backtest**) on every F&O stock, entry dates 2023-10-30 to 2026-10-30. Actions -> "ACC5 backtest" -> `check` first, then `run` (resumable: run again until `PROGRESS.txt` says COMPLETE). Results in `acc5_results/` (start with `SUMMARY.md`; LONG and SHORT are separate folders `long/` and `short/`).
+`accum5_backtest.py` (+ `accum5_rules.py` rules, `test_acc5.py` offline test, workflow **ACC5 backtest**) on every F&O stock, entry dates 2023-10-30 to 2026-10-30. Actions -> "ACC5 backtest" -> `check` first, then `run` (resumable: run again until `PROGRESS.txt` says COMPLETE). Results in `accum5_results/` (start with `SUMMARY.md`; LONG and SHORT are separate folders `long/` and `short/`).
 
 * **Setup (daily)**: Acc_High / Acc_Low = highest High / lowest Low of the prior 5 completed days. LONG: a daily close below Acc_Low (breakdown), then within 3 days price crosses back above that day's Acc_High. SHORT: mirror image (close above Acc_High, then within 3 days a cross back below Acc_Low).
 * **Entry**: the first 1-minute candle (09:15 to 15:20) whose High >= level (LONG) / Low <= level (SHORT); the option price is the close of that minute. The original script used the daily close and assumed a fill at the level; this removes that look-ahead.

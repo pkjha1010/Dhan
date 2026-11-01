@@ -1,4 +1,4 @@
-"""Offline logic test for acc5_backtest.py / acc5_rules.py (no Dhan / Yahoo login):   python test_acc5.py
+"""Offline logic test for accum5_backtest.py / accum5_rules.py (no Dhan / Yahoo login):   python test_acc5.py
  1. the daily setup on hand-made candles (LONG and SHORT: breakdown, window of 3 days, level = that day's 5-day high / low, reset, entry-day close beyond the other side)
  2. the state machine in trigger='close' mode == a literal copy of YOUR ORIGINAL script loop on thousands of random paths (LONG), and SHORT == LONG on the mirrored prices
  3. the 1-minute entry (first High >= level for LONG, first Low <= level for SHORT, gap = 09:15, window end)
@@ -11,8 +11,8 @@ from datetime import date, timedelta
 tmp = tempfile.mkdtemp()
 os.environ.update(AC_OUT=f"{tmp}/out", AC_START="2026-01-02", AC_END="2026-03-27", AC_MIN_TRADES="1", AC_ITM_MAX="3",
                   A8_OFFS_MAX="60", A8_MAX_OFFS="60", A8_TOP_N="10")
-import acc5_rules as RU
-import acc5_backtest as S
+import accum5_rules as RU
+import accum5_backtest as S
 A = S.A
 os.makedirs(A.OUT, exist_ok=True)
 
