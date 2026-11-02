@@ -52,8 +52,16 @@ on:
         description: "Minimum trades for a variant to appear in the top / best tables"
         required: false
         default: "30"
+      vol_mult:
+        description: "VOLUME FILTER: the entry candle's volume must be >= this x the average volume of the previous vol_n candles of the day (0 = filter off)"
+        required: false
+        default: "2"
+      vol_n:
+        description: "Volume filter: how many previous candles are averaged"
+        required: false
+        default: "10"
       out_dir:
-        description: "Result folder (blank = accum5_results). Use another name if you change any setting - the saved data belongs to one setting"
+        description: "Result folder (blank = accum5_vol_results, or accum5_results when vol_mult is 0). Use another name if you change any setting - the saved data belongs to one setting"
         required: false
         default: ""
 
@@ -97,6 +105,8 @@ jobs:
           AC_ITM_MAX: ${{ inputs.itm_max }}
           AC_ENTRY_LAST: ${{ inputs.entry_last }}
           AC_MIN_TRADES: ${{ inputs.min_trades }}
+          AC_VOL_MULT: ${{ inputs.vol_mult }}
+          AC_VOL_N: ${{ inputs.vol_n }}
           AC_OUT: ${{ inputs.out_dir }}
           BUDGET_MIN: "320"
         run: python accum5_backtest.py "${{ inputs.mode }}"
@@ -104,13 +114,13 @@ jobs:
       - name: Show the summary
         if: always() && inputs.mode != 'check'
         run: |
-          OUT="${{ inputs.out_dir || 'accum5_results' }}"
+          OUT="${{ inputs.out_dir || (inputs.vol_mult == '0' && 'accum5_results' || 'accum5_vol_results') }}"
           if [ -f "$OUT/SUMMARY.md" ]; then cat "$OUT/SUMMARY.md" >> "$GITHUB_STEP_SUMMARY"; fi
 
       - name: Save results to the repo
         if: always() && inputs.mode != 'check'
         run: |
-          OUT="${{ inputs.out_dir || 'accum5_results' }}"
+          OUT="${{ inputs.out_dir || (inputs.vol_mult == '0' && 'accum5_results' || 'accum5_vol_results') }}"
           git config user.name "accum5-bot"
           git config user.email "accum5-bot@users.noreply.github.com"
           git add "$OUT" || true
@@ -123,5 +133,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: accum5-results-${{ github.run_number }}
-          path: ${{ inputs.out_dir || 'accum5_results' }}/
+          path: ${{ inputs.out_dir || (inputs.vol_mult == '0' && 'accum5_results' || 'accum5_vol_results') }}/
           if-no-files-found: ignore

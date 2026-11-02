@@ -75,3 +75,23 @@ def first_cross_short(u, level, from_min=9 * 60 + 15, last_min=15 * 60 + 20):
         if m[k] > last_min: return None
         if l[k] <= level: return k
     return None
+
+
+def volume_ratio(u, k, n=10, min_prior=5):
+    """VOLUME FILTER helper.  u = one day of 1-minute candles with a 'v' (volume) column, k = position of the ENTRY candle.
+    -> volume of the entry candle / average volume of the (up to) `n` candles right before it on the SAME day, or None when it cannot be judged
+    (no 'v' column, fewer than `min_prior` earlier candles that day - i.e. an entry before 09:15+min_prior - or an average of 0)."""
+    if u is None or "v" not in getattr(u, "columns", ()) or k is None: return None
+    v = np.asarray(u["v"].values, float)
+    lo = max(0, k - n)
+    if k - lo < min_prior: return None
+    avg = float(np.mean(v[lo:k]))
+    if not avg > 0 or not np.isfinite(avg) or not np.isfinite(v[k]): return None
+    return float(v[k]) / avg
+
+
+def volume_ok(u, k, mult=2.0, n=10, min_prior=5):
+    """True when the entry candle's volume >= mult x the average volume of the previous n candles (mult <= 0 = filter off).  Unjudgeable -> False (the entry is dropped)."""
+    if not mult or mult <= 0: return True
+    r = volume_ratio(u, k, n, min_prior)
+    return r is not None and r >= mult

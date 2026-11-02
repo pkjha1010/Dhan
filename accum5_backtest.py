@@ -27,7 +27,10 @@ def _env(name, default):
 
 
 # ---------------------------------------------------------------- settings -> the A8_* names the engine reads (must be set BEFORE the engine is imported)
-OUT = _env("AC_OUT", "accum5_results")
+VOL_MULT = float(_env("AC_VOL_MULT", "2"))                                       # VOLUME FILTER: entry candle volume >= VOL_MULT x average volume of the previous VOL_N candles (0 = filter off)
+VOL_N = int(_env("AC_VOL_N", "10"))
+VOL_MIN_PRIOR = int(_env("AC_VOL_MIN_PRIOR", "5"))                               # earlier same-day candles needed to judge (entries before 09:20 cannot be judged -> dropped)
+OUT = _env("AC_OUT", "accum5_vol_results" if VOL_MULT > 0 else "accum5_results")
 os.environ["A8_OUT"] = OUT
 os.environ["A8_START"] = _env("AC_START", "2023-10-30")
 os.environ["A8_END"] = _env("AC_END", "2026-10-30")
@@ -63,7 +66,23 @@ def entries_for(u, level, long):
     """Replaces combo_dayrisk_backtest.entries_for.  -> {entry type: entry timestamp}   (ACCL = LONG, ACCS = SHORT)"""
     if u is None or len(u) == 0: return {}
     k = R.first_cross_long(u, level, A.E_FIRST, A.ENTRY_MIN) if long else R.first_cross_short(u, level, A.E_FIRST, A.ENTRY_MIN)
-    return {} if k is None else {("ACCL" if long else "ACCS"): u.index[k]}
+    if k is None or not R.volume_ok(u, k, VOL_MULT, VOL_N, VOL_MIN_PRIOR): return {}   # volume filter: the entry (first cross) candle must be a volume spike, else no trade that day
+    return {("ACCL" if long else "ACCS"): u.index[k]}
+
+
+def eq_minute_vol(dh, sid, d0, d1):
+    """Same as bpb_fno_backtest.eq_minute but keeps the VOLUME of every 1-minute candle (column 'v') - the stock-candle request already returns it."""
+    j = dh.post("/charts/intraday", {"securityId": str(sid), "exchangeSegment": "NSE_EQ", "instrument": "EQUITY", "interval": "1",
+                                     "oi": False, "fromDate": f"{d0} 09:15:00", "toDate": f"{d1} 15:30:00"})
+    if j is None: return None
+    d = j.get("data", j) if isinstance(j.get("data", None), dict) else j
+    fr = A.B.frame(d)
+    if fr is None:
+        print(f"[stock candles {sid} {d0}..{d1}] Dhan answered but sent no candles: {str(j)[:300]}", flush=True)
+        return pd.DataFrame(columns=["o", "h", "l", "c", "v"], index=pd.DatetimeIndex([]))
+    vol = d.get("volume") if isinstance(d, dict) else None
+    fr["v"] = np.asarray(vol, float) if vol is not None and len(vol) == len(fr) else np.nan
+    return fr
 
 
 def strategies_for(source, typ, green, red, up, lo):
@@ -73,6 +92,7 @@ def strategies_for(source, typ, green, red, up, lo):
 
 def install():
     C.entries_for = entries_for
+    A.B.eq_minute = eq_minute_vol
     A.strategies_for = strategies_for
     A.STRATS = list(STRATS)
     A.ENTRY_TYPE = {s: STRAT_RULE[s] for s in STRATS}
@@ -108,14 +128,15 @@ install()
 
 
 def rule_dict():
-    return dict(acc=ACC, window=WINDOW, itm_max=ITM_MAX, entry_last=A.ENTRY_LAST, start=A.START, end=A.END, sls=A.SLS, tps=A.TPS, exits=A.EXITS, cap=A.CAP,
+    return dict(acc=ACC, window=WINDOW, vol_mult=VOL_MULT, vol_n=VOL_N, vol_min_prior=VOL_MIN_PRIOR, itm_max=ITM_MAX, entry_last=A.ENTRY_LAST, start=A.START, end=A.END, sls=A.SLS, tps=A.TPS, exits=A.EXITS, cap=A.CAP,
                 symbols=len(A.UNIVERSE))
 
 
 def rules_text():
     return (f"{ACC}-DAY ACCUMULATION fake-break.  Acc_High / Acc_Low = highest High / lowest Low of the prior {ACC} completed days.  LONG (ATM call): a daily close below Acc_Low, then "
             f"within {WINDOW} days price crosses back above Acc_High (that day's).  SHORT (ATM put): a daily close above Acc_High, then within {WINDOW} days price crosses back below "
-            f"Acc_Low.  Entry = the first 1-minute candle (09:15 to {A.ENTRY_LAST}) that reaches the level; option = ATM, ITM-1 .. ITM-{ITM_MAX} if the ATM series has no candle at the entry minute.")
+            f"Acc_Low.  Entry = the first 1-minute candle (09:15 to {A.ENTRY_LAST}) that reaches the level" +
+            (f", and ONLY if that candle's volume >= {VOL_MULT:g} x the average volume of the previous {VOL_N} candles of the day (needs >= {VOL_MIN_PRIOR} earlier candles); otherwise no trade" if VOL_MULT > 0 else "") + f"; option = ATM, ITM-1 .. ITM-{ITM_MAX} if the ATM series has no candle at the entry minute.")
 
 
 def print_rules():
