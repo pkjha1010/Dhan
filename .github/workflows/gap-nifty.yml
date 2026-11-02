@@ -1,0 +1,61 @@
+name: GAP NIFTY filter (retest of gap_results - LONG only when NIFTY50 > its day open, SHORT only when below)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "check = test Dhan access for NIFTY50 candles | run = download NIFTY50 1-minute candles (cached) + filter all GAP trades | filter = filter only from the cached NIFTY candles (no Dhan call)"
+        type: choice
+        options: [check, run, filter]
+        default: run
+      start:
+        description: "First date of NIFTY50 candles"
+        required: false
+        default: "2023-10-30"
+      end:
+        description: "Last date of NIFTY50 candles"
+        required: false
+        default: "2026-10-30"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gap-nifty
+  cancel-in-progress: false
+
+jobs:
+  nifty:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install packages
+        run: pip install -r requirements.txt
+      - name: Offline logic test
+        run: python test_gap.py && python test_gap_nifty.py
+      - name: Run
+        env:
+          DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
+          DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
+          GN_START: ${{ inputs.start }}
+          GN_END: ${{ inputs.end }}
+        run: python gap_nifty_filter.py "${{ inputs.mode }}"
+      - name: Show the summary
+        if: always()
+        run: |
+          if [ -f gap_nifty_results/COMPARE.md ]; then cat gap_nifty_results/COMPARE.md >> "$GITHUB_STEP_SUMMARY"; fi
+          if [ -f gap_nifty_results/survivors/SURVIVORS.md ]; then cat gap_nifty_results/survivors/SURVIVORS.md >> "$GITHUB_STEP_SUMMARY"; fi
+      - name: Save results to the repo
+        if: always()
+        run: |
+          git config user.name "gap-bot"
+          git config user.email "gap-bot@users.noreply.github.com"
+          git add gap_nifty_results || true
+          git commit -m "GAP NIFTY filter results" || echo "nothing new to commit"
+          git pull --no-rebase -X ours --no-edit || true
+          git push || true

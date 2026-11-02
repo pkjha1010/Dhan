@@ -27,3 +27,12 @@ Setup: repo secrets `DHAN_ACCESS_TOKEN`, `DHAN_CLIENT_ID` (Settings -> Secrets a
 * **Option**: LONG = call, SHORT = put. ATM first; if the ATM series has no candle at the entry minute, ITM-1, ITM-2, ITM-3. Candles are fetched for the **entry day only** (1-day window). On the monthly-expiry day itself the next month's series is used (nearest month if that has no data). The strike offset used is stored per trade (`strike_offset`: 0 = ATM, +-n = ITM-n); entries that still have no option candle are listed with the reason in the summary.
 * **Grid**: stop-loss none / 20 / 40 / 60 % x target 20 / 40 / 60 / 80 / 120 % / none x time exit 09:30 / 10:00 / 12:00 / 15:30 (same day) = 96 variants per direction. Max Rs 60,000 per trade, no charges / slippage.
 * **Files** in `gap_results/` (`long/` and `short/` separate): `SUMMARY.md`, `summary.csv`, `matrix_*.csv`, `trades_all_variants.csv.gz`, `trades_best_variant.csv`, `entries.csv`. Actions -> "GAP backtest" -> `check`, then `run` (repeat until `PROGRESS.txt` says COMPLETE).
+
+## GAP NIFTY filter (market-direction condition on the GAP trades)
+
+`gap_nifty_filter.py` (+ `gap_nifty_rules.py`, `test_gap_nifty.py`, workflow **GAP NIFTY filter**) - retests the existing `gap_results` trades with a NIFTY50 day-direction filter: **LONG only when NIFTY50 price at the entry minute is above the NIFTY50 open of the same day; SHORT only when it is below it** (equal = no trade).
+
+* NIFTY50 1-minute candles come from Dhan (security id 13, segment IDX_I), downloaded once and cached in `gap_nifty_results/nifty_1min.csv.gz`. Nifty open = Open of the 09:15 candle; Nifty price = Close of the candle that starts at the entry minute (last candle at or before it if that minute is missing).
+* No option data is re-fetched: a kept trade is exactly the same trade as in `gap_results`; the filter only removes trades. Days without NIFTY candles are dropped and counted.
+* Output in `gap_nifty_results/`: `COMPARE.md` / `compare.csv` (before vs after for every direction x exit x SL x TP), `{long,short}/trades_all_variants.csv.gz` (kept trades + `nifty_open`, `nifty_price`), `nifty_days.csv`, `survivors/`.
+* Actions -> "GAP NIFTY filter" -> `check` first, then `run`. Offline test: `python test_gap_nifty.py`.
