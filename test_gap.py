@@ -75,26 +75,27 @@ rows = [r for r in rows if r["direction"] == "LONG"]
 assert len(rows) == 1 and rows[0]["direction"] == "LONG" and rows[0]["ref"] == 105.0 and rows[0]["day_offset"] == 3 and rows[0]["gap_pct"] == 2.0, rows
 print("4. runner builds candidates; grid =", len(G.A.VARS), "variants per direction")
 
-# ---- 5. volume filter
-V = [1000.0] * 12
-assert R.vol_spike(V, 11, 2.0) is False
-V[11] = 2000.0; assert R.vol_spike(V, 11, 2.0, 10)                              # exactly 2x -> accepted
-V[11] = 1999.0; assert not R.vol_spike(V, 11, 2.0, 10)
-V = [1000.0] * 12; V[0] = 99999.0; V[11] = 2000.0; assert R.vol_spike(V, 11, 2.0, 10)   # day 0 is 11 days back -> outside the 10-day window
-V[1] = 3000.0; assert not R.vol_spike(V, 11, 2.0, 10)                          # day 1 is inside: avg 1200 -> 2000 < 2400
-V = [1000.0] * 15; V[10] = 2500.0; V[11] = 99999.0; assert R.vol_spike(V, 10, 2.0, 10)  # later days never count
-assert not R.vol_spike([1000.0] * 9 + [5000.0], 9, 2.0, 10)                     # fewer than 10 earlier candles -> cannot judge
-assert not R.vol_spike([0.0] * 10 + [5000.0], 10, 2.0, 10) and R.vol_spike([0.0] * 3, 2, 0)   # zero average -> False; mult 0 = off
-import gap_volume_filter as VF
-dts = pd.bdate_range("2026-01-01", periods=30).strftime("%Y-%m-%d").values
-vol = np.full(30, 1000.0); vol[20] = 2600.0; vol[25] = 1500.0
-vols = {"AAA": (dts, vol)}
-assert abs(VF.signal_ratio(vols, "AAA", dts[20]) - 2.6) < 1e-9 and VF.signal_ratio(vols, "AAA", dts[5]) is None and VF.signal_ratio(vols, "ZZZ", dts[20]) is None
-T = pd.DataFrame(dict(stock=["AAA", "AAA", "AAA"], entry_date=[dts[22], dts[27], dts[28]], pnl=[1.0, 2.0, 3.0]))
-E = pd.DataFrame(dict(stock=["AAA", "AAA", "AAA"], date=[dts[22], dts[27], dts[28]], signal_date=[dts[20], dts[25], dts[5]]))
-F, inf = VF.filter_trades(T, E, vols, 2.0, 10)
-assert list(F.pnl) == [1.0] and inf == dict(signals=3, passed=1, unjudged=1), (list(F.pnl), inf)   # 2.6x passes; 1.5x fails; day 5 cannot be judged
-assert len(VF.filter_trades(T, E, vols, 0, 10)[0]) == 3
-print("5. volume filter OK")
+# ---- 5. candle filters (red gap candle / gap after a pullback)
+O_ = [100.0, 105.0, 105.0]; C_ = [100.0, 103.0, 107.0]
+assert R.red_gap_candle(O_, C_, 1, True) and not R.red_gap_candle(O_, C_, 2, True) and not R.red_gap_candle(O_, [100.0, 105.0, 107.0], 1, True)   # LONG: close < open
+assert R.red_gap_candle([100.0, 95.0], [100.0, 97.0], 1, False) and not R.red_gap_candle([100.0, 95.0], [100.0, 94.0], 1, False)                   # SHORT mirror: close > open
+Cp = [110.0, 108.0, 106.0, 104.0, 102.0, 100.0, 103.0]                         # falling for 6 days, then day 6 gaps up
+assert R.after_pullback(Cp, 6, True, 5) and not R.after_pullback(Cp, 6, False, 5)   # C[5]=100 < C[0]=110
+assert not R.after_pullback([100.0, 101.0, 102.0, 103.0, 104.0, 105.0, 110.0], 6, True, 5) and R.after_pullback([100.0, 101.0, 102.0, 103.0, 104.0, 105.0, 98.0], 6, False, 5)
+assert not R.after_pullback(Cp, 5, True, 5) and R.after_pullback(Cp, 6, True, 5)  # day 5 has no close 6 days back -> False; day 6 does
+assert not R.after_pullback([100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 103.0], 6, True, 5)   # flat -> not a pullback
+import gap_candle_filter as CF
+dts = pd.bdate_range("2026-01-01", periods=12).strftime("%Y-%m-%d").values
+O = np.array([100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100], float); Cl = np.array([110, 108, 106, 104, 102, 100, 103, 100, 100, 100, 100, 100], float)
+Cl[6] = 99.0                                                                  # day 6: red candle (close < open 100) after a 6-day fall
+d = {"AAA": (dts, O, Cl)}
+fl = CF.flags(d, "AAA", dts[6], "LONG", 5)
+assert fl == dict(red=True, pullback=True), fl
+assert CF.flags(d, "AAA", dts[3], "LONG", 5) == dict(red=False, pullback=False) and CF.flags(d, "ZZZ", dts[6], "LONG", 5) is None and CF.flags(d, "AAA", "1999-01-01", "LONG", 5) is None
+T = pd.DataFrame(dict(stock=["AAA", "AAA"], entry_date=[dts[8], dts[9]], pnl=[1.0, 2.0], direction=["LONG", "LONG"]))
+E = pd.DataFrame(dict(stock=["AAA", "AAA"], date=[dts[8], dts[9]], signal_date=[dts[6], dts[3]]))
+M = CF.add_flags(T, E, d, 5)
+assert list(M.red) == [True, False] and list(M.pullback) == [True, False], M
+print("5. candle filters OK")
 import shutil; shutil.rmtree("gap_results_test", ignore_errors=True)
 print("ALL OK")

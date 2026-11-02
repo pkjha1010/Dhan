@@ -62,12 +62,14 @@ def first_cross_short(u, level, from_min=9 * 60 + 15, last_min=15 * 60 + 20):
     return None
 
 
-def vol_spike(V, i, mult=2.0, n=10):
-    """VOLUME FILTER for the GAP signal candle.  V = daily volumes, i = index of the GAP candle (day i, the day that gapped).
-    True when V[i] >= mult x the average volume of the n daily candles right BEFORE day i (V[i-n .. i-1]; day i itself and later days never count).
-    mult <= 0 = filter off.  Fewer than n earlier candles, a zero / missing average or a missing V[i] -> False (cannot judge)."""
-    if not mult or mult <= 0: return True
-    V = np.asarray(V, float)
-    if i < n or i >= len(V): return False
-    avg = float(np.mean(V[i - n:i]))
-    return bool(np.isfinite(avg) and avg > 0 and np.isfinite(V[i]) and V[i] >= mult * avg)
+def red_gap_candle(O, C, i, long=True):
+    """CANDLE FILTER 1 ("correction candle"): the gap candle (day i) corrects against its own gap.
+    LONG (gap up): day i closes BELOW its open (red candle).  SHORT (gap down): day i closes ABOVE its open (green candle).  Equal open / close -> False."""
+    return bool(C[i] < O[i]) if long else bool(C[i] > O[i])
+
+
+def after_pullback(C, i, long=True, n=5):
+    """CANDLE FILTER 3: the gap comes after a correction.  LONG (gap up): the close before the gap, C[i-1], is LOWER than the close n days earlier, C[i-1-n]  (price had been falling, then gapped up).
+    SHORT (gap down): C[i-1] > C[i-1-n] (price had been rising, then gapped down).  Needs i-1-n >= 0, else False."""
+    if i - 1 - n < 0 or i >= len(C): return False
+    return bool(C[i - 1] < C[i - 1 - n]) if long else bool(C[i - 1] > C[i - 1 - n])
