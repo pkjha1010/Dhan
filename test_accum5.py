@@ -3,14 +3,13 @@
  2. the state machine in trigger='close' mode == a literal copy of YOUR ORIGINAL script loop on thousands of random paths (LONG), and SHORT == LONG on the mirrored prices
  3. the 1-minute entry (first High >= level for LONG, first Low <= level for SHORT, gap = 09:15, window end)
  4. the exit grid (SL none/20/40 x TP 20/40/60/80/120/none x exits 09:30/10:00/12:00/15:30) against a brute-force walk
- 5. end to end on a SIMULATED EXCHANGE for CALLS and PUTS (ATM, and ITM-1 when the ATM series has no candle) -> trades -> SUMMARY.md and the long/ short/ folders.
- 6. the VOLUME FILTER (entry candle volume >= 2 x average of the previous 10 candles of the day); sections 1-5 run with the filter off (AC_VOL_MULT=0)."""
+ 5. end to end on a SIMULATED EXCHANGE for CALLS and PUTS (ATM, and ITM-1 when the ATM series has no candle) -> trades -> SUMMARY.md and the long/ short/ folders."""
 import os, sys, json, tempfile
 import numpy as np, pandas as pd
 from datetime import date, timedelta
 
 tmp = tempfile.mkdtemp()
-os.environ.update(AC_OUT=f"{tmp}/out", AC_VOL_MULT="0", AC_START="2026-01-02", AC_END="2026-03-27", AC_MIN_TRADES="1", AC_ITM_MAX="3",
+os.environ.update(AC_OUT=f"{tmp}/out", AC_START="2026-01-02", AC_END="2026-03-27", AC_MIN_TRADES="1", AC_ITM_MAX="3",
                   A8_OFFS_MAX="60", A8_MAX_OFFS="60", A8_TOP_N="10")
 import accum5_rules as RU
 import accum5_backtest as S
@@ -333,33 +332,4 @@ for strat, dn, dr in ((S.STRAT_L, "long", "LONG"), (S.STRAT_S, "short", "SHORT")
     n = {ex: int(G[(G.exit_rule == ex) & (G.sl == 0) & (G.tp == 20)].trades.iloc[0]) for ex in A.EXITS}
     assert n["09:30"] <= n["10:00"] <= n["12:00"] <= n["15:30"], n                  # the early exits only have the early entries
 top = open(f"{A.OUT}/SUMMARY.md").read(); assert "LONG" in top and "SHORT" in top
-
-# ================================================================ 6. volume filter
-def vol_day(vols, level_k=None):
-    idx = pd.date_range("2026-02-02 09:15", periods=len(vols), freq="min")
-    h = np.full(len(vols), 100.0); l = np.full(len(vols), 99.0)
-    if level_k is not None: h[level_k] = 101.0; l[level_k] = 98.0
-    return pd.DataFrame(dict(o=100.0, h=h, l=l, c=100.0, v=np.asarray(vols, float)), index=idx)
-base = [1000] * 30
-u = vol_day(base); assert RU.volume_ratio(u, 20) == 1.0 and not RU.volume_ok(u, 20, 2.0)                  # flat volume -> ratio 1 -> rejected
-v2 = list(base); v2[20] = 2000; assert RU.volume_ok(vol_day(v2), 20, 2.0)                                  # exactly 2x -> accepted (>=)
-v2[20] = 1999; assert not RU.volume_ok(vol_day(v2), 20, 2.0)
-v3 = list(base); v3[9] = 99999; v3[20] = 2000; assert RU.volume_ratio(vol_day(v3), 20) == 2.0              # candle 9 is 11 candles back -> outside the 10-candle window
-v3[10] = 3000; assert abs(RU.volume_ratio(vol_day(v3), 20) - 2000 / 1200) < 1e-9                           # candle 10 is the 10th candle back -> inside
-v4 = list(base); v4[21] = 99999; v4[20] = 2000; assert RU.volume_ratio(vol_day(v4), 20) == 2.0            # later candles never count (no look-ahead)
-assert RU.volume_ratio(vol_day(base), 4) is None and RU.volume_ratio(vol_day(base), 5) == 1.0              # needs >= 5 earlier candles (entry 09:20+)
-assert RU.volume_ratio(vol_day(base), 0) is None
-assert RU.volume_ratio(vol_day([0] * 30), 20) is None                                                       # zero average -> cannot judge
-assert RU.volume_ok(vol_day(base), 20, 0) and RU.volume_ok(u.drop(columns="v"), 20, 0)                      # mult 0 = off
-assert not RU.volume_ok(u.drop(columns="v"), 20, 2.0)                                                       # no volume column -> dropped
-# through the engine's entry rule: first cross at 09:35 (k=20) LONG; the later candle does NOT rescue a failed first cross
-S.VOL_MULT = 2.0
-vv = list(base); vv[20] = 2500
-assert list(S.entries_for(vol_day(vv, 20), 100.5, True)) == ["ACCL"]
-assert list(S.entries_for(vol_day(vv, 20), 98.5, False)) == ["ACCS"]
-assert S.entries_for(vol_day(base, 20), 100.5, True) == {} and S.entries_for(vol_day(base, 20), 98.5, False) == {}
-vv2 = list(vv); vv2[20] = 1000; vv2[25] = 5000; assert S.entries_for(vol_day(vv2, 20), 100.5, True) == {}  # first cross has no spike -> no trade (not the later one)
-S.VOL_MULT = 0.0
-assert list(S.entries_for(vol_day(base, 20), 100.5, True)) == ["ACCL"]                                    # filter off -> old behaviour
-print("volume filter tests passed")
 print("ALL OFFLINE TESTS PASSED")
