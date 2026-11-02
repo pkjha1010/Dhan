@@ -8,7 +8,7 @@ Output: gap_results/survivors/ALL_COMBOS.csv, SURVIVORS.csv, BY_SLOT.csv, SURVIV
 """
 import sys, os, numpy as np, pandas as pd
 
-OUT = "gap_results"; MIN_PRICE = float(sys.argv[1]) if len(sys.argv) > 1 else 5.0; MIN_TRADES = int(sys.argv[2]) if len(sys.argv) > 2 else 30
+OUT = os.environ.get("GAP_SURV_DIR", "gap_results"); MIN_PRICE = float(sys.argv[1]) if len(sys.argv) > 1 else 5.0; MIN_TRADES = int(sys.argv[2]) if len(sys.argv) > 2 else 30
 SLOTS = [("09:15-09:29", "09:15", "09:29"), ("09:30-09:59", "09:30", "09:59"), ("10:00-10:59", "10:00", "10:59"), ("11:00-11:59", "11:00", "11:59"),
          ("12:00-12:59", "12:00", "12:59"), ("13:00-13:59", "13:00", "13:59"), ("14:00-15:20", "14:00", "15:20")]
 

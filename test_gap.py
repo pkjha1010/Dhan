@@ -74,5 +74,27 @@ rows = G.setups_to_rows("TEST", d, np.array(O, float), np.array(H, float), np.ar
 rows = [r for r in rows if r["direction"] == "LONG"]
 assert len(rows) == 1 and rows[0]["direction"] == "LONG" and rows[0]["ref"] == 105.0 and rows[0]["day_offset"] == 3 and rows[0]["gap_pct"] == 2.0, rows
 print("4. runner builds candidates; grid =", len(G.A.VARS), "variants per direction")
+
+# ---- 5. volume filter
+V = [1000.0] * 12
+assert R.vol_spike(V, 11, 2.0) is False
+V[11] = 2000.0; assert R.vol_spike(V, 11, 2.0, 10)                              # exactly 2x -> accepted
+V[11] = 1999.0; assert not R.vol_spike(V, 11, 2.0, 10)
+V = [1000.0] * 12; V[0] = 99999.0; V[11] = 2000.0; assert R.vol_spike(V, 11, 2.0, 10)   # day 0 is 11 days back -> outside the 10-day window
+V[1] = 3000.0; assert not R.vol_spike(V, 11, 2.0, 10)                          # day 1 is inside: avg 1200 -> 2000 < 2400
+V = [1000.0] * 15; V[10] = 2500.0; V[11] = 99999.0; assert R.vol_spike(V, 10, 2.0, 10)  # later days never count
+assert not R.vol_spike([1000.0] * 9 + [5000.0], 9, 2.0, 10)                     # fewer than 10 earlier candles -> cannot judge
+assert not R.vol_spike([0.0] * 10 + [5000.0], 10, 2.0, 10) and R.vol_spike([0.0] * 3, 2, 0)   # zero average -> False; mult 0 = off
+import gap_volume_filter as VF
+dts = pd.bdate_range("2026-01-01", periods=30).strftime("%Y-%m-%d").values
+vol = np.full(30, 1000.0); vol[20] = 2600.0; vol[25] = 1500.0
+vols = {"AAA": (dts, vol)}
+assert abs(VF.signal_ratio(vols, "AAA", dts[20]) - 2.6) < 1e-9 and VF.signal_ratio(vols, "AAA", dts[5]) is None and VF.signal_ratio(vols, "ZZZ", dts[20]) is None
+T = pd.DataFrame(dict(stock=["AAA", "AAA", "AAA"], entry_date=[dts[22], dts[27], dts[28]], pnl=[1.0, 2.0, 3.0]))
+E = pd.DataFrame(dict(stock=["AAA", "AAA", "AAA"], date=[dts[22], dts[27], dts[28]], signal_date=[dts[20], dts[25], dts[5]]))
+F, inf = VF.filter_trades(T, E, vols, 2.0, 10)
+assert list(F.pnl) == [1.0] and inf == dict(signals=3, passed=1, unjudged=1), (list(F.pnl), inf)   # 2.6x passes; 1.5x fails; day 5 cannot be judged
+assert len(VF.filter_trades(T, E, vols, 0, 10)[0]) == 3
+print("5. volume filter OK")
 import shutil; shutil.rmtree("gap_results_test", ignore_errors=True)
 print("ALL OK")

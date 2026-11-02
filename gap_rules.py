@@ -60,3 +60,14 @@ def first_cross_short(u, level, from_min=9 * 60 + 15, last_min=15 * 60 + 20):
         if m[k] > last_min: return None
         if l[k] <= level: return k
     return None
+
+
+def vol_spike(V, i, mult=2.0, n=10):
+    """VOLUME FILTER for the GAP signal candle.  V = daily volumes, i = index of the GAP candle (day i, the day that gapped).
+    True when V[i] >= mult x the average volume of the n daily candles right BEFORE day i (V[i-n .. i-1]; day i itself and later days never count).
+    mult <= 0 = filter off.  Fewer than n earlier candles, a zero / missing average or a missing V[i] -> False (cannot judge)."""
+    if not mult or mult <= 0: return True
+    V = np.asarray(V, float)
+    if i < n or i >= len(V): return False
+    avg = float(np.mean(V[i - n:i]))
+    return bool(np.isfinite(avg) and avg > 0 and np.isfinite(V[i]) and V[i] >= mult * avg)
