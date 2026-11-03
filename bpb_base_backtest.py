@@ -1,25 +1,26 @@
-"""bpb_long_backtest.py - BPB LONG (breakout -> confirmed pullback -> re-cross) on ATM CALL options of ALL F&O stocks, 3 years, Dhan 1-minute data, entry checked through the FULL DAY.
-Same engine as gap_backtest.py / all8_backtest.py (ATM first, ITM-1..3 fallback, next-month series on the expiry day, entry-day-only option candles, resumable).
+"""bpb_base_backtest.py - BPB BASE strategy (10-day-high breakout -> pullback -> entry at the highest price) on ATM options of ALL F&O stocks, LONG (call) and SHORT (put), 3 years, Dhan 1-minute data,
+entry checked through the FULL DAY, with the NIFTY50 direction filter.  Same engine as gap_backtest.py / all8_backtest.py (ATM first, ITM-1..3 fallback, next-month series on the expiry day,
+entry-day-only option candles, resumable).
 
-  python bpb_long_backtest.py check     test Dhan access + print the rules
-  python bpb_long_backtest.py run       full backtest for BL_START .. BL_END (resumable - run again after a polite stop)
-  python bpb_long_backtest.py summary   rebuild every result file from the saved option data (no API calls)
-  python bpb_long_backtest.py rules     print the rules only
+  python bpb_base_backtest.py check     test Dhan access + print the rules
+  python bpb_base_backtest.py run       full backtest for BB_START .. BB_END (resumable - run again after a polite stop)
+  python bpb_base_backtest.py summary   rebuild every result file from the saved option data (no API calls)
+  python bpb_base_backtest.py rules     print the rules only
+  then  python bpb_base_report.py       NIFTY50 filter (before / after) + survivors after cutting the top 10 % of trades (no API calls; the workflow runs it for you)
 
-SETUP (daily chart, Yahoo; rules in bpb_long_rules.py; same state machine as bpb_fno_backtest.find_setups)
-  breakout = a daily close above the 10-day rolling high (the LINE)  ->  entry level = highest High since the breakout  ->  every candle must close at / above the LINE and one bearish
-  candle confirms the pullback  ->  entry day = the first later day whose High reaches the level.  NO open-price prefilter (entries are checked all day).
-ENTRY      whole day 09:15 .. BL_ENTRY_LAST (15:20), two separate strategies:
-  BPBL_T1  the first 1-minute candle whose High >= level.
-  BPBL_T2  re-cross entry avoiding fake breakouts: after the first touch, >= 5 consecutive 1-minute closes below the level, then the first candle whose High >= level.
-OPTION     ATM CALL of the nearest monthly expiry (next month's series on the expiry day itself); ITM-1 .. ITM-BL_ITM_MAX if the ATM series has no candle at the entry minute.  Strike offset stored per trade.
-EXIT GRID  stop-loss none / 20 / 40 / 60 % x target 60 / 80 / 100 / 120 % / none x time exit 15:00 / 15:30 the same day = 40 variants per entry type (percent of the premium).
+SETUP (daily chart, Yahoo; rules in bpb_base_rules.py = your BPB state machine)
+  LONG   a daily close above the 10-day rolling high (the LINE) -> later candles must NOT close below the LINE (one bearish candle confirms the pullback) -> entry level = the highest High since the
+         breakout -> entry day = the first later day whose High reaches the level.   SHORT = exact mirror (10-day low, no close above the line, lowest Low).   No open-price prefilter.
+ENTRY      the first 1-minute candle (09:15 .. BB_ENTRY_LAST = 15:20) of the entry day whose High (SHORT: Low) reaches the level; option price = close of that minute.
+NIFTY50    the filter is checked in the ENTRY MINUTE: LONG only when NIFTY50 > its open of the day, SHORT only when NIFTY50 < its open.  It only removes trades, so the engine fetches every entry once and
+           bpb_base_report.py gives the numbers with and without the filter.
+OPTION     LONG = ATM CALL, SHORT = ATM PUT, nearest monthly expiry (next month's series on the expiry day itself); ITM-1 .. ITM-BB_ITM_MAX if the ATM series has no candle at the entry minute.
+EXIT GRID  stop-loss none / 20 / 40 / 60 % x target 60 / 80 / 100 / 120 % / none x time exit 15:00 / 15:30 the same day = 40 variants per direction (percent of the premium).
            Fills: stop / target = first 1-minute low / high touching the level; a gap through it fills at that candle's open; stop and target in the same minute = STOP.
            A trade entered at / after a time exit is skipped for that exit.
-CAPITAL    at most Rs BL_CAP (60,000) per trade, whole lots.  Charges, taxes and slippage are not included.  Lot sizes are today's values for all years.
+CAPITAL    at most Rs BB_CAP (60,000) per trade, whole lots.  Charges, taxes and slippage are not included.  Lot sizes are today's values for all years.
 
-Results in bpb_long_results/ : SUMMARY.md, type1/ and type2/ (each with its own SUMMARY.md, summary.csv, matrix_*.csv, trades_all_variants.csv.gz, entries.csv ...).
-The Nifty50 filter + top-10 %-trimmed survivors are made by bpb_long_report.py (no API calls).
+Results in bpb_base_results/ : SUMMARY.md, long/ and short/ (each with its own SUMMARY.md, summary.csv, matrix_*.csv, trades_all_variants.csv.gz, entries.csv ...).
 """
 import os, sys, json, glob
 
@@ -29,50 +30,47 @@ def _env(name, default):
 
 
 # ---------------------------------------------------------------- settings -> the A8_* names the engine reads (must be set BEFORE the engine is imported)
-OUT = _env("BL_OUT", "bpb_long_results")
+OUT = _env("BB_OUT", "bpb_base_results")
 os.environ["A8_OUT"] = OUT
-os.environ["A8_START"] = _env("BL_START", "2023-10-30")
-os.environ["A8_END"] = _env("BL_END", "2026-10-30")
-if os.environ.get("BL_SYMBOLS"): os.environ["A8_SYMBOLS"] = os.environ["BL_SYMBOLS"]
-if os.environ.get("BL_CAP"): os.environ["A8_CAP"] = os.environ["BL_CAP"]
-os.environ["A8_SLS"] = _env("BL_SLS", "0,20,40,60")                                 # 0 = no stop-loss
-os.environ["A8_TPS"] = _env("BL_TPS", "60,80,100,120,0")                            # 0 = no target
-os.environ["A8_ENTRY_LAST"] = _env("BL_ENTRY_LAST", "15:20")
-os.environ["A8_MIN_TRADES"] = _env("BL_MIN_TRADES", "30")
+os.environ["A8_START"] = _env("BB_START", "2023-10-30")
+os.environ["A8_END"] = _env("BB_END", "2026-10-30")
+if os.environ.get("BB_SYMBOLS"): os.environ["A8_SYMBOLS"] = os.environ["BB_SYMBOLS"]
+if os.environ.get("BB_CAP"): os.environ["A8_CAP"] = os.environ["BB_CAP"]
+os.environ["A8_SLS"] = _env("BB_SLS", "0,20,40,60")                                 # 0 = no stop-loss
+os.environ["A8_TPS"] = _env("BB_TPS", "60,80,100,120,0")                            # 0 = no target
+os.environ["A8_ENTRY_LAST"] = _env("BB_ENTRY_LAST", "15:20")
+os.environ["A8_MIN_TRADES"] = _env("BB_MIN_TRADES", "30")
 os.environ["A8_TRADES_ALL"] = "1"                                                # every trade of every variant, one file per strategy
 os.environ["A8_SUM_ENTRY_FROM"] = os.environ["A8_SUM_ENTRY_TO"] = ""
-LOOKBACK = int(_env("BL_LOOKBACK", "10"))                                        # rolling-high window (days)
-MIN_CLOSES = int(_env("BL_CLOSES", "5"))                                         # TYPE 2: consecutive 1-minute closes below the level before the re-cross
-ITM_MAX = int(_env("BL_ITM_MAX", "3"))                                           # ATM first, then ITM-1 ... ITM-n (0 = ATM only)
-TEXITS = [x.strip() for x in _env("BL_EXITS", "15:00,15:30").replace(" ", ",").split(",") if len(x.strip()) == 5 and x.strip()[2] == ":"]
+LOOKBACK = int(_env("BB_LOOKBACK", "10"))                                        # rolling-high window (days)
+ITM_MAX = int(_env("BB_ITM_MAX", "3"))                                           # ATM first, then ITM-1 ... ITM-n (0 = ATM only)
+TEXITS = [x.strip() for x in _env("BB_EXITS", "15:00,15:30").replace(" ", ",").split(",") if len(x.strip()) == 5 and x.strip()[2] == ":"]
 
 import numpy as np, pandas as pd
 import all8_backtest as A
-import bpb_long_rules as R
-import bpb_fno_backtest as BP
+import gap_rules as GR
+import bpb_base_rules as R
 C = A.C
 
-STRAT_1, STRAT_2 = "BPBL_T1", "BPBL_T2"
+STRAT_L, STRAT_S = "BPB_LONG", "BPB_SHORT"
 STRAT_RULE = {
-    STRAT_1: "BPB LONG: 10-day-high breakout -> confirmed pullback -> first 1-minute cross above the entry level (full day) -> buy CALL",
-    STRAT_2: f"BPB LONG: 10-day-high breakout -> confirmed pullback -> after the first touch >= {MIN_CLOSES} consecutive 1-minute closes below the level, then the re-cross above it (full day) -> buy CALL"}
+    STRAT_L: f"BPB base LONG: close above the {LOOKBACK}-day high, no later close below it (pullback) -> first 1-minute cross above the highest High since the breakout (full day) -> buy CALL",
+    STRAT_S: f"BPB base SHORT: close below the {LOOKBACK}-day low, no later close above it (pullback) -> first 1-minute cross below the lowest Low since the breakdown (full day) -> buy PUT"}
 STRATS = list(STRAT_RULE)
-DIRNAME = {STRAT_1: "type1", STRAT_2: "type2"}
-TYPE_OF = {"BPBT1": STRAT_1, "BPBT2": STRAT_2}
+DIRNAME = {STRAT_L: "long", STRAT_S: "short"}
 
 
 # ---------------------------------------------------------------- the entry rule used by the engine
 def entries_for(u, level, long):
-    """Replaces combo_dayrisk_backtest.entries_for.  -> {entry type: entry timestamp}   (BPBT1 / BPBT2)"""
-    if u is None or len(u) == 0 or not long: return {}
-    m = u.index.hour.values * 60 + u.index.minute.values
-    r = R.entries_long(m, u.h.values, u.c.values, level, A.ENTRY_MIN, MIN_CLOSES)
-    return {("BPBT1" if k == "T1" else "BPBT2"): u.index[p] for k, p in r.items()}
+    """Replaces combo_dayrisk_backtest.entries_for.  -> {entry type: entry timestamp}   (BPBL = LONG, BPBS = SHORT); the first 1-minute candle that reaches the level, 09:15 .. entry-last."""
+    if u is None or len(u) == 0: return {}
+    k = GR.first_cross_long(u, level, A.E_FIRST, A.ENTRY_MIN) if long else GR.first_cross_short(u, level, A.E_FIRST, A.ENTRY_MIN)
+    return {} if k is None else {("BPBL" if long else "BPBS"): u.index[k]}
 
 
 def strategies_for(source, typ, green, red, up, lo):
     if source != "BPB": return []
-    return [TYPE_OF[typ]] if typ in TYPE_OF else []
+    return [STRAT_L] if typ == "BPBL" else [STRAT_S] if typ == "BPBS" else []
 
 
 def install():
@@ -130,30 +128,31 @@ install()
 
 
 def rule_dict():
-    return dict(lookback=LOOKBACK, closes=MIN_CLOSES, itm_max=ITM_MAX, entry_last=A.ENTRY_LAST, start=A.START, end=A.END, sls=A.SLS, tps=A.TPS, exits=A.EXITS, cap=A.CAP,
-                symbols=len(A.UNIVERSE))
+    return dict(lookback=LOOKBACK, itm_max=ITM_MAX, entry_last=A.ENTRY_LAST, start=A.START, end=A.END, sls=A.SLS, tps=A.TPS, exits=A.EXITS, cap=A.CAP, symbols=len(A.UNIVERSE))
 
 
 def rules_text():
-    return (f"BPB LONG (ATM call), entry checked 09:15 to {A.ENTRY_LAST}.  Daily setup: a close above the {LOOKBACK}-day high (the line), entry level = highest High since the breakout, every candle closes at / above "
-            f"the line, one bearish candle confirms the pullback, entry day = first later day whose High reaches the level.  BPBL_T1 = first 1-minute candle whose High >= level.  BPBL_T2 = after the first touch "
-            f">= {MIN_CLOSES} consecutive 1-minute closes below the level, then the first candle whose High >= level.  Option = ATM of the entry day's month, ITM-1 .. ITM-{ITM_MAX} if the ATM series has no "
-            f"candle at the entry minute.")
+    return (f"BPB BASE.  LONG (ATM call): a daily close above the {LOOKBACK}-day high (the line); later candles must not close below the line (a bearish candle confirms the pullback); entry level = the highest "
+            f"High since the breakout; entry = the first 1-minute candle (09:15 to {A.ENTRY_LAST}) of a later day whose High reaches the level.  SHORT (ATM put) = mirror (close below the {LOOKBACK}-day low, "
+            f"lowest Low, first minute whose Low reaches it).  Option = ATM of the entry day's month, ITM-1 .. ITM-{ITM_MAX} if the ATM series has no candle at the entry minute.  NIFTY50 filter (report): LONG "
+            f"only when NIFTY50 > its day open at the entry minute, SHORT only when it is below.")
 
 
 def print_rules():
     print(rules_text(), flush=True)
-    print(f"Grid: stop-loss {A.SLS} (0 = none) x target {A.TPS} (0 = none) x time exit {A.EXITS} = {len(A.VARS)} variants per entry type; {len(A.UNIVERSE)} stocks; {A.START} .. {A.END}; cap Rs {A.CAP}", flush=True)
+    print(f"Grid: stop-loss {A.SLS} (0 = none) x target {A.TPS} (0 = none) x time exit {A.EXITS} = {len(A.VARS)} variants per direction; {len(A.UNIVERSE)} stocks; {A.START} .. {A.END}; cap Rs {A.CAP}", flush=True)
 
 
 # ---------------------------------------------------------------- step 1: daily candidates (Yahoo)
 def setups_to_rows(stock, dates, O, H, L, C_, t0, t1):
-    """One candidate per BPB LONG setup: the entry day (first day after the confirmed pullback whose High reaches the level).  No open-price prefilter; the exact minute check on Dhan decides the entry."""
+    """One candidate per BPB setup and direction: the entry day (first day after the confirmed pullback whose High / Low reaches the level).  No open-price prefilter; the exact minute check on Dhan decides the entry."""
     rows = []
-    for i, lvl, line, b in BP.find_setups(O, H, L, C_, LOOKBACK):
-        if not (t0 <= pd.Timestamp(dates[i]) <= t1): continue
-        rows.append(dict(source="BPB", stock=stock, direction="LONG", ref=round(float(lvl), 2), signal_date=dates[b], date=dates[i], yahoo_open=float(O[i]),
-                         green=-1, red=-1, upper_longer=-1, lower_longer=-1, line=round(float(line), 2)))
+    for long in (True, False):
+        for s in R.bpb_setups(O, H, L, C_, long, LOOKBACK):
+            i = s["entry"]
+            if not (t0 <= pd.Timestamp(dates[i]) <= t1): continue
+            rows.append(dict(source="BPB", stock=stock, direction="LONG" if long else "SHORT", ref=round(s["level"], 2), signal_date=dates[s["breakout"]], date=dates[i], yahoo_open=float(O[i]),
+                             green=-1, red=-1, upper_longer=-1, lower_longer=-1, line=round(s["line"], 2)))
     return rows
 
 
@@ -173,7 +172,8 @@ def yahoo_candidates():
         rows += setups_to_rows(s, d.index.strftime("%Y-%m-%d"), O, H, L, C_, t0, t1)
     if nst == 0: raise A.Fatal("Yahoo download gave no data for any stock - run again later")
     r = pd.DataFrame(rows)
-    print(f"Yahoo: {nst} stocks, {len(r)} BPB LONG setups with an entry day in {A.START}..{A.END}", flush=True)
+    nl = int((r.direction == "LONG").sum()) if len(r) else 0
+    print(f"Yahoo: {nst} stocks, {nl} LONG + {len(r) - nl} SHORT BPB setups with an entry day in {A.START}..{A.END}", flush=True)
     return r
 
 
@@ -192,7 +192,7 @@ def run():
         old = json.load(open(rp))
         if old != rule:
             sys.exit("STOP - the saved data in " + A.OUT + " was made with other settings:\n  saved: " + json.dumps(old) + "\n  now:   " + json.dumps(rule) +
-                     "\nUse the same settings, or give BL_OUT / the 'out_dir' box another folder name.")
+                     "\nUse the same settings, or give BB_OUT / the 'out_dir' box another folder name.")
     json.dump(rule, open(rp, "w"), indent=1)
     print_rules()
     st = A.load_state(); dh = StrictDhan(); mst = A.load_master()
@@ -250,7 +250,7 @@ def read_entries():
 
 
 def write_direction(strat, S, E, base, cols, prog):
-    """Everything for ONE direction into OUT/<type1|type2>/ ; returns the best row (or None)."""
+    """Everything for ONE direction into OUT/<long|short>/ ; returns the best row (or None)."""
     d = f"{A.OUT}/{DIRNAME[strat]}"; os.makedirs(d, exist_ok=True)
     G = S[S.strategy == strat]
     if G.empty: return None
@@ -271,7 +271,7 @@ def write_direction(strat, S, E, base, cols, prog):
     if len(E):
         E[E.strategy == strat].sort_values(["date", "entry_minute", "stock"]).drop(columns=["ekey"]).to_csv(f"{d}/entries.csv", index=False)
     ts = pd.read_csv(f"{A.OUT}/trades_summary.csv") if os.path.exists(f"{A.OUT}/trades_summary.csv") else pd.DataFrame()
-    L = [f"# BPB LONG ({'entry type 1: first touch' if strat == STRAT_1 else 'entry type 2: re-cross after ' + str(MIN_CLOSES) + ' closes below'}; ATM call) - SL x TP x time-exit grid", "",
+    L = [f"# BPB BASE - {DIRNAME[strat].upper()} ({'ATM call' if strat == STRAT_L else 'ATM put'}) - SL x TP x time-exit grid, entry checked all day", "",
          f"**Status:** {prog}", "",
          f"**Period (entry dates):** {A.START} to {A.END}  |  **Stocks:** all F&O stocks with Dhan data ({len(A.UNIVERSE)} tried)  |  **Capital per trade:** up to Rs {A.CAP:,} (whole lots)", "",
          "## Rule", "", STRAT_RULE[strat], "",
@@ -318,11 +318,11 @@ def post_process():
     cols = ["strategy", "exit_rule", "sl_rule", "tp_rule", "trades", "win_pct", "total_pnl", "roi_pct", "profit_factor", "max_drawdown"]
     prog = open(f"{A.OUT}/PROGRESS.txt").read().strip() if os.path.exists(f"{A.OUT}/PROGRESS.txt") else "(no progress file)"
     best = [b for b in (write_direction(s, S, E, base, cols, prog) for s in STRATS) if b is not None]
-    L = ["# BPB LONG (ATM call) - SL x TP x time-exit grid, entry checked all day", "",
+    L = ["# BPB BASE (LONG call + SHORT put) - SL x TP x time-exit grid, entry checked all day", "",
          f"**Status:** {prog}", "",
          f"**Period (entry dates):** {A.START} to {A.END}  |  **Stocks:** all F&O stocks with Dhan data ({len(A.UNIVERSE)} tried)  |  **Capital per trade:** up to Rs {A.CAP:,} (whole lots)", "",
          "## Rules", "", rules_text(), "",
-         "The two entry types are reported separately: `type1/` and `type2/` each hold their own SUMMARY.md, summary.csv, matrix_*.csv, trades_all_variants.csv.gz, trades_best_variant.csv and entries.csv.", ""]
+         "LONG and SHORT are reported separately: `long/` and `short/` each hold their own SUMMARY.md, summary.csv, matrix_*.csv, trades_all_variants.csv.gz, trades_best_variant.csv and entries.csv.", ""]
     ts = pd.read_csv(f"{A.OUT}/trades_summary.csv") if os.path.exists(f"{A.OUT}/trades_summary.csv") else pd.DataFrame()
     if len(ts):
         L += ["## Entries found", "", md(ts[[c for c in ("strategy", "signals_with_entry", "entries_with_option_data", "dropped_low_coverage", "skipped_no_option_data", "skip_reasons") if c in ts.columns]]), ""]
@@ -351,6 +351,6 @@ if __name__ == "__main__":
         elif mode == "run": run()
         elif mode in ("summary", "range"): print_rules(); summary()
         elif mode == "rules": print_rules()
-        else: sys.exit("use: python bpb_long_backtest.py check | run | summary | rules")
+        else: sys.exit("use: python bpb_base_backtest.py check | run | summary | rules")
     except A.Fatal as e:
         sys.exit(f"STOP - needs your action: {e}")

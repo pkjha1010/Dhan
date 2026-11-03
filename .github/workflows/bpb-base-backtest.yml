@@ -1,10 +1,10 @@
-name: BPB LONG backtest (breakout-pullback-recross, ATM call, full-day entry, SL x TP x time exit, all F&O stocks, 3 years, Dhan)
+name: BPB BASE backtest (10-day breakout + pullback, entry at the highest price, LONG call + SHORT put, full-day entry, NIFTY50 filter, SL x TP x time exit, all F&O stocks, 3 years, Dhan)
 
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "check = test Dhan access + print the rules | run = full backtest (resumable - run again until PROGRESS.txt says COMPLETE) | summary = rebuild result files from saved data (no API calls) | report = NIFTY50 filter + top-10% trimmed survivors (no API calls)"
+        description: "check = test Dhan access + print the rules | run = full backtest (resumable - run again until PROGRESS.txt says COMPLETE) | summary = rebuild result files from saved data (no API calls) | report = NIFTY50 filter (before / after) + top-10% trimmed survivors (no API calls)"
         type: choice
         options: [check, run, summary, report]
         default: run
@@ -32,16 +32,12 @@ on:
         description: "Time exits, comma separated (same day)"
         required: false
         default: "15:00,15:30"
-      closes:
-        description: "Entry type 2: consecutive 1-minute closes below the level before the re-cross"
-        required: false
-        default: "5"
       itm_max:
         description: "Strike rule: ATM first, then ITM-1, ITM-2 ... up to ITM-n until a strike has a candle (0 = ATM only)"
         required: false
         default: "3"
       out_dir:
-        description: "Result folder (blank = bpb_long_results). Use another name if you change any setting - the saved data belongs to one setting"
+        description: "Result folder (blank = bpb_base_results). Use another name if you change any setting - the saved data belongs to one setting"
         required: false
         default: ""
 
@@ -49,7 +45,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: bpb-long-backtest
+  group: bpb-base-backtest
   cancel-in-progress: false
 
 jobs:
@@ -65,37 +61,36 @@ jobs:
       - name: Install packages
         run: pip install -r requirements.txt
       - name: Offline logic test
-        run: python test_bpb_long.py && python test_gap_nifty.py && python test_itm_fallback.py
+        run: python test_bpb_base.py && python test_gap_nifty.py && python test_itm_fallback.py
       - name: Run
         if: inputs.mode != 'report'
         env:
           DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
           DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
-          BL_START: ${{ inputs.start }}
-          BL_END: ${{ inputs.end }}
-          BL_SYMBOLS: ${{ inputs.symbols }}
-          BL_SLS: ${{ inputs.sls }}
-          BL_TPS: ${{ inputs.tps }}
-          BL_EXITS: ${{ inputs.exits }}
-          BL_CLOSES: ${{ inputs.closes }}
-          BL_ITM_MAX: ${{ inputs.itm_max }}
-          BL_OUT: ${{ inputs.out_dir }}
-        run: python bpb_long_backtest.py "${{ inputs.mode }}"
+          BB_START: ${{ inputs.start }}
+          BB_END: ${{ inputs.end }}
+          BB_SYMBOLS: ${{ inputs.symbols }}
+          BB_SLS: ${{ inputs.sls }}
+          BB_TPS: ${{ inputs.tps }}
+          BB_EXITS: ${{ inputs.exits }}
+          BB_ITM_MAX: ${{ inputs.itm_max }}
+          BB_OUT: ${{ inputs.out_dir }}
+        run: python bpb_base_backtest.py "${{ inputs.mode }}"
       - name: NIFTY50 filter + top-10% trimmed survivors (no API calls)
         if: always() && (inputs.mode == 'report' || inputs.mode == 'summary' || inputs.mode == 'run')
         env:
           BR_SRC: ${{ inputs.out_dir }}
-        run: python bpb_long_report.py || true
+        run: python bpb_base_report.py || true
       - name: Show the summary
         if: always()
         run: |
-          for f in bpb_long_results/SUMMARY.md bpb_long_nifty_results/TRIM10.md; do if [ -f "$f" ]; then cat "$f" >> "$GITHUB_STEP_SUMMARY"; fi; done
+          for f in bpb_base_results/SUMMARY.md bpb_base_nifty_results/COMPARE.md bpb_base_nifty_results/TRIM10.md; do if [ -f "$f" ]; then cat "$f" >> "$GITHUB_STEP_SUMMARY"; fi; done
       - name: Save results to the repo
         if: always()
         run: |
           git config user.name "bpb-bot"
           git config user.email "bpb-bot@users.noreply.github.com"
-          git add bpb_long_results bpb_long_nifty_results || true
-          git commit -m "BPB LONG backtest results" || echo "nothing new to commit"
+          git add bpb_base_results bpb_base_nifty_results || true
+          git commit -m "BPB BASE backtest results" || echo "nothing new to commit"
           git pull --no-rebase -X ours --no-edit || true
           git push || true
