@@ -87,9 +87,12 @@ jobs:
           PO_OUT: ${{ inputs.out_dir }}
           PO_BUDGET_MIN: "320"
         run: python pullback_options_backtest.py "${{ inputs.mode }}"
+      - name: Robustness report (top 10% of trades cut, by entry-time slot)
+        if: always() && inputs.mode == 'run'
+        run: python robustness_report.py "${{ inputs.out_dir }}" 0.10 30 || true
       - name: Show the summary
         if: always() && inputs.mode == 'run'
-        run: if [ -f "${{ inputs.out_dir }}/SUMMARY.md" ]; then cat "${{ inputs.out_dir }}/SUMMARY.md" >> "$GITHUB_STEP_SUMMARY"; fi
+        run: if [ -f "${{ inputs.out_dir }}/SUMMARY.md" ]; then cat "${{ inputs.out_dir }}/SUMMARY.md" >> "$GITHUB_STEP_SUMMARY"; fi; if [ -f "${{ inputs.out_dir }}/ROBUSTNESS.md" ]; then cat "${{ inputs.out_dir }}/ROBUSTNESS.md" >> "$GITHUB_STEP_SUMMARY"; fi
       - name: Save results to the repo
         if: always() && inputs.mode == 'run'
         run: |
