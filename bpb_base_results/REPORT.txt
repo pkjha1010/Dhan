@@ -1,0 +1,43 @@
+Stocks tested: 210; entry dates 2023-10-30 .. 2026-10-30; entry checked 09:15 .. 15:20
+Variants: 4 stop-loss x 5 targets x 2 exits = 40 per strategy, 2 strategies; 80 variant rows with trades.
+
+Entries by strategy:
+ strategy  signals_with_entry  entries_with_option_data  dropped_low_coverage  skipped_no_option_data
+ BPB_LONG                3566                      1102                    73                     313
+BPB_SHORT                2404                       763                    58                     148
+
+TOP 15 BY TOTAL PnL (min 30 trades):
+                         variant  trades  win_pct  total_pnl  roi_pct  profit_factor  avg_days_held  max_days_held
+ BPB_SHORT | 15:30 | SL0 | TP100     699    46.49    4280055    11.50           1.92            0.0              0
+  BPB_SHORT | 15:30 | SL0 | TP80     699    47.50    4240204    11.39           1.95            0.0              0
+ BPB_SHORT | 15:30 | SL0 | TP120     699    45.78    4131955    11.10           1.86            0.0              0
+BPB_SHORT | 15:30 | SL60 | TP120     699    44.92    3554955     9.55           1.71            0.0              0
+  BPB_SHORT | 15:30 | SL0 | TP60     699    48.21    3529158     9.48           1.80            0.0              0
+ BPB_SHORT | 15:30 | SL60 | TP80     699    46.49    3528472     9.48           1.75            0.0              0
+BPB_SHORT | 15:30 | SL60 | TP100     699    45.49    3524552     9.47           1.72            0.0              0
+BPB_SHORT | 15:30 | SL40 | TP120     699    43.92    3425729     9.20           1.71            0.0              0
+BPB_SHORT | 15:30 | SL40 | TP100     699    44.35    3322299     8.92           1.70            0.0              0
+   BPB_SHORT | 15:30 | SL0 | TP0     699    44.49    3292636     8.84           1.65            0.0              0
+ BPB_SHORT | 15:30 | SL60 | TP60     699    47.50    3172113     8.52           1.69            0.0              0
+ BPB_SHORT | 15:30 | SL40 | TP80     699    45.06    3130231     8.41           1.67            0.0              0
+   BPB_SHORT | 15:00 | SL0 | TP0     675    45.33    2970532     8.27           1.64            0.0              0
+ BPB_SHORT | 15:30 | SL40 | TP60     699    46.21    2946346     7.91           1.65            0.0              0
+  BPB_SHORT | 15:30 | SL40 | TP0     699    42.92    2889440     7.76           1.58            0.0              0
+
+TOP 15 BY ROI (min 30 trades):
+                         variant  trades  win_pct  total_pnl  roi_pct  profit_factor  avg_days_held  max_days_held
+ BPB_SHORT | 15:30 | SL0 | TP100     699    46.49    4280055    11.50           1.92            0.0              0
+  BPB_SHORT | 15:30 | SL0 | TP80     699    47.50    4240204    11.39           1.95            0.0              0
+ BPB_SHORT | 15:30 | SL0 | TP120     699    45.78    4131955    11.10           1.86            0.0              0
+BPB_SHORT | 15:30 | SL60 | TP120     699    44.92    3554955     9.55           1.71            0.0              0
+  BPB_SHORT | 15:30 | SL0 | TP60     699    48.21    3529158     9.48           1.80            0.0              0
+ BPB_SHORT | 15:30 | SL60 | TP80     699    46.49    3528472     9.48           1.75            0.0              0
+BPB_SHORT | 15:30 | SL60 | TP100     699    45.49    3524552     9.47           1.72            0.0              0
+BPB_SHORT | 15:30 | SL40 | TP120     699    43.92    3425729     9.20           1.71            0.0              0
+BPB_SHORT | 15:30 | SL40 | TP100     699    44.35    3322299     8.92           1.70            0.0              0
+   BPB_SHORT | 15:30 | SL0 | TP0     699    44.49    3292636     8.84           1.65            0.0              0
+ BPB_SHORT | 15:30 | SL60 | TP60     699    47.50    3172113     8.52           1.69            0.0              0
+ BPB_SHORT | 15:30 | SL40 | TP80     699    45.06    3130231     8.41           1.67            0.0              0
+   BPB_SHORT | 15:00 | SL0 | TP0     675    45.33    2970532     8.27           1.64            0.0              0
+ BPB_SHORT | 15:30 | SL40 | TP60     699    46.21    2946346     7.91           1.65            0.0              0
+ BPB_SHORT | 15:00 | SL0 | TP100     675    46.81    2811013     7.83           1.64            0.0              0
