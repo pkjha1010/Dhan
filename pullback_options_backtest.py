@@ -38,6 +38,7 @@ EXITS = env("PO_EXITS", "09:30,10:00,12:00,15:30").replace(" ", "").split(",")
 hm = lambda s: int(s[:2]) * 60 + int(s[3:5])
 EXIT_MIN = [hm(x) for x in EXITS]
 ENTRY_LAST = env("PO_ENTRY_LAST", "15:20"); ENTRY_LAST_MIN = hm(ENTRY_LAST)
+MIN_PREMIUM = float(env("PO_MIN_PREMIUM", "1.0"))                            # entry premium below this (Rs) is a tick-size artefact, not a tradable price
 CAP = float(env("PO_CAP", "60000")); MIN_TRADES = int(env("PO_MIN_TRADES", "30"))
 NIFTY_MODE = env("PO_NIFTY_MODE", "intraday")                               # intraday | daily_close | none
 WINDOW = int(env("PO_WINDOW", "10")); DIP = float(env("PO_DIP_PCT", "0.5")) / 100; BUDGET = float(env("PO_BUDGET_MIN", "0")) * 60
@@ -116,6 +117,11 @@ class Dhan:
         d = (j or {}).get("data") or j or {}
         x = (d.get("ce") or d.get("CALL")) if side == "LONG" else (d.get("pe") or d.get("PUT"))
         return frame(x or {}, extra=("strike", "spot"))
+
+
+def sameday(d, day):
+    """Dhan returns the NEXT trading day's candles too (toDate is inclusive); a same-day trade must never see them."""
+    return d[d.index.strftime("%Y-%m-%d") == str(day)[:10]] if len(d) else d
 
 
 def cached(fp, fn):
@@ -216,7 +222,7 @@ def find_events(dh, eqid, lots, universe, stats, side="LONG"):
 # ---------------------------------------------------------------- phase 2: option + exits
 def pick_contract(dh, sid, day, ets, side="LONG"):
     for off, label in (("ATM", "ATM"), ("ATM-1" if side == "LONG" else "ATM+1", "ITM1")):          # ITM: call = one strike below, put = one strike above
-        d = cached(f"{CACHE}/opt/{sid}/{day}_{off}_{side}.csv.gz", lambda: dh.option(sid, day, off, side))
+        d = sameday(cached(f"{CACHE}/opt/{sid}/{day}_{off}_{side}.csv.gz", lambda: dh.option(sid, day, off, side)), day)
         if len(d) and ets in d.index and d.c[ets] > 0: return off, label, d
     return None
 
@@ -227,14 +233,14 @@ def locked_series(dh, sid, day, off, d, ets, side="LONG"):
     parts = [a[same]]
     for o in OFFS:
         if o == off: continue
-        x = cached(f"{CACHE}/opt/{sid}/{day}_{o}_{side}.csv.gz", lambda: dh.option(sid, day, o, side))
+        x = sameday(cached(f"{CACHE}/opt/{sid}/{day}_{o}_{side}.csv.gz", lambda: dh.option(sid, day, o, side)), day)
         if len(x): parts.append(x[(x.index >= ets) & ((x.strike - k).abs() < 1e-6)])
     s = pd.concat(parts); return s[~s.index.duplicated()].sort_index(), k
 
 
 def simulate(s, ets, e):
     """s: option candles (index start, o h l c) of the locked contract.  -> {(exit, sl, tp): (exit_price, exit_time, reason)} for every variant."""
-    a = s[s.index > ets]; res = {}
+    a = s[(s.index > ets) & (s.index.strftime("%Y-%m-%d") == ets.strftime("%Y-%m-%d"))]; res = {}      # same day only
     em = ets.hour * 60 + ets.minute
     for ex, xm in zip(EXITS, EXIT_MIN):
         if em >= xm: continue
@@ -261,6 +267,7 @@ def trade_rows(dh, ev, stats):
         side = r.side; pc = pick_contract(dh, sid, r.date, ets, side)
         if pc is None: stats[side]["no_option_candle_atm_or_itm"] += 1; continue
         off, label, d = pc; s, strike = locked_series(dh, sid, r.date, off, d, ets, side); e = float(d.c[ets])
+        if e < MIN_PREMIUM: stats[side]["premium_below_min"] = stats[side].get("premium_below_min", 0) + 1; continue
         if not r.lot: stats[side]["no_lot_size"] += 1; continue
         lots = int(CAP // (e * r.lot))
         if lots < 1: stats[side]["one_lot_too_expensive"] += 1; continue

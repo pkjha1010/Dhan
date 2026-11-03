@@ -62,7 +62,9 @@ class FakeDhan(P.Dhan):
             day = b["fromDate"]; off = b["strike"]
             if os.environ.get("NOATM") and off == "ATM": return {"data": {"ce": None, "pe": None}}
             k = "ce" if b["drvOptionType"] == "CALL" else "pe"
-            return {"data": {"ce": None, "pe": None, k: arrs(opt(day, "ATM-1" if off == "ATM+1" else off), ("strike", "spot"))}}
+            o1 = opt(day, "ATM-1" if off == "ATM+1" else off); nxt = (pd.Timestamp(day) + pd.offsets.BDay(1)).strftime("%Y-%m-%d")
+            o2 = opt(nxt, "ATM-1" if off == "ATM+1" else off); o2[["o", "h", "l", "c"]] = o2[["o", "h", "l", "c"]] * 50     # NEXT day, absurd prices: must never be used
+            return {"data": {"ce": None, "pe": None, k: arrs(pd.concat([o1, o2]), ("strike", "spot"))}}
 P.Dhan = FakeDhan
 P.load_master = lambda: ({"AAA": "1", "BBB": "2"}, {"AAA": 1000, "BBB": 500})
 P.BUDGET = 0
@@ -79,6 +81,7 @@ x = T[(T.stock == "AAA") & (T.exit_rule == "15:30") & (T.sl == 0) & (T.tp == 60)
 assert x.reason == "TP" and x.exit_time == "10:20" and abs(x.exit - 8.0) < 1e-9 or x.exit > 8   # gap fill: open 8.5 >= level 8.0
 y = T[(T.stock == "AAA") & (T.exit_rule == "15:30") & (T.sl == 0) & (T.tp == 0)].iloc[0]; assert y.reason == "TIME" and y.exit_time == "15:29"
 # 09:30 exit: entry 10:03 is after it -> no rows
+assert T.exit.max() < 20 and (T.exit_time > T.entry_time).all(), "next-day candles leaked into a same-day trade"
 assert not (T.exit_rule == "09:30").any() and not (T.exit_rule == "10:00").any() and (T.exit_rule == "12:00").any()
 # locked strike 106: after 11:00 the ATM series moves to 107, stitching must have fetched other offsets (or used none because candles end) -> series check
 s, k = P.locked_series(dh, "1", "2026-10-14", "ATM", P.cached("/tmp/po/cache/opt/1/2026-10-14_ATM_LONG.csv.gz", lambda: None), pd.Timestamp("2026-10-14 10:03"), "LONG")
