@@ -1,0 +1,2 @@
+slot,exit_rule,sl,tp,trades,win_pct,pnl,roi_pct,pf,trades_cut,win_pct_cut,pnl_cut,roi_pct_cut,pf_cut,sl_rule,tp_rule,survivor
+09:17-09:29,12:00,0,40,264,53.4,909355,6.6,1.72,237,48.1,168757,1.38,1.13,no SL,TP 40%,True
