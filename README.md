@@ -36,3 +36,14 @@ Setup: repo secrets `DHAN_ACCESS_TOKEN`, `DHAN_CLIENT_ID` (Settings -> Secrets a
 * No option data is re-fetched: a kept trade is exactly the same trade as in `gap_results`; the filter only removes trades. Days without NIFTY candles are dropped and counted.
 * Output in `gap_nifty_results/`: `COMPARE.md` / `compare.csv` (before vs after for every direction x exit x SL x TP), `{long,short}/trades_all_variants.csv.gz` (kept trades + `nifty_open`, `nifty_price`), `nifty_days.csv`, `survivors/`.
 * Actions -> "GAP NIFTY filter" -> `check` first, then `run`. Offline test: `python test_gap_nifty.py`.
+
+## BPB LONG backtest (breakout -> confirmed pullback -> re-cross, ATM call, full-day entry)
+
+`bpb_long_backtest.py` (+ `bpb_long_rules.py`, `test_bpb_long.py`, `bpb_long_report.py`, workflow **BPB LONG backtest**) - the BPB LONG setup on the real ATM / ITM calls with Dhan 1-minute candles, all F&O stocks, entry dates 2023-10-30 to 2026-10-30. Same engine, option rule (ATM, ITM-1..3 fallback, next-month series on the expiry day, entry-day candles only) and Rs 60,000 cap as the GAP study.
+
+* **Setup (Yahoo daily, same state machine as `bpb_fno_backtest.find_setups`)**: a close above the 10-day high (the line) -> entry level = highest High since the breakout -> candles must close at / above the line, one bearish candle confirms the pullback -> entry day = first later day whose High reaches the level. No open-price prefilter.
+* **Entry, checked the FULL DAY (09:15 to 15:20)**, two separate strategies: **type1** = first 1-minute candle whose High >= level; **type2** = after the first touch, >= 5 consecutive 1-minute closes below the level, then the first candle whose High >= level (avoids fake breakouts). The option price is the close of the entry minute.
+* **Grid**: stop-loss none / 20 / 40 / 60 % x target 60 / 80 / 100 / 120 % / none x time exit 15:00 / 15:30 = 40 variants per entry type. A trade entered at / after a time exit is skipped for that exit.
+* **Run**: Actions -> "BPB LONG backtest" -> `check`, then `run` (repeat until `PROGRESS.txt` says COMPLETE). Results in `bpb_long_results/` (`type1/`, `type2/`).
+* **NIFTY50 filter + top-10 % trim** (`bpb_long_report.py`, mode `report`, no API calls; runs automatically after `run` / `summary`): LONG only when NIFTY50 at the entry minute is above its day open (cached candles in `gap_nifty_results/`). Writes `bpb_long_nifty_results/` with `COMPARE.md` (before vs after), `TRIM10.md` / `SURVIVORS.csv` (survivors after cutting the best 10 % of trades, for no-filter and Nifty sets, whole day and per entry-time slot).
+* Offline test: `python test_bpb_long.py`.
