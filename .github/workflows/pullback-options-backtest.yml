@@ -1,0 +1,109 @@
+name: PULLBACK-OPTIONS backtest (10-day breakout / breakdown, pullback, re-cross; long = ATM call, short = ATM put at the exact minute; all F&O stocks, Dhan)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "check = test Dhan access (daily, minute, option series) | run = full backtest (resumable - run again until PROGRESS.txt says COMPLETE)"
+        type: choice
+        options: [check, run]
+        default: run
+      start:
+        description: "Start date YYYY-MM-DD (blank = 3 years back)"
+        required: false
+        default: ""
+      end:
+        description: "End date YYYY-MM-DD (blank = today)"
+        required: false
+        default: ""
+      symbols:
+        description: "Stocks (space or comma separated). Blank = all F&O stocks (use 2-3 for a quick test)"
+        required: false
+        default: ""
+      sides:
+        description: "LONG (calls), SHORT (puts) or both - each is reported separately"
+        type: choice
+        options: ["LONG,SHORT", "LONG", "SHORT"]
+        default: "LONG,SHORT"
+      nifty_mode:
+        description: "intraday = from 1-minute candles, Nifty above its day open at the entry minute | minute = Nifty 1-minute candle of the entry minute is green | daily_close = final day candle green (look-ahead) | none"
+        type: choice
+        options: [intraday, minute, daily_close, none]
+        default: intraday
+      sls:
+        description: "Stop-loss % list (0 = none)"
+        required: false
+        default: "0,20,40,60"
+      tps:
+        description: "Target % list (0 = none)"
+        required: false
+        default: "0,40,60,80,120"
+      cap:
+        description: "Max rupees per trade"
+        required: false
+        default: "60000"
+      out_dir:
+        description: "Result folder (use another name if you change dates / filter / grid)"
+        required: false
+        default: "pullback_options_results"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pullback-options-backtest
+  cancel-in-progress: false
+
+jobs:
+  pullback-options:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pandas numpy tabulate
+      - name: Offline logic test
+        run: python test_pullback_options.py
+      - name: Restore the downloaded-data cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ inputs.out_dir }}/cache
+          key: pbopt-${{ inputs.out_dir }}-${{ github.run_id }}
+          restore-keys: pbopt-${{ inputs.out_dir }}-
+      - name: Run
+        env:
+          DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
+          DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
+          PO_START: ${{ inputs.start }}
+          PO_END: ${{ inputs.end }}
+          PO_SYMBOLS: ${{ inputs.symbols }}
+          PO_SIDES: ${{ inputs.sides }}
+          PO_NIFTY_MODE: ${{ inputs.nifty_mode }}
+          PO_SLS: ${{ inputs.sls }}
+          PO_TPS: ${{ inputs.tps }}
+          PO_CAP: ${{ inputs.cap }}
+          PO_OUT: ${{ inputs.out_dir }}
+          PO_BUDGET_MIN: "320"
+        run: python pullback_options_backtest.py "${{ inputs.mode }}"
+      - name: Show the summary
+        if: always() && inputs.mode == 'run'
+        run: if [ -f "${{ inputs.out_dir }}/SUMMARY.md" ]; then cat "${{ inputs.out_dir }}/SUMMARY.md" >> "$GITHUB_STEP_SUMMARY"; fi
+      - name: Save results to the repo
+        if: always() && inputs.mode == 'run'
+        run: |
+          git config user.name "pullback-bot"; git config user.email "pullback-bot@users.noreply.github.com"
+          git add "${{ inputs.out_dir }}" ":!${{ inputs.out_dir }}/cache" || true
+          git commit -m "pullback options results" || echo "nothing new"
+          git pull --no-rebase -X ours --no-edit || true
+          git push || true
+      - name: Upload results
+        if: always() && inputs.mode == 'run'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pullback-options-${{ github.run_number }}
+          path: |
+            ${{ inputs.out_dir }}/
+            !${{ inputs.out_dir }}/cache/
+          if-no-files-found: ignore
