@@ -1,0 +1,139 @@
+name: ORB backtest (opening range breakout 09:15-09:30, LONG call + SHORT put, SL x TP x time-exit grid, Dhan 1-minute)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "check = test Dhan access + print the rules | run = full backtest (resumable - run again until it says ALL STEPS FINISHED) | summary = rebuild result files from saved data (no API calls; use it to narrow the date range)"
+        type: choice
+        options: [check, run, summary]
+        default: run
+      universe:
+        description: "Which stocks: top10 = 10 heaviest NIFTY50 stocks | nifty50 = the 50 index stocks | fno = all F&O stocks"
+        type: choice
+        options: [top10, nifty50, fno]
+        default: top10
+      start:
+        description: "Start date YYYY-MM-DD (entry dates)"
+        required: false
+        default: "2025-11-01"
+      end:
+        description: "End date YYYY-MM-DD (entry dates)"
+        required: false
+        default: "2026-11-10"
+      symbols:
+        description: "Own stock list (space / comma separated) - overrides the universe. Blank = use the universe"
+        required: false
+        default: ""
+      sls:
+        description: "Stop-losses: none | ORB (stock beyond the ORB low/high) | BRK (stock beyond the breakout candle low/high) | % of premium. Mixes ORB+20 ... BRK+60 (combined exit) are added automatically"
+        required: false
+        default: "none,ORB,BRK,20,40,60"
+      no_combine:
+        description: "1 = do not add the combined stop-loss mixes (ORB+20 ... BRK+60)"
+        required: false
+        default: "0"
+      tps:
+        description: "Targets, % of premium (0 = no target)"
+        required: false
+        default: "0,20,40,60"
+      exits:
+        description: "Time exits (same day), comma separated"
+        required: false
+        default: "10:00,12:00,15:00,15:30"
+      vol_mult:
+        description: "Volume filter: breakout candle volume >= this x the average of the previous N candles (0 = filter off)"
+        required: false
+        default: "1.5"
+      vol_n:
+        description: "Number of previous 1-minute candles for the volume average"
+        required: false
+        default: "10"
+      sl_buffer:
+        description: "% beyond the ORB / breakout-candle level before the stock stop counts as hit"
+        required: false
+        default: "0"
+      itm_max:
+        description: "Strike rule: ATM first, then ITM-1 .. ITM-n until a strike has a candle (0 = ATM only)"
+        required: false
+        default: "3"
+      entry_last:
+        description: "Last minute an entry is accepted"
+        required: false
+        default: "15:20"
+      out_dir:
+        description: "Result folder (blank = orb_results_<universe>). Use another name if you change any setting - the saved data belongs to one setting"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: orb-backtest
+  cancel-in-progress: false
+
+jobs:
+  orb:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install packages
+        run: pip install -r requirements.txt
+
+      - name: Offline logic test
+        run: python test_orb.py
+
+      - name: Result folder
+        run: echo "OUT=${{ inputs.out_dir || format('orb_results_{0}', inputs.universe) }}" >> "$GITHUB_ENV"
+
+      - name: Run
+        env:
+          DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
+          DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
+          ORB_UNIVERSE: ${{ inputs.universe }}
+          ORB_SYMBOLS: ${{ inputs.symbols }}
+          ORB_START: ${{ inputs.start }}
+          ORB_END: ${{ inputs.end }}
+          ORB_SLS: ${{ inputs.sls }}
+          ORB_NO_COMBINE: ${{ inputs.no_combine }}
+          ORB_TPS: ${{ inputs.tps }}
+          ORB_EXITS: ${{ inputs.exits }}
+          ORB_VOL_MULT: ${{ inputs.vol_mult }}
+          ORB_VOL_N: ${{ inputs.vol_n }}
+          ORB_SL_BUFFER: ${{ inputs.sl_buffer }}
+          ORB_ITM_MAX: ${{ inputs.itm_max }}
+          ORB_ENTRY_LAST: ${{ inputs.entry_last }}
+          ORB_OUT: ${{ env.OUT }}
+          BUDGET_MIN: "320"
+        run: python orb_backtest.py "${{ inputs.mode }}"
+
+      - name: Show the summary
+        if: always() && inputs.mode != 'check'
+        run: |
+          if [ -f "$OUT/SUMMARY.md" ]; then cat "$OUT/SUMMARY.md" >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - name: Save results to the repo
+        if: always() && inputs.mode != 'check'
+        run: |
+          git config user.name "orb-bot"
+          git config user.email "orb-bot@users.noreply.github.com"
+          git add "$OUT" || true
+          git commit -m "orb results" || echo "nothing new to commit"
+          git pull --no-rebase -X ours --no-edit || true
+          git push || true
+
+      - name: Upload results
+        if: always() && inputs.mode != 'check'
+        uses: actions/upload-artifact@v4
+        with:
+          name: orb-results-${{ github.run_number }}
+          path: ${{ env.OUT }}/
+          if-no-files-found: ignore
