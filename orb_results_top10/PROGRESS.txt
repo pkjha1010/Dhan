@@ -1,0 +1,1 @@
+2371 ORB entries in 2025-11-01..2026-11-10, 1286 with option data (68 dropped for option-candle coverage < 90%), 2 skipped
