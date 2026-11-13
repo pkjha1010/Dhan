@@ -60,3 +60,13 @@ Setup: repo secrets `DHAN_ACCESS_TOKEN`, `DHAN_CLIENT_ID` (Settings -> Secrets a
 * **Results** (`long/` and `short/` separate): `SUMMARY.md` (PnL / ROI / win % matrices per time exit, best variants), `summary.csv`, `matrix_*.csv`, `trades_all_variants.csv.gz`, `trades_best_variant.csv`, `entries.csv`. Max Rs 60,000 per trade (whole lots), no charges / slippage, today's lot sizes.
 * Data limits: Dhan allows 100,000 data calls a day. A big universe x long range (fno x 3 years) takes several days - progress is saved, just run again. Start with `top10` and a short range.
 * Offline test (no login): `python test_orb.py` - the combined exit is checked against a minute-by-minute brute force.
+
+## OPENDROP backtest (open-drop retest, LONG call, SL x TP x time-exit grid)
+
+`opendrop_backtest.py` (+ `opendrop_rules.py`, `test_opendrop.py`, workflow **OPENDROP backtest**) - your Nifty-50 hourly stock script (no stop-loss, +2 % stock target) tested on the real ATM / ITM **call options of all F&O stocks** with Dhan 1-minute candles, entry dates 2025-11-12 to 2026-11-12 (1 year).
+
+* **Setup (same as the original script; `test_opendrop.py` proves it equals the original loop on random data)**: day i - the first hourly candle (09:15-10:15) is red and falls more than 1 % (open to close); its close = LEVEL; NIFTY50 hourly slope (20 candles) >= -0.5 on day i. Drop day = first of i+1..i+3 that trades <= LEVEL x 0.99. Entry day = first of drop day+1..+5 that trades >= LEVEL.
+* **Entry**: the first 1-minute candle (09:15 to 15:20) of the entry day whose High >= LEVEL; option price = close of that minute.
+* **Option**: ATM call; if the ATM series has no candle at the entry minute, ITM-1, ITM-2, ITM-3. Entry-day candles only; on the monthly-expiry day the next month's series is used. `strike_offset` is stored per trade.
+* **Grid**: stop-loss none / 20 / 40 / 60 % x target 40 / 60 / 80 / 120 % / none x time exit 09:30 / 10:00 / 12:00 / 15:00 / 15:30 (same day) = 100 variants. Fills on 1-minute low / high; stop and target in one minute = stop. Max Rs 60,000 per trade, no charges / slippage.
+* **Run**: Actions -> "OPENDROP backtest" -> `check`, then `run` (repeat until `PROGRESS.txt` says COMPLETE). Results in `opendrop_results/` (`SUMMARY.md`, `long/` with `SUMMARY.md`, `summary.csv`, `matrix_*.csv`, `trades_all_variants.csv.gz`, `trades_best_variant.csv`, `entries.csv`). Offline test: `python test_opendrop.py`.
