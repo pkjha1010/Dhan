@@ -1,0 +1,3 @@
+source,stock,direction,ref,signal_date,date,yahoo_open,breakout_date,line,green,red,upper_longer,lower_longer
+TL_1H,AXISBANK,LONG,1297.0,2026-01-07,2026-01-08,1291.1,2026-01-07,1294.2,0,1,0,1
+TL_1H,AXISBANK,LONG,1358.0,2026-04-16,2026-04-17,1353.0,2026-04-16,1347.36,0,1,0,1
