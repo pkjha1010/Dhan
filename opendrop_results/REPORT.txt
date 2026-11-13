@@ -3,40 +3,40 @@ Variants: 4 stop-loss x 5 targets x 5 exits = 100 per strategy, 1 strategies; 10
 
 Entries by strategy:
      strategy  signals_with_entry  entries_with_option_data  dropped_low_coverage  skipped_no_option_data
-OPENDROP_LONG                1550                       488                    26                      55
+OPENDROP_LONG                1550                       536                    30                      56
 
 TOP 15 BY TOTAL PnL (min 30 trades):
                              variant  trades  win_pct  total_pnl  roi_pct  profit_factor  avg_days_held  max_days_held
- OPENDROP_LONG | 12:00 | SL40 | TP80     388    46.91     796784     4.05           1.49            0.0              0
-OPENDROP_LONG | 12:00 | SL40 | TP120     388    46.91     744811     3.79           1.45            0.0              0
- OPENDROP_LONG | 15:00 | SL40 | TP80     449    44.32     740670     3.24           1.33            0.0              0
- OPENDROP_LONG | 15:00 | SL40 | TP40     449    46.77     708952     3.10           1.32            0.0              0
- OPENDROP_LONG | 12:00 | SL60 | TP80     388    46.91     701498     3.57           1.40            0.0              0
- OPENDROP_LONG | 10:00 | SL40 | TP80     320    51.56     684106     4.25           1.68            0.0              0
- OPENDROP_LONG | 15:30 | SL40 | TP40     460    47.83     683985     2.92           1.29            0.0              0
-  OPENDROP_LONG | 12:00 | SL0 | TP80     388    46.91     679787     3.46           1.39            0.0              0
- OPENDROP_LONG | 15:30 | SL20 | TP40     460    44.13     671360     2.87           1.32            0.0              0
- OPENDROP_LONG | 12:00 | SL40 | TP60     388    46.91     666597     3.39           1.41            0.0              0
- OPENDROP_LONG | 15:30 | SL40 | TP80     460    45.22     663834     2.84           1.27            0.0              0
-OPENDROP_LONG | 10:00 | SL40 | TP120     320    51.56     653579     4.06           1.65            0.0              0
- OPENDROP_LONG | 10:00 | SL20 | TP80     320    50.31     652642     4.05           1.69            0.0              0
-OPENDROP_LONG | 12:00 | SL60 | TP120     388    46.91     649526     3.30           1.37            0.0              0
-  OPENDROP_LONG | 10:00 | SL0 | TP80     320    51.56     642686     3.99           1.61            0.0              0
+ OPENDROP_LONG | 12:00 | SL40 | TP80     426    45.31     617137     2.85           1.33            0.0              0
+ OPENDROP_LONG | 09:30 | SL60 | TP80     309    53.07     615708     3.96           1.88            0.0              0
+  OPENDROP_LONG | 09:30 | SL0 | TP80     309    53.07     612074     3.94           1.87            0.0              0
+OPENDROP_LONG | 09:30 | SL60 | TP120     309    53.07     608133     3.91           1.87            0.0              0
+  OPENDROP_LONG | 09:30 | SL60 | TP0     309    53.07     607126     3.91           1.87            0.0              0
+ OPENDROP_LONG | 09:30 | SL40 | TP80     309    53.07     606016     3.90           1.86            0.0              0
+ OPENDROP_LONG | 09:30 | SL0 | TP120     309    53.07     604499     3.89           1.86            0.0              0
+   OPENDROP_LONG | 09:30 | SL0 | TP0     309    53.07     603492     3.88           1.86            0.0              0
+OPENDROP_LONG | 09:30 | SL40 | TP120     309    53.07     598441     3.85           1.84            0.0              0
+  OPENDROP_LONG | 09:30 | SL40 | TP0     309    53.07     597434     3.84           1.84            0.0              0
+ OPENDROP_LONG | 10:00 | SL40 | TP80     354    50.56     584582     3.27           1.50            0.0              0
+ OPENDROP_LONG | 09:30 | SL60 | TP60     309    53.07     570862     3.67           1.82            0.0              0
+ OPENDROP_LONG | 15:00 | SL40 | TP80     492    43.09     570648     2.28           1.22            0.0              0
+ OPENDROP_LONG | 10:00 | SL20 | TP80     354    49.44     569237     3.19           1.52            0.0              0
+ OPENDROP_LONG | 09:30 | SL20 | TP80     309    52.10     567244     3.65           1.78            0.0              0
 
 TOP 15 BY ROI (min 30 trades):
                              variant  trades  win_pct  total_pnl  roi_pct  profit_factor  avg_days_held  max_days_held
- OPENDROP_LONG | 09:30 | SL60 | TP80     280    53.93     617802     4.40           1.99            0.0              0
- OPENDROP_LONG | 09:30 | SL40 | TP80     280    53.93     613906     4.37           1.98            0.0              0
-  OPENDROP_LONG | 09:30 | SL0 | TP80     280    53.93     614168     4.37           1.98            0.0              0
-  OPENDROP_LONG | 09:30 | SL60 | TP0     280    53.93     609219     4.34           1.98            0.0              0
-OPENDROP_LONG | 09:30 | SL60 | TP120     280    53.93     610227     4.34           1.98            0.0              0
- OPENDROP_LONG | 09:30 | SL0 | TP120     280    53.93     606593     4.32           1.97            0.0              0
-   OPENDROP_LONG | 09:30 | SL0 | TP0     280    53.93     605586     4.31           1.97            0.0              0
-OPENDROP_LONG | 09:30 | SL40 | TP120     280    53.93     606331     4.31           1.97            0.0              0
-  OPENDROP_LONG | 09:30 | SL40 | TP0     280    53.93     605323     4.31           1.97            0.0              0
- OPENDROP_LONG | 10:00 | SL40 | TP80     320    51.56     684106     4.25           1.68            0.0              0
- OPENDROP_LONG | 09:30 | SL60 | TP60     280    53.93     572956     4.08           1.92            0.0              0
-OPENDROP_LONG | 10:00 | SL40 | TP120     320    51.56     653579     4.06           1.65            0.0              0
-  OPENDROP_LONG | 09:30 | SL0 | TP60     280    53.93     569322     4.05           1.91            0.0              0
- OPENDROP_LONG | 09:30 | SL40 | TP60     280    53.93     569060     4.05           1.91            0.0              0
- OPENDROP_LONG | 10:00 | SL20 | TP80     320    50.31     652642     4.05           1.69            0.0              0
+ OPENDROP_LONG | 09:30 | SL60 | TP80     309    53.07     615708     3.96           1.88            0.0              0
+  OPENDROP_LONG | 09:30 | SL0 | TP80     309    53.07     612074     3.94           1.87            0.0              0
+OPENDROP_LONG | 09:30 | SL60 | TP120     309    53.07     608133     3.91           1.87            0.0              0
+  OPENDROP_LONG | 09:30 | SL60 | TP0     309    53.07     607126     3.91           1.87            0.0              0
+ OPENDROP_LONG | 09:30 | SL40 | TP80     309    53.07     606016     3.90           1.86            0.0              0
+ OPENDROP_LONG | 09:30 | SL0 | TP120     309    53.07     604499     3.89           1.86            0.0              0
+   OPENDROP_LONG | 09:30 | SL0 | TP0     309    53.07     603492     3.88           1.86            0.0              0
+OPENDROP_LONG | 09:30 | SL40 | TP120     309    53.07     598441     3.85           1.84            0.0              0
+  OPENDROP_LONG | 09:30 | SL40 | TP0     309    53.07     597434     3.84           1.84            0.0              0
+ OPENDROP_LONG | 09:30 | SL60 | TP60     309    53.07     570862     3.67           1.82            0.0              0
+ OPENDROP_LONG | 09:30 | SL20 | TP80     309    52.10     567244     3.65           1.78            0.0              0
+  OPENDROP_LONG | 09:30 | SL0 | TP60     309    53.07     567228     3.65           1.81            0.0              0
+ OPENDROP_LONG | 09:30 | SL40 | TP60     309    53.07     561170     3.61           1.79            0.0              0
+ OPENDROP_LONG | 09:30 | SL60 | TP40     309    53.40     560034     3.60           1.81            0.0              0
+OPENDROP_LONG | 09:30 | SL20 | TP120     309    52.10     559669     3.60           1.77            0.0              0

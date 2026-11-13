@@ -1,6 +1,6 @@
 # OPEN-DROP RETEST - LONG (ATM call) - SL x TP x time-exit grid
 
-**Status:** PARTIAL - 1414 of 2421 request groups finished. Results cover only the finished part. Run again to continue.
+**Status:** PARTIAL - 1463 of 2421 request groups finished. Results cover only the finished part. Run again to continue.
 
 **Period (entry dates):** 2025-11-12 to 2026-11-12  |  **Stocks:** all F&O stocks with Dhan data (210 tried)  |  **Capital per trade:** up to Rs 60,000 (whole lots)
 
@@ -14,195 +14,195 @@ first hourly candle falls > 1% (red) on day i -> a day i+1..i+3 trades <= 1% bel
 
 | strategy      |   signals_with_entry |   entries_with_option_data |   dropped_low_coverage |   skipped_no_option_data | skip_reasons                                                                                               |
 |:--------------|---------------------:|---------------------------:|-----------------------:|-------------------------:|:-----------------------------------------------------------------------------------------------------------|
-| OPENDROP_LONG |                 1550 |                        488 |                     26 |                       55 | Dhan returned no option candles for this period = 48; no ATM / ITM-1..ITM-3 candle at the entry minute = 7 |
+| OPENDROP_LONG |                 1550 |                        536 |                     30 |                       56 | Dhan returned no option candles for this period = 49; no ATM / ITM-1..ITM-3 candle at the entry minute = 7 |
 
 ## Strike used
 
-strike_offset 0 = ATM, -n = ITM-n (the ATM series had no candle at the entry minute): -2: 1, -1: 3, 0: 484
+strike_offset 0 = ATM, -n = ITM-n (the ATM series had no candle at the entry minute): -2: 1, -1: 5, 0: 530
 
 ## Exit 09:30
 
-**Total PnL (Rs)** (rows stop-loss, columns target)  -  trades per variant: 280-280
+**Total PnL (Rs)** (rows stop-loss, columns target)  -  trades per variant: 309-309
 
 | stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
 |:------------|---------:|---------:|---------:|----------:|--------:|
-| no SL       |   526751 |   569322 |   614168 |    606593 |  605586 |
-| SL 20%      |   480639 |   523210 |   568055 |    560481 |  559473 |
-| SL 40%      |   526489 |   569060 |   613906 |    606331 |  605323 |
-| SL 60%      |   530385 |   572956 |   617802 |    610227 |  609219 |
+| no SL       |   556401 |   567228 |   612074 |    604499 |  603492 |
+| SL 20%      |   511571 |   522398 |   567244 |    559669 |  558662 |
+| SL 40%      |   550342 |   561170 |   606016 |    598441 |  597434 |
+| SL 60%      |   560034 |   570862 |   615708 |    608133 |  607126 |
 
-**ROI % on capital used** (rows stop-loss, columns target)  -  trades per variant: 280-280
-
-| stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
-|:------------|---------:|---------:|---------:|----------:|--------:|
-| no SL       |     3.75 |     4.05 |     4.37 |      4.32 |    4.31 |
-| SL 20%      |     3.42 |     3.72 |     4.04 |      3.99 |    3.98 |
-| SL 40%      |     3.75 |     4.05 |     4.37 |      4.31 |    4.31 |
-| SL 60%      |     3.77 |     4.08 |     4.4  |      4.34 |    4.34 |
-
-**Win %** (rows stop-loss, columns target)  -  trades per variant: 280-280
+**ROI % on capital used** (rows stop-loss, columns target)  -  trades per variant: 309-309
 
 | stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
 |:------------|---------:|---------:|---------:|----------:|--------:|
-| no SL       |    53.93 |    53.93 |    53.93 |     53.93 |   53.93 |
-| SL 20%      |    52.86 |    52.86 |    52.86 |     52.86 |   52.86 |
-| SL 40%      |    53.93 |    53.93 |    53.93 |     53.93 |   53.93 |
-| SL 60%      |    53.93 |    53.93 |    53.93 |     53.93 |   53.93 |
+| no SL       |     3.58 |     3.65 |     3.94 |      3.89 |    3.88 |
+| SL 20%      |     3.29 |     3.36 |     3.65 |      3.6  |    3.59 |
+| SL 40%      |     3.54 |     3.61 |     3.9  |      3.85 |    3.84 |
+| SL 60%      |     3.6  |     3.67 |     3.96 |      3.91 |    3.91 |
+
+**Win %** (rows stop-loss, columns target)  -  trades per variant: 309-309
+
+| stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
+|:------------|---------:|---------:|---------:|----------:|--------:|
+| no SL       |    53.4  |    53.07 |    53.07 |     53.07 |   53.07 |
+| SL 20%      |    52.43 |    52.1  |    52.1  |     52.1  |   52.1  |
+| SL 40%      |    53.4  |    53.07 |    53.07 |     53.07 |   53.07 |
+| SL 60%      |    53.4  |    53.07 |    53.07 |     53.07 |   53.07 |
 
 ## Exit 10:00
 
-**Total PnL (Rs)** (rows stop-loss, columns target)  -  trades per variant: 320-320
+**Total PnL (Rs)** (rows stop-loss, columns target)  -  trades per variant: 354-354
 
 | stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
 |:------------|---------:|---------:|---------:|----------:|--------:|
-| no SL       |   430817 |   574567 |   642686 |    612159 |  581934 |
-| SL 20%      |   456501 |   599102 |   652642 |    624274 |  594049 |
-| SL 40%      |   472238 |   615987 |   684106 |    653579 |  623354 |
-| SL 60%      |   424525 |   568274 |   636394 |    605866 |  575641 |
+| no SL       |   392622 |   487858 |   555977 |    525450 |  495225 |
+| SL 20%      |   417872 |   515698 |   569237 |    540870 |  510645 |
+| SL 40%      |   421226 |   516462 |   584582 |    554054 |  523829 |
+| SL 60%      |   386329 |   481566 |   549685 |    519157 |  488932 |
 
-**ROI % on capital used** (rows stop-loss, columns target)  -  trades per variant: 320-320
-
-| stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
-|:------------|---------:|---------:|---------:|----------:|--------:|
-| no SL       |     2.68 |     3.57 |     3.99 |      3.8  |    3.61 |
-| SL 20%      |     2.84 |     3.72 |     4.05 |      3.88 |    3.69 |
-| SL 40%      |     2.93 |     3.83 |     4.25 |      4.06 |    3.87 |
-| SL 60%      |     2.64 |     3.53 |     3.95 |      3.76 |    3.58 |
-
-**Win %** (rows stop-loss, columns target)  -  trades per variant: 320-320
+**ROI % on capital used** (rows stop-loss, columns target)  -  trades per variant: 354-354
 
 | stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
 |:------------|---------:|---------:|---------:|----------:|--------:|
-| no SL       |    51.56 |    51.56 |    51.56 |     51.56 |   51.56 |
-| SL 20%      |    50.31 |    50.31 |    50.31 |     50.31 |   50.31 |
-| SL 40%      |    51.56 |    51.56 |    51.56 |     51.56 |   51.56 |
-| SL 60%      |    51.56 |    51.56 |    51.56 |     51.56 |   51.56 |
+| no SL       |     2.2  |     2.73 |     3.11 |      2.94 |    2.77 |
+| SL 20%      |     2.34 |     2.89 |     3.19 |      3.03 |    2.86 |
+| SL 40%      |     2.36 |     2.89 |     3.27 |      3.1  |    2.93 |
+| SL 60%      |     2.16 |     2.7  |     3.08 |      2.91 |    2.74 |
+
+**Win %** (rows stop-loss, columns target)  -  trades per variant: 354-354
+
+| stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
+|:------------|---------:|---------:|---------:|----------:|--------:|
+| no SL       |    50.85 |    50.56 |    50.56 |     50.56 |   50.56 |
+| SL 20%      |    49.72 |    49.44 |    49.44 |     49.44 |   49.44 |
+| SL 40%      |    50.85 |    50.56 |    50.56 |     50.56 |   50.56 |
+| SL 60%      |    50.85 |    50.56 |    50.56 |     50.56 |   50.56 |
 
 ## Exit 12:00
 
-**Total PnL (Rs)** (rows stop-loss, columns target)  -  trades per variant: 388-388
+**Total PnL (Rs)** (rows stop-loss, columns target)  -  trades per variant: 426-426
 
 | stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
 |:------------|---------:|---------:|---------:|----------:|--------:|
-| no SL       |   483293 |   549600 |   679787 |    627814 |  483916 |
-| SL 20%      |   448572 |   516441 |   636540 |    563507 |  423929 |
-| SL 40%      |   600290 |   666597 |   796784 |    744811 |  600913 |
-| SL 60%      |   505004 |   571312 |   701498 |    649526 |  505627 |
+| no SL       |   376183 |   387895 |   518082 |    466109 |  322211 |
+| SL 20%      |   328652 |   362359 |   482458 |    409425 |  269847 |
+| SL 40%      |   466502 |   486950 |   617137 |    565164 |  421266 |
+| SL 60%      |   397895 |   409607 |   539793 |    487821 |  343922 |
 
-**ROI % on capital used** (rows stop-loss, columns target)  -  trades per variant: 388-388
-
-| stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
-|:------------|---------:|---------:|---------:|----------:|--------:|
-| no SL       |     2.46 |     2.8  |     3.46 |      3.19 |    2.46 |
-| SL 20%      |     2.28 |     2.63 |     3.24 |      2.87 |    2.16 |
-| SL 40%      |     3.05 |     3.39 |     4.05 |      3.79 |    3.06 |
-| SL 60%      |     2.57 |     2.91 |     3.57 |      3.3  |    2.57 |
-
-**Win %** (rows stop-loss, columns target)  -  trades per variant: 388-388
+**ROI % on capital used** (rows stop-loss, columns target)  -  trades per variant: 426-426
 
 | stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
 |:------------|---------:|---------:|---------:|----------:|--------:|
-| no SL       |    47.68 |    46.91 |    46.91 |     46.91 |   46.91 |
-| SL 20%      |    44.85 |    44.07 |    44.07 |     44.07 |   44.07 |
-| SL 40%      |    47.68 |    46.91 |    46.91 |     46.91 |   46.91 |
-| SL 60%      |    47.68 |    46.91 |    46.91 |     46.91 |   46.91 |
+| no SL       |     1.74 |     1.79 |     2.39 |      2.15 |    1.49 |
+| SL 20%      |     1.52 |     1.67 |     2.23 |      1.89 |    1.25 |
+| SL 40%      |     2.16 |     2.25 |     2.85 |      2.61 |    1.95 |
+| SL 60%      |     1.84 |     1.89 |     2.49 |      2.25 |    1.59 |
+
+**Win %** (rows stop-loss, columns target)  -  trades per variant: 426-426
+
+| stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
+|:------------|---------:|---------:|---------:|----------:|--------:|
+| no SL       |    46.24 |    45.31 |    45.31 |     45.31 |   45.31 |
+| SL 20%      |    43.43 |    42.49 |    42.49 |     42.49 |   42.49 |
+| SL 40%      |    46.24 |    45.31 |    45.31 |     45.31 |   45.31 |
+| SL 60%      |    46.24 |    45.31 |    45.31 |     45.31 |   45.31 |
 
 ## Exit 15:00
 
-**Total PnL (Rs)** (rows stop-loss, columns target)  -  trades per variant: 449-449
+**Total PnL (Rs)** (rows stop-loss, columns target)  -  trades per variant: 492-492
 
 | stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
 |:------------|---------:|---------:|---------:|----------:|--------:|
-| no SL       |   632153 |   495102 |   614687 |    487511 |  343453 |
-| SL 20%      |   587025 |   500557 |   564063 |    394645 |  228641 |
-| SL 40%      |   708952 |   621085 |   740670 |    610807 |  461219 |
-| SL 60%      |   592719 |   455669 |   575253 |    448077 |  304019 |
+| no SL       |   465547 |   311405 |   453287 |    316503 |  172445 |
+| SL 20%      |   454619 |   345561 |   418607 |    249909 |   83905 |
+| SL 40%      |   536644 |   428766 |   570648 |    431178 |  281590 |
+| SL 60%      |   426114 |   256536 |   398418 |    261634 |  117576 |
 
-**ROI % on capital used** (rows stop-loss, columns target)  -  trades per variant: 449-449
-
-| stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
-|:------------|---------:|---------:|---------:|----------:|--------:|
-| no SL       |     2.77 |     2.17 |     2.69 |      2.13 |    1.5  |
-| SL 20%      |     2.57 |     2.19 |     2.47 |      1.73 |    1    |
-| SL 40%      |     3.1  |     2.72 |     3.24 |      2.67 |    2.02 |
-| SL 60%      |     2.59 |     1.99 |     2.52 |      1.96 |    1.33 |
-
-**Win %** (rows stop-loss, columns target)  -  trades per variant: 449-449
+**ROI % on capital used** (rows stop-loss, columns target)  -  trades per variant: 492-492
 
 | stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
 |:------------|---------:|---------:|---------:|----------:|--------:|
-| no SL       |    47.22 |    44.99 |    44.54 |     44.1  |   43.88 |
-| SL 20%      |    42.32 |    40.76 |    40.31 |     39.64 |   39.2  |
-| SL 40%      |    46.77 |    44.77 |    44.32 |     43.88 |   43.65 |
-| SL 60%      |    46.99 |    44.77 |    44.32 |     43.88 |   43.65 |
+| no SL       |     1.86 |     1.24 |     1.81 |      1.26 |    0.69 |
+| SL 20%      |     1.81 |     1.38 |     1.67 |      1    |    0.33 |
+| SL 40%      |     2.14 |     1.71 |     2.28 |      1.72 |    1.12 |
+| SL 60%      |     1.7  |     1.02 |     1.59 |      1.04 |    0.47 |
+
+**Win %** (rows stop-loss, columns target)  -  trades per variant: 492-492
+
+| stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
+|:------------|---------:|---------:|---------:|----------:|--------:|
+| no SL       |    45.93 |    43.7  |    43.29 |     42.89 |   42.68 |
+| SL 20%      |    41.26 |    39.63 |    39.23 |     38.62 |   38.21 |
+| SL 40%      |    45.53 |    43.5  |    43.09 |     42.68 |   42.48 |
+| SL 60%      |    45.73 |    43.5  |    43.09 |     42.68 |   42.48 |
 
 ## Exit 15:30
 
-**Total PnL (Rs)** (rows stop-loss, columns target)  -  trades per variant: 460-460
+**Total PnL (Rs)** (rows stop-loss, columns target)  -  trades per variant: 504-504
 
 | stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
 |:------------|---------:|---------:|---------:|----------:|--------:|
-| no SL       |   572653 |   389623 |   491630 |    399875 |  248031 |
-| SL 20%      |   671360 |   569360 |   636979 |    512216 |  270333 |
-| SL 40%      |   683985 |   561139 |   663834 |    575663 |  398934 |
-| SL 60%      |   576493 |   396351 |   498358 |    406603 |  254759 |
+| no SL       |   430047 |   215705 |   340010 |    245352 |   93508 |
+| SL 20%      |   559833 |   423227 |   500386 |    375758 |  133875 |
+| SL 40%      |   548641 |   393769 |   518762 |    427688 |  250959 |
+| SL 60%      |   432627 |   207943 |   332248 |    237590 |   85746 |
 
-**ROI % on capital used** (rows stop-loss, columns target)  -  trades per variant: 460-460
-
-| stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
-|:------------|---------:|---------:|---------:|----------:|--------:|
-| no SL       |     2.45 |     1.67 |     2.1  |      1.71 |    1.06 |
-| SL 20%      |     2.87 |     2.43 |     2.72 |      2.19 |    1.16 |
-| SL 40%      |     2.92 |     2.4  |     2.84 |      2.46 |    1.71 |
-| SL 60%      |     2.46 |     1.69 |     2.13 |      1.74 |    1.09 |
-
-**Win %** (rows stop-loss, columns target)  -  trades per variant: 460-460
+**ROI % on capital used** (rows stop-loss, columns target)  -  trades per variant: 504-504
 
 | stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
 |:------------|---------:|---------:|---------:|----------:|--------:|
-| no SL       |    48.26 |    45.87 |    45.43 |     45    |   45    |
-| SL 20%      |    44.13 |    41.96 |    41.52 |     40.87 |   40.43 |
-| SL 40%      |    47.83 |    45.65 |    45.22 |     44.78 |   44.57 |
-| SL 60%      |    48.04 |    45.65 |    45.22 |     44.78 |   44.78 |
+| no SL       |     1.68 |     0.84 |     1.33 |      0.96 |    0.36 |
+| SL 20%      |     2.18 |     1.65 |     1.95 |      1.46 |    0.52 |
+| SL 40%      |     2.14 |     1.53 |     2.02 |      1.67 |    0.98 |
+| SL 60%      |     1.69 |     0.81 |     1.29 |      0.93 |    0.33 |
+
+**Win %** (rows stop-loss, columns target)  -  trades per variant: 504-504
+
+| stop_loss   |   TP 40% |   TP 60% |   TP 80% |   TP 120% |   no TP |
+|:------------|---------:|---------:|---------:|----------:|--------:|
+| no SL       |    47.22 |    44.84 |    44.44 |     44.05 |   44.05 |
+| SL 20%      |    43.25 |    41.07 |    40.67 |     40.08 |   39.68 |
+| SL 40%      |    46.83 |    44.64 |    44.25 |     43.85 |   43.65 |
+| SL 60%      |    47.02 |    44.64 |    44.25 |     43.85 |   43.85 |
 
 ## Best variant by total PnL
 
 | strategy      | exit_rule   | sl_rule   | tp_rule   |   trades |   win_pct |   total_pnl |   roi_pct |   profit_factor |   max_drawdown |
 |:--------------|:------------|:----------|:----------|---------:|----------:|------------:|----------:|----------------:|---------------:|
-| OPENDROP_LONG | 12:00       | SL 40%    | TP 80%    |      388 |     46.91 |      796784 |      4.05 |            1.49 |        -297996 |
+| OPENDROP_LONG | 12:00       | SL 40%    | TP 80%    |      426 |     45.31 |      617137 |      2.85 |            1.33 |        -360970 |
 
 ## Top 10 variants by ROI (at least 30 trades)
 
 | strategy      | exit_rule   | sl_rule   | tp_rule   |   trades |   win_pct |   total_pnl |   roi_pct |   profit_factor |   max_drawdown |
 |:--------------|:------------|:----------|:----------|---------:|----------:|------------:|----------:|----------------:|---------------:|
-| OPENDROP_LONG | 09:30       | SL 60%    | TP 80%    |      280 |     53.93 |      617802 |      4.4  |            1.99 |        -124094 |
-| OPENDROP_LONG | 09:30       | SL 40%    | TP 80%    |      280 |     53.93 |      613906 |      4.37 |            1.98 |        -123712 |
-| OPENDROP_LONG | 09:30       | no SL     | TP 80%    |      280 |     53.93 |      614168 |      4.37 |            1.98 |        -124094 |
-| OPENDROP_LONG | 09:30       | SL 60%    | no TP     |      280 |     53.93 |      609219 |      4.34 |            1.98 |        -124094 |
-| OPENDROP_LONG | 09:30       | SL 60%    | TP 120%   |      280 |     53.93 |      610227 |      4.34 |            1.98 |        -124094 |
-| OPENDROP_LONG | 09:30       | no SL     | TP 120%   |      280 |     53.93 |      606593 |      4.32 |            1.97 |        -124094 |
-| OPENDROP_LONG | 09:30       | no SL     | no TP     |      280 |     53.93 |      605586 |      4.31 |            1.97 |        -124094 |
-| OPENDROP_LONG | 09:30       | SL 40%    | TP 120%   |      280 |     53.93 |      606331 |      4.31 |            1.97 |        -123712 |
-| OPENDROP_LONG | 09:30       | SL 40%    | no TP     |      280 |     53.93 |      605323 |      4.31 |            1.97 |        -123712 |
-| OPENDROP_LONG | 10:00       | SL 40%    | TP 80%    |      320 |     51.56 |      684106 |      4.25 |            1.68 |        -147608 |
+| OPENDROP_LONG | 09:30       | SL 60%    | TP 80%    |      309 |     53.07 |      615708 |      3.96 |            1.88 |        -145016 |
+| OPENDROP_LONG | 09:30       | no SL     | TP 80%    |      309 |     53.07 |      612074 |      3.94 |            1.87 |        -145016 |
+| OPENDROP_LONG | 09:30       | SL 60%    | TP 120%   |      309 |     53.07 |      608133 |      3.91 |            1.87 |        -145016 |
+| OPENDROP_LONG | 09:30       | SL 60%    | no TP     |      309 |     53.07 |      607126 |      3.91 |            1.87 |        -145016 |
+| OPENDROP_LONG | 09:30       | SL 40%    | TP 80%    |      309 |     53.07 |      606016 |      3.9  |            1.86 |        -150429 |
+| OPENDROP_LONG | 09:30       | no SL     | TP 120%   |      309 |     53.07 |      604499 |      3.89 |            1.86 |        -145016 |
+| OPENDROP_LONG | 09:30       | no SL     | no TP     |      309 |     53.07 |      603492 |      3.88 |            1.86 |        -145016 |
+| OPENDROP_LONG | 09:30       | SL 40%    | TP 120%   |      309 |     53.07 |      598441 |      3.85 |            1.84 |        -150429 |
+| OPENDROP_LONG | 09:30       | SL 40%    | no TP     |      309 |     53.07 |      597434 |      3.84 |            1.84 |        -150429 |
+| OPENDROP_LONG | 09:30       | SL 60%    | TP 60%    |      309 |     53.07 |      570862 |      3.67 |            1.82 |        -145016 |
 
 ## Top 10 variants by total PnL (at least 30 trades)
 
 | strategy      | exit_rule   | sl_rule   | tp_rule   |   trades |   win_pct |   total_pnl |   roi_pct |   profit_factor |   max_drawdown |
 |:--------------|:------------|:----------|:----------|---------:|----------:|------------:|----------:|----------------:|---------------:|
-| OPENDROP_LONG | 12:00       | SL 40%    | TP 80%    |      388 |     46.91 |      796784 |      4.05 |            1.49 |        -297996 |
-| OPENDROP_LONG | 12:00       | SL 40%    | TP 120%   |      388 |     46.91 |      744811 |      3.79 |            1.45 |        -299184 |
-| OPENDROP_LONG | 15:00       | SL 40%    | TP 80%    |      449 |     44.32 |      740670 |      3.24 |            1.33 |        -380226 |
-| OPENDROP_LONG | 15:00       | SL 40%    | TP 40%    |      449 |     46.77 |      708952 |      3.1  |            1.32 |        -333133 |
-| OPENDROP_LONG | 12:00       | SL 60%    | TP 80%    |      388 |     46.91 |      701498 |      3.57 |            1.4  |        -328013 |
-| OPENDROP_LONG | 10:00       | SL 40%    | TP 80%    |      320 |     51.56 |      684106 |      4.25 |            1.68 |        -147608 |
-| OPENDROP_LONG | 15:30       | SL 40%    | TP 40%    |      460 |     47.83 |      683985 |      2.92 |            1.29 |        -367506 |
-| OPENDROP_LONG | 12:00       | no SL     | TP 80%    |      388 |     46.91 |      679787 |      3.46 |            1.39 |        -335593 |
-| OPENDROP_LONG | 15:30       | SL 20%    | TP 40%    |      460 |     44.13 |      671360 |      2.87 |            1.32 |        -244370 |
-| OPENDROP_LONG | 12:00       | SL 40%    | TP 60%    |      388 |     46.91 |      666597 |      3.39 |            1.41 |        -291497 |
+| OPENDROP_LONG | 12:00       | SL 40%    | TP 80%    |      426 |     45.31 |      617137 |      2.85 |            1.33 |        -360970 |
+| OPENDROP_LONG | 09:30       | SL 60%    | TP 80%    |      309 |     53.07 |      615708 |      3.96 |            1.88 |        -145016 |
+| OPENDROP_LONG | 09:30       | no SL     | TP 80%    |      309 |     53.07 |      612074 |      3.94 |            1.87 |        -145016 |
+| OPENDROP_LONG | 09:30       | SL 60%    | TP 120%   |      309 |     53.07 |      608133 |      3.91 |            1.87 |        -145016 |
+| OPENDROP_LONG | 09:30       | SL 60%    | no TP     |      309 |     53.07 |      607126 |      3.91 |            1.87 |        -145016 |
+| OPENDROP_LONG | 09:30       | SL 40%    | TP 80%    |      309 |     53.07 |      606016 |      3.9  |            1.86 |        -150429 |
+| OPENDROP_LONG | 09:30       | no SL     | TP 120%   |      309 |     53.07 |      604499 |      3.89 |            1.86 |        -145016 |
+| OPENDROP_LONG | 09:30       | no SL     | no TP     |      309 |     53.07 |      603492 |      3.88 |            1.86 |        -145016 |
+| OPENDROP_LONG | 09:30       | SL 40%    | TP 120%   |      309 |     53.07 |      598441 |      3.85 |            1.84 |        -150429 |
+| OPENDROP_LONG | 09:30       | SL 40%    | no TP     |      309 |     53.07 |      597434 |      3.84 |            1.84 |        -150429 |
 
 ## Files in this folder
 
-`trades_all_variants.csv.gz` (37940 rows: every trade of every variant - filter by exit_rule / sl / tp, sl 0 = none, tp 0 = none), `trades_best_variant.csv` (388 trades of the best-PnL variant), `entries.csv` (one row per entry: level, setup / drop day, first-candle drop %, strike, expiry, option price), `summary.csv`, `matrix_*.csv`.
+`trades_all_variants.csv.gz` (41700 rows: every trade of every variant - filter by exit_rule / sl / tp, sl 0 = none, tp 0 = none), `trades_best_variant.csv` (426 trades of the best-PnL variant), `entries.csv` (one row per entry: level, setup / drop day, first-candle drop %, strike, expiry, option price), `summary.csv`, `matrix_*.csv`.
 
 The best variant is the best of many, chosen after seeing the results, so it is optimistic: look at its neighbours (next stop-loss / target) and at the other exits. Charges, taxes and slippage are not included. Lot sizes are today's values for the whole year. The stock list is today's F&O list (stocks that left F&O are missing). Past results do not promise future results.
