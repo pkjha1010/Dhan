@@ -1,0 +1,43 @@
+Stocks tested: 10; entry dates 2025-11-13 .. 2026-11-12; entry checked 09:15 .. 15:20
+Variants: 4 stop-loss x 5 targets x 5 exits = 100 per strategy, 2 strategies; 200 variant rows with trades.
+
+Entries by strategy:
+ strategy  signals_with_entry  entries_with_option_data  dropped_low_coverage  skipped_no_option_data
+ GAP_LONG                  38                        23                     2                       0
+GAP_SHORT                  46                        32                     3                       0
+
+TOP 15 BY TOTAL PnL (min 10 trades):
+                        variant  trades  win_pct  total_pnl  roi_pct  profit_factor  avg_days_held  max_days_held
+ GAP_SHORT | 15:30 | SL0 | TP60      29    55.17     167480    10.55           2.29            0.0              0
+ GAP_SHORT | 15:30 | SL0 | TP80      29    55.17     154022     9.70           2.18            0.0              0
+ GAP_SHORT | 15:00 | SL0 | TP60      28    53.57     147992     9.67           2.30            0.0              0
+ GAP_SHORT | 15:00 | SL0 | TP80      28    53.57     139350     9.11           2.23            0.0              0
+ GAP_SHORT | 15:30 | SL0 | TP40      29    55.17     120907     7.62           1.93            0.0              0
+ GAP_SHORT | 15:00 | SL0 | TP40      28    53.57     115945     7.58           2.02            0.0              0
+GAP_LONG | 12:00 | SL40 | TP120      16    56.25      97525    11.52           2.73            0.0              0
+GAP_LONG | 15:30 | SL40 | TP120      21    42.86      93477     8.47           2.05            0.0              0
+  GAP_LONG | 15:30 | SL40 | TP0      21    42.86      91881     8.33           2.03            0.0              0
+ GAP_LONG | 12:00 | SL0 | TP120      16    56.25      89245    10.54           2.38            0.0              0
+GAP_LONG | 12:00 | SL20 | TP120      16    50.00      88062    10.40           2.52            0.0              0
+GAP_LONG | 12:00 | SL60 | TP120      16    56.25      86965    10.27           2.30            0.0              0
+ GAP_SHORT | 10:00 | SL0 | TP60      18    50.00      86599     8.88           2.13            0.0              0
+GAP_SHORT | 09:30 | SL40 | TP60      16    50.00      80693     9.27           2.24            0.0              0
+GAP_SHORT | 09:30 | SL60 | TP60      16    50.00      79191     9.10           2.19            0.0              0
+
+TOP 15 BY ROI (min 10 trades):
+                        variant  trades  win_pct  total_pnl  roi_pct  profit_factor  avg_days_held  max_days_held
+GAP_LONG | 12:00 | SL40 | TP120      16    56.25      97525    11.52           2.73            0.0              0
+ GAP_SHORT | 15:30 | SL0 | TP60      29    55.17     167480    10.55           2.29            0.0              0
+ GAP_LONG | 12:00 | SL0 | TP120      16    56.25      89245    10.54           2.38            0.0              0
+GAP_LONG | 12:00 | SL20 | TP120      16    50.00      88062    10.40           2.52            0.0              0
+GAP_LONG | 12:00 | SL60 | TP120      16    56.25      86965    10.27           2.30            0.0              0
+ GAP_SHORT | 15:30 | SL0 | TP80      29    55.17     154022     9.70           2.18            0.0              0
+ GAP_SHORT | 15:00 | SL0 | TP60      28    53.57     147992     9.67           2.30            0.0              0
+GAP_SHORT | 09:30 | SL40 | TP60      16    50.00      80693     9.27           2.24            0.0              0
+ GAP_SHORT | 15:00 | SL0 | TP80      28    53.57     139350     9.11           2.23            0.0              0
+ GAP_SHORT | 09:30 | SL0 | TP60      16    50.00      79191     9.10           2.19            0.0              0
+GAP_SHORT | 09:30 | SL60 | TP60      16    50.00      79191     9.10           2.19            0.0              0
+ GAP_SHORT | 10:00 | SL0 | TP60      18    50.00      86599     8.88           2.13            0.0              0
+ GAP_LONG | 12:00 | SL40 | TP80      16    56.25      73893     8.73           2.31            0.0              0
+GAP_LONG | 15:30 | SL40 | TP120      21    42.86      93477     8.47           2.05            0.0              0
+  GAP_LONG | 15:30 | SL40 | TP0      21    42.86      91881     8.33           2.03            0.0              0
