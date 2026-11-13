@@ -1,0 +1,112 @@
+name: TOP10 all strategies (every strategy of the repo on the 10 heaviest stocks, 1 year, one common SL / TP / exit grid, Dhan)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "rules = print the settings (offline) | check = test Dhan access in every strategy | run = run all strategies (resumable - run again until nothing says PARTIAL) | summary = rebuild files from saved data | compare = only rebuild COMPARE.md"
+        type: choice
+        options: [rules, check, run, summary, compare]
+        default: run
+      only:
+        description: "Strategies, comma separated (blank = all): opendrop,gap,bpb_base,accum5,accum10,orb,all8,pullback"
+        required: false
+        default: ""
+      symbols:
+        description: "Stocks (blank = the 10 heaviest: HDFCBANK RELIANCE ICICIBANK INFY BHARTIARTL ITC LT TCS AXISBANK SBIN)"
+        required: false
+        default: ""
+      start:
+        description: "Start date YYYY-MM-DD (entry dates)"
+        required: false
+        default: "2025-11-13"
+      end:
+        description: "End date YYYY-MM-DD (entry dates)"
+        required: false
+        default: "2026-11-12"
+      sls:
+        description: "Stop-loss % of premium (0 = none)"
+        required: false
+        default: "0,20,40,60"
+      tps:
+        description: "Target % of premium (0 = none)"
+        required: false
+        default: "0,40,60,80,120"
+      exits:
+        description: "Time exits, same day"
+        required: false
+        default: "09:30,10:00,12:00,15:00,15:30"
+      min_trades:
+        description: "Minimum trades for a variant to appear in the best tables"
+        required: false
+        default: "10"
+      out_dir:
+        description: "Result folder (blank = top10_results). Use another name if you change any setting above - saved data belongs to one setting"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: top10-all-backtest
+  cancel-in-progress: false
+
+jobs:
+  top10:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install packages
+        run: pip install -r requirements.txt
+
+      - name: Offline logic test
+        run: python test_top10_all.py
+
+      - name: Run
+        env:
+          DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
+          DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
+          T10_ONLY: ${{ inputs.only }}
+          T10_SYMBOLS: ${{ inputs.symbols }}
+          T10_START: ${{ inputs.start }}
+          T10_END: ${{ inputs.end }}
+          T10_SLS: ${{ inputs.sls }}
+          T10_TPS: ${{ inputs.tps }}
+          T10_EXITS: ${{ inputs.exits }}
+          T10_MIN_TRADES: ${{ inputs.min_trades }}
+          T10_OUT: ${{ inputs.out_dir }}
+          T10_BUDGET_MIN: "335"
+        run: python top10_all_backtest.py "${{ inputs.mode }}"
+
+      - name: Show the comparison
+        if: always() && inputs.mode != 'check' && inputs.mode != 'rules'
+        run: |
+          OUT="${{ inputs.out_dir || 'top10_results' }}"
+          if [ -f "$OUT/COMPARE.md" ]; then cat "$OUT/COMPARE.md" >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - name: Save results to the repo
+        if: always() && inputs.mode != 'check' && inputs.mode != 'rules'
+        run: |
+          OUT="${{ inputs.out_dir || 'top10_results' }}"
+          git config user.name "top10-bot"
+          git config user.email "top10-bot@users.noreply.github.com"
+          git add "$OUT" || true
+          git commit -m "top10 results" || echo "nothing new to commit"
+          git pull --no-rebase -X ours --no-edit || true
+          git push || true
+
+      - name: Upload results
+        if: always() && inputs.mode != 'check' && inputs.mode != 'rules'
+        uses: actions/upload-artifact@v4
+        with:
+          name: top10-results-${{ github.run_number }}
+          path: ${{ inputs.out_dir || 'top10_results' }}/
+          if-no-files-found: ignore
