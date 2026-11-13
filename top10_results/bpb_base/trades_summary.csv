@@ -1,0 +1,3 @@
+strategy,entry_type,signals_with_entry,entries_with_option_data,dropped_low_coverage,skipped_no_option_data,skip_reasons,trades_one_lot_affordable,long_trades,short_trades,first_entry,last_entry,avg_option_price
+BPB_LONG,"BPB base LONG: close above the 10-day high, no later close below it (pullback) -> first 1-minute cross above the highest High since the breakout (full day) -> buy CALL",50,27,2,0,,25,25,0,2025-11-20,2026-11-11,29.95
+BPB_SHORT,"BPB base SHORT: close below the 10-day low, no later close above it (pullback) -> first 1-minute cross below the lowest Low since the breakdown (full day) -> buy PUT",65,40,4,0,,36,0,36,2025-11-14,2026-10-23,18.35
