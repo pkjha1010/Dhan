@@ -1,0 +1,3 @@
+strategy,entry_type,signals_with_entry,entries_with_option_data,dropped_low_coverage,skipped_no_option_data,skip_reasons,trades_one_lot_affordable,long_trades,short_trades,first_entry,last_entry,avg_option_price
+ACC10_LONG,close below the 10-day low (breakdown) -> within 3 days price crosses back above the 10-day high -> buy CALL,7,7,0,0,,7,7,0,2026-01-05,2026-10-07,32.81
+ACC10_SHORT,close above the 10-day high (breakout) -> within 3 days price crosses back below the 10-day low -> buy PUT,11,11,1,0,,10,0,10,2026-01-05,2026-10-21,30.71
