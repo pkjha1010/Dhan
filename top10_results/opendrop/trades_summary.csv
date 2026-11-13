@@ -1,0 +1,2 @@
+strategy,entry_type,signals_with_entry,entries_with_option_data,dropped_low_coverage,skipped_no_option_data,skip_reasons,trades_one_lot_affordable,long_trades,short_trades,first_entry,last_entry,avg_option_price
+OPENDROP_LONG,first hourly candle falls > 1% (red) on day i -> a day i+1..i+3 trades <= 1% below its close -> first cross above that close on the next 1..5 days (1-minute) -> buy CALL; NIFTY50 hourly slope >= -0.5 on day i,34,33,4,0,,29,29,0,2025-12-18,2026-10-29,38.09
