@@ -1,10 +1,10 @@
-name: BPB BB backtest (your BPB + Bollinger script, LONG call + SHORT put, full-day 1-minute entry, SL x TP x time exit, all F&O stocks, 3 years, Dhan)
+name: BPB BB backtest (your pure-breakout + Bollinger script, B+n entry days, LONG call + SHORT put, 1-minute entry, SL x TP x time exit, all F&O stocks, 3 years, Dhan)
 
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "check = test Dhan access + print the rules | run = full backtest (resumable - run again until PROGRESS.txt says COMPLETE) | summary = rebuild result files from saved data (no API calls) | report = the Bollinger-filter comparison ALL / ORIG / BB_EOD / BB_LIVE (no API calls)"
+        description: "check = test Dhan access + print the rules | run = full backtest (resumable - run again until PROGRESS.txt says COMPLETE) | summary = rebuild result files from saved data (no API calls) | report = LONG and SHORT reports per entry rule (B+1 / B+2 / B+3 onward) and per exact B+n (no API calls)"
         type: choice
         options: [check, run, summary, report]
         default: run
@@ -32,6 +32,14 @@ on:
         description: "Time exits, comma separated (same day)"
         required: false
         default: "09:30,10:00,12:00,15:00,15:30"
+      lookback:
+        description: "Breakout window in days (your script: 5). B = the breakout day, entries are labelled B+n"
+        required: false
+        default: "5"
+      bb_only:
+        description: "1 = fetch only entries that pass the previous-day Bollinger filter (your strategy). 0 = fetch the others too (about 3x the Dhan calls) for a with / without comparison"
+        required: false
+        default: "1"
       itm_max:
         description: "Strike rule: ATM first, then ITM-1, ITM-2 ... up to ITM-n until a strike has a candle (0 = ATM only)"
         required: false
@@ -74,6 +82,8 @@ jobs:
           BBB_TPS: ${{ inputs.tps }}
           BBB_EXITS: ${{ inputs.exits }}
           BBB_ITM_MAX: ${{ inputs.itm_max }}
+          BBB_LOOKBACK: ${{ inputs.lookback }}
+          BBB_BB_ONLY: ${{ inputs.bb_only }}
           BBB_OUT: ${{ inputs.out_dir }}
         run: python bpb_bb_backtest.py "${{ inputs.mode }}"
       - name: Bollinger-filter comparison (no API calls)
@@ -84,7 +94,7 @@ jobs:
       - name: Show the summary
         if: always()
         run: |
-          for f in bpb_bb_results/SUMMARY.md bpb_bb_report/COMPARE.md; do if [ -f "$f" ]; then cat "$f" >> "$GITHUB_STEP_SUMMARY"; fi; done
+          for f in bpb_bb_results/SUMMARY.md bpb_bb_report/long/COMPARE.md bpb_bb_report/short/COMPARE.md; do if [ -f "$f" ]; then cat "$f" >> "$GITHUB_STEP_SUMMARY"; fi; done
       - name: Save results to the repo
         if: always()
         run: |
