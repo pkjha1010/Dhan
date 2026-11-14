@@ -40,6 +40,10 @@ on:
         description: "1 = fetch only entries that pass the previous-day Bollinger filter (your strategy). 0 = fetch the others too (about 3x the Dhan calls) for a with / without comparison"
         required: false
         default: "1"
+      skip_gap:
+        description: "1 = remove entries whose 09:15 candle OPENS beyond the entry level (gap-up for LONG, gap-down for SHORT). 0 = keep them"
+        required: false
+        default: "1"
       itm_max:
         description: "Strike rule: ATM first, then ITM-1, ITM-2 ... up to ITM-n until a strike has a candle (0 = ATM only)"
         required: false
@@ -84,23 +88,31 @@ jobs:
           BBB_ITM_MAX: ${{ inputs.itm_max }}
           BBB_LOOKBACK: ${{ inputs.lookback }}
           BBB_BB_ONLY: ${{ inputs.bb_only }}
+          BBB_SKIP_GAP: ${{ inputs.skip_gap }}
           BBB_OUT: ${{ inputs.out_dir }}
         run: python bpb_bb_backtest.py "${{ inputs.mode }}"
       - name: Bollinger-filter comparison (no API calls)
         if: always() && (inputs.mode == 'report' || inputs.mode == 'summary' || inputs.mode == 'run')
         env:
           BBR_SRC: ${{ inputs.out_dir }}
+          BBR_OUT: ${{ inputs.out_dir != '' && format('{0}_report', inputs.out_dir) || '' }}
         run: python bpb_bb_report.py || true
       - name: Show the summary
         if: always()
+        env:
+          OUT_DIR: ${{ inputs.out_dir }}
         run: |
-          for f in bpb_bb_results/SUMMARY.md bpb_bb_report/long/COMPARE.md bpb_bb_report/short/COMPARE.md; do if [ -f "$f" ]; then cat "$f" >> "$GITHUB_STEP_SUMMARY"; fi; done
+          R="${OUT_DIR:-bpb_bb_results}"; P="${OUT_DIR:+${OUT_DIR}_report}"; P="${P:-bpb_bb_report}"
+          for f in "$R/SUMMARY.md" "$P/long/COMPARE.md" "$P/short/COMPARE.md"; do if [ -f "$f" ]; then cat "$f" >> "$GITHUB_STEP_SUMMARY"; fi; done
       - name: Save results to the repo
         if: always()
+        env:
+          OUT_DIR: ${{ inputs.out_dir }}
         run: |
           git config user.name "bpb-bot"
           git config user.email "bpb-bot@users.noreply.github.com"
           git add bpb_bb_results bpb_bb_report || true
+          if [ -n "$OUT_DIR" ]; then git add "$OUT_DIR" "${OUT_DIR}_report" || true; fi
           git commit -m "BPB BB backtest results" || echo "nothing new to commit"
           git pull --no-rebase -X ours --no-edit || true
           git push || true

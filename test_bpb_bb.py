@@ -124,6 +124,29 @@ e = BB.entries_for(d, 100.0, False); assert list(e) == ["BPBS"] and e["BPBS"].st
 late = pd.DataFrame({"o": 99.0, "h": np.where(M == 15 * 60 + 29, 101.0, 99.0), "l": 98.0, "c": 99.0}, index=idx)
 assert BB.entries_for(late, 100.0, True)["BPBL"].strftime("%H:%M") == "15:29"
 assert BB.entries_for(u, 120.0, True) == {} and BB.entries_for(d, 90.0, False) == {}
+
+# ---- gap filter: no trade when the 09:15 candle OPENS beyond the level
+def day(opens, highs, lows):
+    n_ = len(opens); i_ = pd.to_datetime("2026-01-05 09:15") + pd.to_timedelta(np.arange(n_), unit="m")
+    return pd.DataFrame({"o": opens, "h": highs, "l": lows, "c": opens}, index=i_)
+assert BB.SKIP_GAP is True
+g = day([101.0, 101, 101], [102.0, 102, 102], [100.5, 100, 100])                         # LONG, opens 101 > level 100 -> gap-up, removed
+assert BB.entries_for(g, 100.0, True) == {} and BB.GAP_SKIPPED[0] == 1
+g2 = day([99.0, 99, 99], [101.0, 101, 101], [98.0, 98, 98])                              # LONG, opens 99 < level, crosses inside the 09:15 candle -> normal entry at 09:15
+assert BB.entries_for(g2, 100.0, True)["BPBL"].strftime("%H:%M") == "09:15"
+g3 = day([100.0, 100, 100], [101.0, 101, 101], [99.0, 99, 99])                           # opens exactly at the level -> not a gap
+assert BB.entries_for(g3, 100.0, True)["BPBL"].strftime("%H:%M") == "09:15"
+s1 = day([98.0, 98, 98], [99.0, 99, 99], [97.0, 97, 97])                                 # SHORT, opens 98 < level 100 -> gap-down, removed
+assert BB.entries_for(s1, 100.0, False) == {} and BB.GAP_SKIPPED[0] == 2
+s2 = day([101.0, 101, 101], [102.0, 102, 102], [99.0, 99, 99])                           # SHORT, opens above the level and falls through inside 09:15 -> entry
+assert BB.entries_for(s2, 100.0, False)["BPBS"].strftime("%H:%M") == "09:15"
+g4 = pd.DataFrame({"o": [99.0, 101.0], "h": [99.5, 102.0], "l": [98.0, 100.5], "c": [99.0, 101.0]}, index=pd.to_datetime(["2026-01-05 09:16", "2026-01-05 09:17"]))      # day starts at 09:16: no 09:15 candle, so no gap rule
+assert BB.entries_for(g4, 100.0, True)["BPBL"].strftime("%H:%M") == "09:17"
+BB.SKIP_GAP = False
+assert BB.entries_for(g, 100.0, True)["BPBL"].strftime("%H:%M") == "09:15" and BB.entries_for(s1, 100.0, False)["BPBS"].strftime("%H:%M") == "09:15"        # filter off: entered at 09:15
+BB.SKIP_GAP = True
+assert BB.rule_dict()["skip_gap"] is True and "GAP FILTER ON" in BB.rules_text()
+print("gap filter OK (LONG gap-up and SHORT gap-down at 09:15 removed, crossing inside the 09:15 candle kept)")
 assert BB.strategies_for("BPB", "BPBL", -1, -1, -1, -1) == ["BPBBB_LONG"] and BB.strategies_for("BPB", "BPBS", -1, -1, -1, -1) == ["BPBBB_SHORT"]
 assert BB.A.STRATS == ["BPBBB_LONG", "BPBBB_SHORT"] and BB.A.EXITS == ["09:30", "10:00", "12:00", "15:00", "15:30"], (BB.A.STRATS, BB.A.EXITS)
 assert BB.A.SLS == [0, 20, 40, 60] and BB.A.TPS == [40, 60, 80, 120, 0] and len(BB.A.VARS) == 5 * 4 * 5

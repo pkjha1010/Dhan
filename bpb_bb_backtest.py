@@ -16,9 +16,11 @@ SETUP (daily chart, Yahoo; rules + the proof against your loop in bpb_bb_rules.p
          SHORT = exact mirror (5-day low, level = Low of B, previous close below the lower band).   No open-price prefilter.   Your script = FIRST_DAY 3 (see bpb_bb_rules.py: its day counter skips B+1 AND B+2).
   Three entry rules are built from the SAME fetched entries:  'enter from B+1' (no skip), 'enter from B+2' (skip only B+1) and 'enter from B+3' (YOUR SCRIPT EXACTLY).  Touches before the first allowed day are ignored.
 ENTRY      the first 1-minute candle (09:15 .. BBB_ENTRY_LAST = 15:29, every minute of the session) of the entry day whose High (SHORT: Low) reaches the level; option price = close of that minute.
-           A stock that opens beyond the level is entered at 09:15 at the real option price (your daily script assumed a fill AT the level).
+           A stock that OPENS beyond the level at 09:15 is removed (BBB_SKIP_GAP = 1); with 0 it is entered at 09:15 at the real option price (your daily script assumed a fill AT the level).
 OPTION     LONG = ATM CALL, SHORT = ATM PUT, nearest monthly expiry (next month's series on the expiry day itself); ITM-1 .. ITM-BBB_ITM_MAX (3) if the ATM series has no candle at the entry minute.
            Nothing is dropped for thin option data (BBB_COV_MIN = 0); every entry carries its data coverage 'cov' in entries.csv.
+GAP FILTER BBB_SKIP_GAP = 1 (default): an entry is REMOVED when the 09:15 candle OPENS beyond the level (LONG: open > level = gap-up through the entry level; SHORT: open < level).  The setup stays used up, as in the
+           daily rules.  A 09:15 candle that opens below the level (SHORT: above) and then crosses it is still entered at 09:15.  0 = keep them (entered at 09:15 at the real option price).
 FILTER     BBB_BB_ONLY = 1 (default): only entries that pass the Bollinger filter are fetched (your strategy).  0 = fetch the others too (tagged bb_ok 0) for a with / without comparison (about 3x the Dhan calls).
 EXIT GRID  stop-loss none / 20 / 40 / 60 % x target 40 / 60 / 80 / 120 % / none x time exit 09:30 / 10:00 / 12:00 / 15:00 / 15:30 the same day = 100 variants per direction (percent of the premium).
            Fills: stop / target = first 1-minute low / high touching the level; a gap through it fills at that candle's open; stop and target in the same minute = STOP.
@@ -50,6 +52,7 @@ os.environ["A8_TRADES_ALL"] = "1"                                               
 os.environ["A8_SUM_ENTRY_FROM"] = os.environ["A8_SUM_ENTRY_TO"] = ""
 LOOKBACK = int(_env("BBB_LOOKBACK", "5"))                                         # breakout window (days)
 BB_ONLY = _env("BBB_BB_ONLY", "1") != "0"                                         # fetch only the entries that pass the Bollinger filter
+SKIP_GAP = _env("BBB_SKIP_GAP", "1") != "0"                                        # drop entries whose 09:15 candle OPENS beyond the entry level (gap-up for LONG, gap-down for SHORT)
 ITM_MAX = int(_env("BBB_ITM_MAX", "3"))                                           # ATM first, then ITM-1 ... ITM-n (0 = ATM only)
 TEXITS = [x.strip() for x in _env("BBB_EXITS", "09:30,10:00,12:00,15:00,15:30").replace(" ", ",").split(",") if len(x.strip()) == 5 and x.strip()[2] == ":"]
 
@@ -68,9 +71,20 @@ DIRNAME = {STRAT_L: "long", STRAT_S: "short"}
 
 
 # ---------------------------------------------------------------- the entry rule used by the engine
+GAP_SKIPPED = [0]
+
+
 def entries_for(u, level, long):
-    """Replaces combo_dayrisk_backtest.entries_for.  -> {entry type: entry timestamp}   (BPBL = LONG, BPBS = SHORT); the first 1-minute candle that reaches the level, 09:15 .. entry-last."""
+    """Replaces combo_dayrisk_backtest.entries_for.  -> {entry type: entry timestamp}   (BPBL = LONG, BPBS = SHORT); the first 1-minute candle that reaches the level, 09:15 .. entry-last.
+    SKIP_GAP: if the 09:15 candle OPENS beyond the level (LONG: open > level = gap-up through the entry level; SHORT: open < level = gap-down) there is no trade (the setup stays used up, as in the daily rules).
+    A 09:15 candle that opens below the level (SHORT: above) and only then crosses it is a normal entry at 09:15."""
     if u is None or len(u) == 0: return {}
+    if SKIP_GAP:
+        m0 = u.index[0].hour * 60 + u.index[0].minute
+        if m0 == A.E_FIRST:
+            o = float(u.o.iloc[0])
+            if (long and o > level) or (not long and o < level):
+                GAP_SKIPPED[0] += 1; return {}
     k = GR.first_cross_long(u, level, A.E_FIRST, A.ENTRY_MIN) if long else GR.first_cross_short(u, level, A.E_FIRST, A.ENTRY_MIN)
     return {} if k is None else {("BPBL" if long else "BPBS"): u.index[k]}
 
@@ -135,7 +149,7 @@ install()
 
 
 def rule_dict():
-    return dict(version=2, bb_only=BB_ONLY, first_days=list(R.FIRST_DAYS), cov_min=A.COV_MIN, lookback=LOOKBACK, itm_max=ITM_MAX, entry_last=A.ENTRY_LAST, start=A.START, end=A.END, sls=A.SLS, tps=A.TPS, exits=A.EXITS, cap=A.CAP, symbols=len(A.UNIVERSE))
+    return dict(version=3, skip_gap=SKIP_GAP, bb_only=BB_ONLY, first_days=list(R.FIRST_DAYS), cov_min=A.COV_MIN, lookback=LOOKBACK, itm_max=ITM_MAX, entry_last=A.ENTRY_LAST, start=A.START, end=A.END, sls=A.SLS, tps=A.TPS, exits=A.EXITS, cap=A.CAP, symbols=len(A.UNIVERSE))
 
 
 def rules_text():
@@ -143,7 +157,8 @@ def rules_text():
             f"below the line cancels the setup; entry = the first 1-minute candle (09:15 to {A.ENTRY_LAST}) of a day B+m (m >= first allowed day) whose High reaches the level, only if the previous day's close is above "
             f"the previous day's upper Bollinger band (20, 2).  SHORT (ATM put) = mirror (breakdown day B, Low of B, previous close below the lower band).  Entry rules reported: enter from B+1, from B+2 (skip B+1 only), "
             f"from B+3 (your script exactly: its day counter skips B+1 and B+2).  Option = ATM of the entry day's month, ITM-1 .. ITM-{ITM_MAX} if the ATM series has no candle at the entry minute; no entry is dropped "
-            f"for thin data.  Every entry is tagged with its B+n.")
+            f"for thin data.  Every entry is tagged with its B+n."
+            + ("  GAP FILTER ON: an entry is removed when the 09:15 candle OPENS beyond the level (LONG: above it, SHORT: below it)." if SKIP_GAP else "  Gap filter off: a stock that opens beyond the level is entered at 09:15."))
 
 
 def print_rules():
@@ -212,7 +227,7 @@ def run():
         print(f"Candidate entry days {A.START}..{A.END}: {len(cand)}", flush=True)
         ev = A.step_events(dh, cand, mst, st)
         ev = ev[(ev["date"] >= A.START) & (ev["date"] <= A.END)] if len(ev) else ev
-        print(f"Entries (09:15-{A.ENTRY_LAST}): {len(ev)}", flush=True)
+        print(f"Entries (09:15-{A.ENTRY_LAST}): {len(ev)}" + (f"  (gap filter: {GAP_SKIPPED[0]} entries removed this run because the 09:15 candle opened beyond the level)" if SKIP_GAP else ""), flush=True)
         if len(ev): options_step(dh, ev, mst, st)
         print("ALL STEPS FINISHED", flush=True)
     except A.Stop as e:
