@@ -1,0 +1,3 @@
+set,variant,year,trades,total_pnl,win_pct
+B+2 onward,15:30 | SL 20 | TP 40,2026,30,-93385.0,26.7
+B+2 onward noBB,15:30 | SL 20 | TP 40,2026,30,-93385.0,26.7

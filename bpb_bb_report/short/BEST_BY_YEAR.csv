@@ -1,0 +1,7 @@
+set,variant,year,trades,total_pnl,win_pct
+B+1 onward,15:30 | SL 20 | TP 120,2026,86,393640.0,36.0
+B+1 onward noBB,15:30 | SL 20 | TP 120,2026,86,393640.0,36.0
+B+2 onward,12:00 | SL none | TP none,2026,95,582943.0,40.0
+B+2 onward noBB,12:00 | SL none | TP none,2026,95,582943.0,40.0
+B+3 onward (your script),15:00 | SL 20 | TP 80,2026,72,206580.0,38.9
+B+3 onward (your script) noBB,15:00 | SL 20 | TP 80,2026,72,206580.0,38.9
