@@ -285,9 +285,11 @@ def write_direction(strat, S, E, prog):
     if os.path.exists(tp):
         T = pd.read_csv(tp).sort_values(["exit_rule", "sl", "tp", "entry_date", "entry_time", "stock"])
         if len(E):
-            sub = E[E.strategy == strat].rename(columns={"date": "entry_date", "entry_minute": "entry_time", "ref": "level", "signal_date": "breakout_date"})
-            keep = [c for c in ("stock", "entry_date", "entry_time", "breakout_date", "b_plus", "b_label", "from_b1", "from_b2", "from_b3", "bb_ok", "level", "ref_yahoo", "stock_price", "line", "strike_offset", "cov") if c in sub.columns]
-            T = T.merge(sub[keep].drop_duplicates(["stock", "entry_date", "entry_time"]), on=["stock", "entry_date", "entry_time"], how="left")
+            # one entry per stock and day -> merge on stock + entry_date.  NOT on the minute: the option's first candle can start a minute or more after the stock's entry minute (entry_time in the trades is the
+            # OPTION candle time), and a merge on the minute silently dropped the tags (B+n, flags, level, stock price) of those trades.
+            sub = E[E.strategy == strat].rename(columns={"date": "entry_date", "entry_minute": "stock_entry_minute", "ref": "level", "signal_date": "breakout_date"})
+            keep = [c for c in ("stock", "entry_date", "stock_entry_minute", "breakout_date", "b_plus", "b_label", "from_b1", "from_b2", "from_b3", "bb_ok", "level", "ref_yahoo", "stock_price", "line", "strike_offset", "cov") if c in sub.columns]
+            T = T.merge(sub[keep].drop_duplicates(["stock", "entry_date"]), on=["stock", "entry_date"], how="left")
         T.to_csv(f"{d}/trades_all_variants.csv.gz", index=False); nT = len(T)
     byb = pd.DataFrame()
     if len(E):

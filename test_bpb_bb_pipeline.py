@@ -20,7 +20,7 @@ cases = [("LONG", "2026-02-03", "10:00", 20.0, [20 + 0.1 * k for k in range(330)
          ("LONG", "2026-02-04", "10:00", 20.0, [20 - 0.1 * k for k in range(330)], 2, 1, 1, 0),        # falls 0.1 per minute
          ("SHORT", "2026-02-05", "11:00", 20.0, [20 + 0.1 * k for k in range(300)], 1, 1, 0, 0)]
 for k, (d, day, em, ep, path, bp, f1, f2, f3) in enumerate(cases):
-    te = pd.Timestamp(f"{day} {em}")
+    te = pd.Timestamp(f"{day} {em}") + pd.Timedelta(minutes=2 if day == "2026-02-04" else 0)      # 02-04: option candle starts 2 minutes after the stock entry minute
     S = option_path(day, (te + pd.Timedelta(minutes=1)).strftime("%H:%M"), path[1:])
     S = S[S.index <= pd.Timestamp(f"{day} 15:29")]
     r = A.make_record(S, te, ep, LOT, 100.0, pd.Timestamp(day).date(), 1.0)

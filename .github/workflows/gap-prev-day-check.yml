@@ -1,0 +1,58 @@
+name: Gap-open entries - previous day last half hour vs breakout high / close (Dhan 1-minute)
+
+on:
+  workflow_dispatch:
+    inputs:
+      rule:
+        description: "Entry rule: from_b3 (your script), from_b2 or from_b1"
+        type: choice
+        options: [from_b3, from_b2, from_b1]
+        default: from_b3
+      min_gap:
+        description: "Entry-minute price at least this % beyond the entry level counts as a gap"
+        required: false
+        default: "0.5"
+      src:
+        description: "Folder with long/ and short/ entries.csv (blank = bpb_bb_results)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gap-prev-day
+  cancel-in-progress: false
+
+jobs:
+  gap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt tabulate
+      - run: python test_gap_prev_day.py
+      - name: Run
+        env:
+          DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
+          DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
+          GPD_RULE: ${{ inputs.rule }}
+          GPD_MIN_GAP: ${{ inputs.min_gap }}
+          GPD_SRC: ${{ inputs.src }}
+        run: python gap_prev_day_check.py
+      - name: Show the summary
+        if: always()
+        run: if [ -f gap_prev_day_results/SUMMARY.md ]; then cat gap_prev_day_results/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"; fi
+      - name: Save results to the repo
+        if: always()
+        run: |
+          git config user.name "bpb-bot"
+          git config user.email "bpb-bot@users.noreply.github.com"
+          git add gap_prev_day_results || true
+          git commit -m "Gap previous-day check results" || echo "nothing new"
+          git pull --no-rebase -X ours --no-edit || true
+          git push || true
