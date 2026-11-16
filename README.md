@@ -102,3 +102,12 @@ Setup: repo secrets `DHAN_ACCESS_TOKEN`, `DHAN_CLIENT_ID` (Settings -> Secrets a
 * **Run**: Actions -> "BO5W backtest" -> `check`, then `run` (resumable: run again until `PROGRESS.txt` says COMPLETE). The raw option candles of every signal are saved, so a new exit grid / capital only needs mode `summary` (no API calls).
 * **Files**: `SUMMARY.md` (best variants, top lists, plain return per exit, by month, PnL / win % matrices per exit), `summary.csv` (every variant), `matrix_*.csv`, `signals.csv` (one row per signal incl. the stock gap), `trades_all_variants.csv.gz`, `trades_best_variant.csv`, `by_month_best.csv`.
 * Offline test: `python test_bo5w.py`.
+
+## BO5S backtest (SHORT mirror of BO5W: 10-day-low breakdown + lower Bollinger + previous day red + longer lower wick, ATM put, entry at the close, next-morning exit grid)
+
+`bo5s_backtest.py` (+ `bo5s_rules.py`, `test_bo5s.py`, workflow **BO5S backtest**) - the exact opposite of BO5W on the real ATM **put** options of all F&O stocks, entry dates 2026-01-01 up to today, Dhan 1-minute candles, results in `bo5s_results/`. Same engine, exit simulation and 280-variant grid as BO5W (it imports `bo5w_rules.py`).
+
+* **Setup (Yahoo daily, B = breakdown day)**: close **below** the lowest Low of the previous **10** days (BO5W used 5; `BO5S_LOOKBACK` changes it), close below the **lower** Bollinger band (20, 2 std), day B-1 **red** (close < open), **lower** wick > upper wick of B. `test_bo5s.py` proves the conditions equal your script's mirrored conditions and equal the LONG rule on the price-negated series.
+* **Entry**: the put at the **close of B** (last 1-minute ATM put candle up to 15:29, at most 10 minutes old; ITM-1..3 = higher strikes if the ATM series has no candle). Strike locked, nearest monthly expiry (next month's series when B is the expiry day).
+* **Exit, next trading day B+1**: time exit 09:15 open / 09:15 close / 09:16 close / 09:20 close / 09:30 close x stop-loss none / 20 / 40 / 60 % x **gap rule off / on** x target 40 / 60 / 80 / 100 / 120 / 200 % / none = 280 variants. **Gap rule** = the stock opens on B+1 **above** the entry price (Yahoo Open[B+1] > Close[B]) -> sell the put at its 09:15 open. Rs 60,000 per trade, no charges / slippage.
+* **Run**: Actions -> "BO5S backtest" -> `check`, then `run` (repeat until `PROGRESS.txt` says COMPLETE). A new exit grid / capital only needs mode `summary`. Offline test: `python test_bo5s.py`.
