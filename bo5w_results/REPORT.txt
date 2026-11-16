@@ -1,0 +1,4 @@
+Breakout days found (Yahoo daily, all four rules, with a next trading day): 764
+With option data (a trade): 719
+Skipped: 42
+  reasons: no ATM / ITM option candle near the close of the breakout day = 20; no option candles of the locked strike on the exit day = 15; no option candles 09:15-10:00 on the exit day = 7
