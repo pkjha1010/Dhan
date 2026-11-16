@@ -1,0 +1,4 @@
+Breakdown days found (Yahoo daily, all four rules, with a next trading day): 901
+With option data (a trade): 835
+Skipped: 60
+  reasons: no ATM / ITM option candle near the close of the breakdown day = 26; no option candles of the locked strike on the exit day = 20; no option candles 09:15-10:00 on the exit day = 10; no ATM / ITM option candle near the close of the breakdown day (next-month series) = 3; Dhan returned no option candles on the exit day = 1
