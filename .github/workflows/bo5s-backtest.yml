@@ -1,4 +1,4 @@
-name: BO5S backtest (SHORT mirror: 10-day-low breakdown + lower Bollinger + prev day red + longer lower wick, ATM put, entry at the close, next-morning exit grid, all F&O stocks, 2026, Dhan)
+name: "BO5S backtest - SHORT mirror (10-day-low breakdown + lower Bollinger + prev day red + longer lower wick, ATM put, entry at the close, next-morning exit grid, all F&O stocks, 2026, Dhan)"
 
 on:
   workflow_dispatch:
