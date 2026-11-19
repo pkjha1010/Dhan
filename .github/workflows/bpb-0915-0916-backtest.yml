@@ -1,0 +1,91 @@
+name: BPB 09:15 / 09:16 entry, exit 09:20 backtest (LONG call + SHORT put, SL none/40/60 x TP none/40/60/80, all F&O stocks, Dhan)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "check = test Dhan access + print the rules | run = full backtest (resumable - run again until PROGRESS.txt says COMPLETE) | summary = rebuild result files from saved data (no API calls)"
+        type: choice
+        options: [check, run, summary]
+        default: run
+      start:
+        description: "Start date YYYY-MM-DD (entry dates)"
+        required: false
+        default: "2023-10-30"
+      end:
+        description: "End date YYYY-MM-DD"
+        required: false
+        default: "2026-10-30"
+      symbols:
+        description: "Stocks (space or comma separated). Blank = all F&O stocks (quick test: RELIANCE,SBIN,INFY)"
+        required: false
+        default: ""
+      sls:
+        description: "Percent stop-loss list (0 = none)"
+        required: false
+        default: "0,40,60"
+      tps:
+        description: "Target % of premium list (0 = none)"
+        required: false
+        default: "40,60,80,0"
+      cap:
+        description: "Capital per trade in Rs"
+        required: false
+        default: "60000"
+      out_dir:
+        description: "Result folder (blank = bpb_0915_0916_results). Use another name if you change start / end / symbols"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bpb-0915-0916-backtest
+  cancel-in-progress: false
+
+jobs:
+  bpb0915:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install packages
+        run: pip install -r requirements.txt
+      - name: Run
+        env:
+          DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
+          DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
+          BB_START: ${{ inputs.start }}
+          BB_END: ${{ inputs.end }}
+          BB_SYMBOLS: ${{ inputs.symbols }}
+          BB_SLS: ${{ inputs.sls }}
+          BB_TPS: ${{ inputs.tps }}
+          BB_CAP: ${{ inputs.cap }}
+          BB_OUT: ${{ inputs.out_dir }}
+        run: python bpb_0915_0916_backtest.py "${{ inputs.mode }}"
+      - name: Show the summary
+        if: always()
+        env:
+          OUT_DIR: ${{ inputs.out_dir }}
+        run: |
+          R="${OUT_DIR:-bpb_0915_0916_results}"
+          for f in "$R/SUMMARY_0915_0916.md" "$R/SUMMARY.md"; do
+            if [ -f "$f" ]; then cat "$f" >> "$GITHUB_STEP_SUMMARY"; fi
+          done
+      - name: Save results to the repo
+        if: always()
+        env:
+          OUT_DIR: ${{ inputs.out_dir }}
+        run: |
+          git config user.name "bpb-bot"
+          git config user.email "bpb-bot@users.noreply.github.com"
+          git add bpb_0915_0916_results || true
+          if [ -n "$OUT_DIR" ]; then git add "$OUT_DIR" || true; fi
+          git commit -m "BPB 09:15/09:16 backtest results" || echo "nothing new to commit"
+          git pull --no-rebase -X ours --no-edit || true
+          git push || true
