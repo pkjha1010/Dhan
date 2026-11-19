@@ -1,0 +1,4 @@
+strategy,exit_rule,stop_loss,TP 40%,TP 60%,TP 80%,no TP
+BPB_LONG,09:20,no SL,2.56,2.38,2.49,3.67
+BPB_LONG,09:20,SL 40%,2.41,2.23,2.34,3.52
+BPB_LONG,09:20,SL 60%,2.38,2.21,2.31,3.49
