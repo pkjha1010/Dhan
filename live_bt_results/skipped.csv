@@ -1,0 +1,328 @@
+stock,strategy,date,level,reason
+BAJAJHLDNG,GAPS,2026-10-26,10924.0,not in the Dhan stock-option list
+BAJAJHLDNG,GAPS,2026-10-27,10924.0,not in the Dhan stock-option list
+APOLLOHOSP,GAPL,2026-09-18,8950.5,level not touched in the entry window
+APOLLOHOSP,GAPL,2026-09-21,8950.5,level not touched in the entry window
+ASHOKLEY,GAPS,2026-09-28,157.0,touched before 09:30
+AMBUJACEM,GAPL,2026-10-13,351.5,level not touched in the entry window
+AMBUJACEM,GAPL,2026-10-14,351.5,no option candles
+ATHERENERG,GAPL,2026-09-15,1661.9,level not touched in the entry window
+ATHERENERG,GAPS,2026-09-23,1528.0,touched before 09:30
+ATHERENERG,GAPL,2026-10-30,1702.0,level not touched in the entry window
+ABCAPITAL,GAPL,2026-11-05,390.9,no ATM candle at the entry
+AXISBANK,GAPL,2026-11-05,1240.9,no ATM candle at the entry
+BDL,GAPL,2026-11-09,1100.8,level not touched in the entry window
+BDL,GAPS,2026-11-17,1023.5,level not touched in the entry window
+BANKBARODA,GAPS,2026-09-28,233.77,touched before 09:30
+BANKBARODA,GAPL,2026-11-05,250.89,level not touched in the entry window
+BHARTIARTL,GAPL,2026-09-03,1877.2,level not touched in the entry window
+BHARTIARTL,GAPL,2026-09-04,1877.2,level not touched in the entry window
+BHARTIARTL,GAPL,2026-11-11,2120.0,level not touched in the entry window
+BHARTIARTL,GAPL,2026-11-13,2116.3,level not touched in the entry window
+BHARTIARTL,GAPL,2026-11-20,2172.3,level not touched in the entry window
+BLUESTARCO,GAPL,2026-10-13,1589.0,level not touched in the entry window
+ABB,GAPS,2026-09-07,7331.5,level not touched in the entry window
+AUBANK,GAPL,2026-11-11,947.65,level not touched in the entry window
+ADANIPORTS,GAPS,2026-09-24,1766.7,level not touched in the entry window
+ADANIPORTS,GAPS,2026-09-25,1766.7,level not touched in the entry window
+ADANIPORTS,GAPL,2026-11-02,1872.0,level not touched in the entry window
+ADANIPORTS,GAPL,2026-11-19,1925.0,level not touched in the entry window
+ADANIPORTS,GAPL,2026-11-20,1925.0,level not touched in the entry window
+BSE,GAPS,2026-09-11,3268.2,touched before 09:30
+BSE,GAPS,2026-09-28,3175.0,touched before 09:30
+BAJAJFINSV,GAPS,2026-09-28,1760.9,touched before 09:30
+BAJFINANCE,GAPL,2026-09-23,1040.3,level not touched in the entry window
+COALINDIA,GAPL,2026-09-25,428.75,level not touched in the entry window
+COALINDIA,GAPL,2026-09-28,428.75,level not touched in the entry window
+BHARATFORG,GAPS,2026-09-28,1965.0,no usable option candles for the OTM strikes
+CUMMINSIND,GAPS,2026-11-05,4363.3,touched before 09:30
+COCHINSHIP,GAPS,2026-09-23,1363.1,level not touched in the entry window
+COCHINSHIP,GAPS,2026-09-24,1363.1,touched before 09:30
+COCHINSHIP,GAPL,2026-11-09,1260.0,level not touched in the entry window
+DABUR,GAPS,2026-09-23,386.8,level not touched in the entry window
+DABUR,GAPS,2026-09-24,386.8,touched before 09:30
+APLAPOLLO,GAPS,2026-09-23,2178.7,strike step unknown
+APLAPOLLO,GAPL,2026-11-11,2224.4,level not touched in the entry window
+APLAPOLLO,GAPL,2026-11-12,2224.4,level not touched in the entry window
+BANDHANBNK,GAPL,2026-10-15,173.0,level not touched in the entry window
+DRREDDY,GAPL,2026-10-28,1319.0,level not touched in the entry window
+ETERNAL,GAPS,2026-08-28,323.0,level not touched in the entry window
+FEDERALBNK,GAPS,2026-09-03,348.0,touched before 09:30
+BHEL,GAPS,2026-09-03,423.2,level not touched in the entry window
+BHEL,GAPS,2026-10-19,433.1,touched before 09:30
+BHEL,GAPL,2026-11-09,425.95,level not touched in the entry window
+BHEL,GAPL,2026-11-13,437.0,level not touched in the entry window
+CGPOWER,GAPS,2026-10-15,834.35,touched before 09:30
+CGPOWER,GAPS,2026-10-21,815.35,level not touched in the entry window
+CGPOWER,GAPS,2026-11-04,801.0,touched before 09:30
+ASIANPAINT,GAPS,2026-09-04,2510.7,level not touched in the entry window
+ASIANPAINT,GAPS,2026-10-29,2268.7,touched before 09:30
+ASIANPAINT,GAPL,2026-11-05,2443.4,no ATM candle at the entry
+ASIANPAINT,GAPL,2026-11-13,2574.9,level not touched in the entry window
+COFORGE,GAPL,2026-10-13,1884.1,level not touched in the entry window
+CONCOR,GAPL,2026-09-01,520.0,level not touched in the entry window
+CONCOR,GAPL,2026-09-02,520.0,level not touched in the entry window
+CONCOR,GAPS,2026-10-30,411.45,level not touched in the entry window
+GODFRYPHLP,GAPS,2026-10-30,1683.2,level not touched in the entry window
+GODFRYPHLP,GAPL,2026-11-11,1825.0,level not touched in the entry window
+GRASIM,GAPS,2026-09-28,3150.6,touched before 09:30
+DMART,GAPS,2026-10-14,3350.6,level not touched in the entry window
+GMRAIRPORT,GAPL,2026-09-03,96.3,level not touched in the entry window
+GMRAIRPORT,GAPL,2026-11-11,100.95,level not touched in the entry window
+GMRAIRPORT,GAPL,2026-11-16,101.0,level not touched in the entry window
+DELHIVERY,GAPL,2026-09-03,464.35,level not touched in the entry window
+DELHIVERY,GAPL,2026-11-09,435.4,level not touched in the entry window
+HAVELLS,GAPL,2026-11-19,1192.0,level not touched in the entry window
+DLF,GAPL,2026-10-05,674.0,level not touched in the entry window
+DLF,GAPS,2026-10-07,650.55,level not touched in the entry window
+DLF,GAPS,2026-10-08,650.55,touched before 09:30
+GLENMARK,GAPL,2026-11-23,2691.5,level not touched in the entry window
+GLENMARK,GAPL,2026-11-25,2691.5,no ATM candle at the entry
+COLPAL,GAPS,2026-09-03,1842.0,level not touched in the entry window
+COLPAL,GAPL,2026-11-09,1699.9,level not touched in the entry window
+COLPAL,GAPL,2026-11-11,1699.9,no ATM candle at the entry
+HINDPETRO,GAPS,2026-09-04,355.4,level not touched in the entry window
+HINDPETRO,GAPS,2026-09-07,355.4,touched before 09:30
+HINDPETRO,GAPS,2026-09-28,349.3,touched before 09:30
+BPCL,GAPS,2026-09-28,306.7,touched before 09:30
+BPCL,GAPS,2026-10-30,286.9,touched before 09:30
+FORTIS,GAPS,2026-11-11,762.6,level not touched in the entry window
+HINDUNILVR,GAPL,2026-11-17,2027.0,level not touched in the entry window
+DIVISLAB,GAPS,2026-09-04,9087.0,level not touched in the entry window
+DIVISLAB,GAPS,2026-09-07,9087.0,level not touched in the entry window
+ICICIPRULI,GAPS,2026-09-03,495.0,not in the Dhan stock-option list
+GAIL,GAPS,2026-09-03,172.07,level not touched in the entry window
+GAIL,GAPL,2026-11-09,188.9,level not touched in the entry window
+ICICIGI,GAPL,2026-11-26,1762.1,level not touched in the entry window
+IEX,GAPS,2026-10-30,101.51,not in the Dhan stock-option list
+IEX,GAPL,2026-11-11,113.6,not in the Dhan stock-option list
+IDEA,GAPL,2026-11-11,12.97,level not touched in the entry window
+HEROMOTOCO,GAPS,2026-09-11,5205.5,touched before 09:30
+HEROMOTOCO,GAPS,2026-09-28,5294.0,level not touched in the entry window
+ICICIBANK,GAPL,2026-08-31,1453.8,level not touched in the entry window
+ICICIBANK,GAPL,2026-11-05,1431.2,no ATM candle at the entry
+HCLTECH,GAPL,2026-09-21,1290.0,level not touched in the entry window
+HCLTECH,GAPS,2026-10-28,1386.0,touched before 09:30
+HCLTECH,GAPL,2026-11-05,1451.8,level not touched in the entry window
+INDUSINDBK,GAPL,2026-11-11,918.35,level not touched in the entry window
+INDUSINDBK,GAPL,2026-11-12,918.35,level not touched in the entry window
+GODREJPROP,GAPS,2026-09-28,1665.7,level not touched in the entry window
+GODREJPROP,GAPS,2026-09-29,1665.7,touched before 09:30
+GODREJPROP,GAPL,2026-11-09,1815.0,level not touched in the entry window
+GODREJPROP,GAPS,2026-11-20,1856.5,touched before 09:30
+INDUSTOWER,GAPL,2026-10-14,382.0,level not touched in the entry window
+INDUSTOWER,GAPL,2026-11-11,394.0,level not touched in the entry window
+INDUSTOWER,GAPL,2026-11-13,397.5,level not touched in the entry window
+HINDALCO,GAPS,2026-09-07,998.2,level not touched in the entry window
+HINDALCO,GAPS,2026-11-06,904.55,touched before 09:30
+HINDALCO,GAPS,2026-11-16,919.3,level not touched in the entry window
+HINDALCO,GAPS,2026-11-20,898.15,touched before 09:30
+HINDALCO,GAPS,2026-11-25,879.5,touched before 09:30
+GVT&D,GAPL,2026-09-22,4433.9,no ATM candle at the entry
+GVT&D,GAPL,2026-10-07,4337.9,level not touched in the entry window
+GVT&D,GAPS,2026-10-19,3933.0,touched before 09:30
+GVT&D,GAPL,2026-11-04,4225.0,level not touched in the entry window
+GVT&D,GAPS,2026-11-04,3945.6,touched before 09:30
+IDFCFIRSTB,GAPS,2026-09-28,83.3,touched before 09:30
+IDFCFIRSTB,GAPL,2026-11-09,77.97,level not touched in the entry window
+IDFCFIRSTB,GAPL,2026-11-11,77.97,no ATM candle at the entry
+IOC,GAPS,2026-09-07,135.15,level not touched in the entry window
+IOC,GAPS,2026-09-08,134.35,touched before 09:30
+JINDALSTEL,GAPS,2026-09-28,1152.3,touched before 09:30
+JSWENERGY,GAPS,2026-09-23,514.55,level not touched in the entry window
+JSWENERGY,GAPS,2026-09-24,514.55,touched before 09:30
+JUBLFOOD,GAPS,2026-09-03,481.3,touched before 09:30
+KEI,GAPL,2026-11-12,4108.5,level not touched in the entry window
+KOTAKBANK,GAPL,2026-10-06,435.6,level not touched in the entry window
+KOTAKBANK,GAPL,2026-10-07,435.6,level not touched in the entry window
+INDHOTEL,GAPL,2026-10-26,794.65,level not touched in the entry window
+KPITTECH,GAPS,2026-11-25,515.9,level not touched in the entry window
+KPITTECH,GAPS,2026-11-26,515.9,level not touched in the entry window
+LAURUSLABS,GAPS,2026-09-04,1837.4,level not touched in the entry window
+JSWSTEEL,GAPL,2026-09-22,1278.7,level not touched in the entry window
+JSWSTEEL,GAPL,2026-09-23,1278.7,no ATM candle at the entry
+HDFCBANK,GAPS,2026-09-08,700.0,level not touched in the entry window
+LT,GAPS,2026-09-28,3849.0,touched before 09:30
+LICI,GAPS,2026-09-29,398.5,touched before 09:30
+LICI,GAPL,2026-11-18,403.45,level not touched in the entry window
+LICI,GAPL,2026-11-19,403.45,level not touched in the entry window
+MARUTI,GAPS,2026-09-04,12640.0,level not touched in the entry window
+MARUTI,GAPS,2026-09-07,12640.0,touched before 09:30
+KAYNES,GAPS,2026-09-24,3425.0,level not touched in the entry window
+KAYNES,GAPL,2026-11-11,3386.9,no ATM candle at the entry
+MAXHEALTH,GAPS,2026-10-05,907.7,level not touched in the entry window
+MAXHEALTH,GAPS,2026-10-06,907.7,touched before 09:30
+MAXHEALTH,GAPL,2026-11-19,1039.0,level not touched in the entry window
+MCX,GAPL,2026-10-07,3345.0,level not touched in the entry window
+MCX,GAPL,2026-11-18,3772.6,level not touched in the entry window
+MCX,GAPS,2026-11-25,3497.0,touched before 09:30
+MOTHERSON,GAPL,2026-11-11,169.49,level not touched in the entry window
+KFINTECH,GAPS,2026-09-23,892.2,level not touched in the entry window
+KFINTECH,GAPS,2026-09-24,892.2,level not touched in the entry window
+KFINTECH,GAPS,2026-09-25,892.2,level not touched in the entry window
+KFINTECH,GAPL,2026-10-30,887.7,level not touched in the entry window
+KALYANKJIL,GAPL,2026-10-07,564.95,level not touched in the entry window
+ITC,GAPL,2026-09-03,268.2,level not touched in the entry window
+ITC,GAPL,2026-11-13,286.1,level not touched in the entry window
+INOXWIND,GAPS,2026-09-23,75.52,no usable option candles for the OTM strikes
+INOXWIND,GAPL,2026-11-04,62.96,level not touched in the entry window
+INOXWIND,GAPL,2026-11-09,66.35,level not touched in the entry window
+INOXWIND,GAPS,2026-11-18,57.7,no usable option candles for the OTM strikes
+NAUKRI,GAPS,2026-09-16,1244.8,level not touched in the entry window
+NAUKRI,GAPS,2026-09-17,1244.8,touched before 09:30
+NAUKRI,GAPL,2026-09-21,1310.0,level not touched in the entry window
+NAUKRI,GAPS,2026-09-30,1202.3,level not touched in the entry window
+NAUKRI,GAPL,2026-10-15,1239.3,level not touched in the entry window
+NAUKRI,GAPS,2026-10-28,1168.0,level not touched in the entry window
+NAUKRI,GAPS,2026-11-20,1148.5,level not touched in the entry window
+MANKIND,GAPS,2026-09-03,2350.0,level not touched in the entry window
+MANKIND,GAPL,2026-10-30,2529.8,level not touched in the entry window
+MANKIND,GAPL,2026-11-16,2705.0,level not touched in the entry window
+NYKAA,GAPL,2026-10-07,344.55,level not touched in the entry window
+OBEROIRLTY,GAPS,2026-09-28,1815.0,level not touched in the entry window
+OBEROIRLTY,GAPS,2026-09-29,1815.0,touched before 09:30
+OBEROIRLTY,GAPL,2026-11-09,1760.1,level not touched in the entry window
+HAL,GAPL,2026-09-10,5072.0,level not touched in the entry window
+HAL,GAPL,2026-10-05,4701.0,level not touched in the entry window
+OIL,GAPL,2026-09-08,499.5,level not touched in the entry window
+LTF,GAPL,2026-11-12,280.9,level not touched in the entry window
+NAM-INDIA,GAPL,2026-11-09,1082.75,level not touched in the entry window
+NHPC,GAPS,2026-09-24,75.54,level not touched in the entry window
+ONGC,GAPS,2026-11-12,228.65,touched before 09:30
+ONGC,GAPS,2026-11-16,224.01,touched before 09:30
+NBCC,GAPL,2026-11-09,81.15,level not touched in the entry window
+PAGEIND,GAPL,2026-11-04,35800.0,level not touched in the entry window
+HINDZINC,GAPS,2026-09-02,592.0,touched before 09:30
+HINDZINC,GAPL,2026-09-08,603.0,level not touched in the entry window
+HINDZINC,GAPS,2026-09-28,581.0,touched before 09:30
+HINDZINC,GAPS,2026-10-27,492.0,level not touched in the entry window
+HINDZINC,GAPS,2026-11-20,525.7,touched before 09:30
+PERSISTENT,GAPS,2026-09-16,5372.5,level not touched in the entry window
+PERSISTENT,GAPL,2026-10-08,5620.0,level not touched in the entry window
+PETRONET,GAPS,2026-10-29,282.05,level not touched in the entry window
+PETRONET,GAPS,2026-10-30,283.85,level not touched in the entry window
+POLYCAB,GAPS,2026-10-19,7955.0,level not touched in the entry window
+POWERGRID,GAPL,2026-10-27,253.6,level not touched in the entry window
+POWERGRID,GAPS,2026-11-06,257.3,touched before 09:30
+POWERGRID,GAPL,2026-11-11,266.25,level not touched in the entry window
+MANAPPURAM,GAPS,2026-09-07,330.3,touched before 09:30
+MANAPPURAM,GAPS,2026-09-28,313.15,no usable option candles for the OTM strikes
+MANAPPURAM,GAPS,2026-09-30,312.15,level not touched in the entry window
+MANAPPURAM,GAPL,2026-11-09,328.35,level not touched in the entry window
+PGEL,GAPL,2026-10-06,506.0,level not touched in the entry window
+PGEL,GAPL,2026-11-09,555.4,level not touched in the entry window
+PREMIERENE,GAPL,2026-10-19,930.0,level not touched in the entry window
+PREMIERENE,GAPS,2026-11-06,862.05,level not touched in the entry window
+MUTHOOTFIN,GAPS,2026-09-11,2795.6,touched before 09:30
+MUTHOOTFIN,GAPS,2026-09-28,2808.1,touched before 09:30
+RBLBANK,GAPS,2026-09-28,409.1,touched before 09:30
+RBLBANK,GAPL,2026-10-09,419.9,level not touched in the entry window
+RECLTD,GAPS,2026-09-03,313.0,level not touched in the entry window
+NATIONALUM,GAPL,2026-08-27,405.0,level not touched in the entry window
+NATIONALUM,GAPS,2026-09-28,354.4,touched before 09:30
+NATIONALUM,GAPS,2026-10-07,329.5,touched before 09:30
+PRESTIGE,GAPS,2026-09-07,1548.2,level not touched in the entry window
+PRESTIGE,GAPS,2026-09-28,1463.1,touched before 09:30
+PRESTIGE,GAPL,2026-11-12,1647.0,level not touched in the entry window
+RVNL,GAPL,2026-11-09,196.1,level not touched in the entry window
+SBIN,GAPS,2026-09-28,975.8,touched before 09:30
+SOLARINDS,GAPL,2026-10-06,19820.0,level not touched in the entry window
+PIDILITIND,GAPL,2026-09-23,1598.0,level not touched in the entry window
+PIDILITIND,GAPL,2026-10-06,1496.9,level not touched in the entry window
+SAIL,GAPS,2026-09-28,182.15,level not touched in the entry window
+SAIL,GAPS,2026-09-29,182.15,touched before 09:30
+SAIL,GAPS,2026-11-06,165.0,level not touched in the entry window
+SAIL,GAPL,2026-11-09,173.64,level not touched in the entry window
+SAIL,GAPL,2026-11-11,173.64,level not touched in the entry window
+LTM,GAPS,2026-09-28,4011.0,level not touched in the entry window
+LTM,GAPS,2026-09-29,4011.0,level not touched in the entry window
+LTM,GAPS,2026-10-06,3945.5,level not touched in the entry window
+SUNPHARMA,GAPS,2026-09-03,1921.1,touched before 09:30
+TATACONSUM,GAPL,2026-11-16,1099.9,level not touched in the entry window
+SAGILITY,GAPL,2026-09-21,46.62,level not touched in the entry window
+SAGILITY,GAPL,2026-10-27,45.65,level not touched in the entry window
+SAGILITY,GAPL,2026-11-09,44.29,level not touched in the entry window
+SAGILITY,GAPL,2026-11-12,44.75,level not touched in the entry window
+SAGILITY,GAPL,2026-11-26,46.3,no ATM candle at the entry
+PAYTM,GAPL,2026-09-18,1855.5,level not touched in the entry window
+PAYTM,GAPS,2026-09-23,1792.0,touched before 09:30
+PAYTM,GAPL,2026-10-06,1708.0,level not touched in the entry window
+PAYTM,GAPL,2026-11-26,1759.9,level not touched in the entry window
+POWERINDIA,GAPS,2026-10-15,29580.0,touched before 09:30
+POWERINDIA,GAPS,2026-10-19,28630.0,level not touched in the entry window
+POWERINDIA,GAPS,2026-11-03,27185.0,level not touched in the entry window
+POWERINDIA,GAPS,2026-11-20,29785.0,touched before 09:30
+POWERINDIA,GAPS,2026-11-25,29675.0,touched before 09:30
+TATAPOWER,GAPS,2026-10-07,346.4,touched before 09:30
+TATAPOWER,GAPL,2026-11-11,366.9,level not touched in the entry window
+RADICO,GAPL,2026-10-06,4516.0,level not touched in the entry window
+RADICO,GAPL,2026-10-07,4516.0,level not touched in the entry window
+TIINDIA,GAPL,2026-11-12,2307.6,level not touched in the entry window
+POLICYBZR,GAPL,2026-11-11,979.0,level not touched in the entry window
+TRENT,GAPL,2026-10-08,2914.0,level not touched in the entry window
+TRENT,GAPL,2026-11-17,3238.0,level not touched in the entry window
+INFY,GAPL,2026-09-01,1145.0,level not touched in the entry window
+INFY,GAPS,2026-09-11,1026.5,level not touched in the entry window
+INFY,GAPS,2026-11-12,1139.0,touched before 09:30
+NESTLEIND,GAPS,2026-09-28,1350.2,touched before 09:30
+NESTLEIND,GAPS,2026-10-15,1306.9,no usable option candles for the OTM strikes
+NESTLEIND,GAPL,2026-11-05,1248.4,no ATM candle at the entry
+UNOMINDA,GAPL,2026-11-09,1335.0,level not touched in the entry window
+VEDL,GAPL,2026-11-09,265.0,level not touched in the entry window
+VEDL,GAPL,2026-11-11,265.0,level not touched in the entry window
+VEDL,GAPL,2026-11-12,265.0,level not touched in the entry window
+VEDL,GAPS,2026-11-13,255.4,level not touched in the entry window
+NMDC,GAPL,2026-11-09,71.27,level not touched in the entry window
+TECHM,GAPS,2026-10-26,1752.7,level not touched in the entry window
+TECHM,GAPS,2026-10-28,1754.6,touched before 09:30
+TATASTEEL,GAPL,2026-09-17,186.49,level not touched in the entry window
+TATASTEEL,GAPL,2026-11-04,177.37,level not touched in the entry window
+TVSMOTOR,GAPS,2026-09-28,4057.0,level not touched in the entry window
+TVSMOTOR,GAPS,2026-09-29,4057.0,touched before 09:30
+TVSMOTOR,GAPS,2026-10-26,3915.0,touched before 09:30
+TVSMOTOR,GAPL,2026-11-02,4308.1,level not touched in the entry window
+TVSMOTOR,GAPL,2026-11-03,4308.1,level not touched in the entry window
+TMPV,GAPL,2026-09-17,320.15,level not touched in the entry window
+TMPV,GAPS,2026-10-08,273.35,level not touched in the entry window
+TMPV,GAPL,2026-11-09,296.35,level not touched in the entry window
+YESBANK,GAPL,2026-11-20,18.06,level not touched in the entry window
+SHRIRAMFIN,GAPS,2026-09-11,1013.0,level not touched in the entry window
+SHRIRAMFIN,GAPS,2026-09-28,983.4,touched before 09:30
+SHRIRAMFIN,GAPL,2026-11-09,974.7,level not touched in the entry window
+WIPRO,GAPL,2026-10-09,164.3,level not touched in the entry window
+WIPRO,GAPL,2026-11-09,199.21,level not touched in the entry window
+TATAELXSI,GAPS,2026-09-11,3380.0,touched before 09:30
+TATAELXSI,GAPL,2026-10-07,3148.4,level not touched in the entry window
+TATAELXSI,GAPL,2026-10-08,3148.4,level not touched in the entry window
+TATAELXSI,GAPL,2026-10-09,3148.4,level not touched in the entry window
+TCS,GAPL,2026-10-08,2140.9,no usable option candles for the OTM strikes
+WAAREEENER,GAPL,2026-11-11,2473.8,no usable option candles for the OTM strikes
+UNIONBANK,GAPL,2026-10-07,172.6,level not touched in the entry window
+NMDC,GAPS,2026-09-03,85.1,"cheap option, OI below 1000 lots; price at or below Rs 1"
+BPCL,GAPS,2026-09-07,313.0,"cheap option, OI below 1000 lots"
+BHEL,GAPS,2026-09-07,423.2,30% fund limit
+GODREJPROP,GAPS,2026-09-07,1908.9,max open trades
+INDHOTEL,GAPS,2026-09-07,710.85,max open trades
+LTM,GAPS,2026-09-16,4275.0,day loss stop
+NHPC,GAPS,2026-09-25,75.54,"cheap option, OI below 1000 lots"
+INDIGO,GAPS,2026-09-28,4874.5,max open trades
+BAJFINANCE,GAPS,2026-09-28,974.0,max open trades
+BANDHANBNK,GAPS,2026-09-28,182.62,max open trades
+BANDHANBNK,GAPS,2026-10-16,168.02,"cheap option, OI below 1000 lots"
+HINDZINC,GAPS,2026-10-21,524.5,30% fund limit
+LTM,GAPS,2026-10-23,4142.0,day loss stop
+MAHABANK,GAPL,2026-10-29,80.5,"cheap option, OI below 1000 lots"
+NMDC,GAPS,2026-10-30,66.91,"cheap option, OI below 1000 lots"
+MUTHOOTFIN,GAPL,2026-11-02,2506.0,30% fund limit
+BANKINDIA,GAPL,2026-11-09,139.0,"cheap option, OI below 1000 lots"
+CAMS,GAPL,2026-11-09,721.2,max open trades
+UNIONBANK,GAPL,2026-11-09,188.9,max open trades
+CDSL,GAPL,2026-11-09,1352.2,max open trades
+GAIL,GAPL,2026-11-11,188.9,"cheap option, OI below 1000 lots"
+WIPRO,GAPL,2026-11-11,199.21,max open trades
+EICHERMOT,GAPL,2026-11-11,7713.0,max open trades
+KFINTECH,GAPL,2026-11-11,931.5,max open trades
+NBCC,GAPL,2026-11-11,81.15,"cheap option, OI below 1000 lots"
+VOLTAS,GAPL,2026-11-11,1118.5,max open trades
+TATAELXSI,GAPL,2026-11-11,3953.0,max open trades
+NMDC,GAPS,2026-11-23,67.27,"cheap option, OI below 1000 lots"
