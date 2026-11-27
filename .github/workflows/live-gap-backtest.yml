@@ -1,0 +1,59 @@
+name: Live GAP strategy backtest (last 3 months)
+
+on:
+  workflow_dispatch:
+    inputs:
+      start:
+        description: "Start date YYYY-MM-DD (blank = 3 months before end)"
+        required: false
+        default: ""
+      end:
+        description: "End date YYYY-MM-DD (blank = yesterday)"
+        required: false
+        default: ""
+      funds:
+        description: "Starting funds in Rs"
+        required: false
+        default: "1000000"
+      symbols:
+        description: "Blank = all F&O stocks (quick test: RELIANCE,SBIN,INFY)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install packages
+        run: pip install -r requirements.txt
+      - name: Run
+        env:
+          DHAN_CLIENT_ID: ${{ secrets.DHAN_CLIENT_ID }}
+          DHAN_ACCESS_TOKEN: ${{ secrets.DHAN_ACCESS_TOKEN }}
+          LB_START: ${{ inputs.start }}
+          LB_END: ${{ inputs.end }}
+          LB_FUNDS: ${{ inputs.funds }}
+          LB_SYMBOLS: ${{ inputs.symbols }}
+        run: python -u live_gap_backtest.py
+      - name: Show the report
+        if: always()
+        run: |
+          if [ -f live_bt_results/REPORT.md ]; then cat live_bt_results/REPORT.md >> "$GITHUB_STEP_SUMMARY"; fi
+      - name: Save results to the repo
+        if: always()
+        run: |
+          git config user.name "livebt-bot"
+          git config user.email "livebt-bot@users.noreply.github.com"
+          git add live_bt_results || true
+          git commit -m "Live GAP strategy backtest results" || echo "nothing new to commit"
+          git pull --no-rebase -X ours --no-edit || true
+          git push || true
